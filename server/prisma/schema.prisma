@@ -1,0 +1,417 @@
+// FrenchMaster backend data model.
+//
+// Scope note: this schema models enough of the real domain to back the
+// Dashboard endpoint (GET /api/dashboard) with genuine aggregation, plus
+// the auth flow needed to protect it. Tables for the rest of the product
+// (full lesson content authoring, exams content, payments, CMS, etc.) are
+// intentionally minimal or absent — see server/README.md "Out of scope".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// DATABASE_URL: pooled connection (Supabase Supavisor, port 6543,
+// ?pgbouncer=true) — used for normal app queries.
+// DIRECT_URL: direct connection (port 5432) — used only by `prisma migrate`,
+// which needs a non-pooled connection to run reliably.
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum CEFRLevel {
+  A1
+  A2
+  B1
+  B2
+}
+
+enum SkillKey {
+  pronunciation
+  grammar
+  listening
+  reading
+  speaking
+  vocabulary
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  PREMIUM
+  USER
+}
+
+enum AchievementIcon {
+  flame
+  mic
+  trophy
+  book
+  target
+  medal
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  APPLE
+}
+
+enum WordGender {
+  masculine
+  feminine
+  neutral
+}
+
+enum PartOfSpeech {
+  noun
+  verb
+  adjective
+  adverb
+  phrase
+  expression
+}
+
+enum MasteryStatus {
+  new
+  learning
+  mastered
+}
+
+// ---------------------------------------------------------------------------
+// Auth / Users
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String? // nullable: OAuth-only users have no password
+  name         String
+  avatarUrl    String?
+  role         Role      @default(USER)
+
+  authProvider   AuthProvider @default(EMAIL)
+  googleId       String?      @unique
+  appleId        String?      @unique
+
+  currentLevel   CEFRLevel @default(A1)
+  levelProgress  Int       @default(0) // 0-100 through currentLevel
+  coins          Int       @default(0)
+
+  goalMinutesPerDay Int @default(15)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  refreshTokens      RefreshToken[]
+  lessonProgress     LessonProgress[]
+  skillScores        SkillScoreSnapshot[]
+  mistakeLogs        MistakeLog[]
+  userAchievements   UserAchievement[]
+  dailyActivity      DailyActivity[]
+  xpTransactions     XpTransaction[]
+  vocabularyProgress UserVocabularyProgress[]
+
+  @@index([currentLevel])
+  @@map("users")
+}
+
+// Refresh tokens are stored hashed (never the raw token) so a DB leak does
+// not expose usable tokens. Rotation: each refresh issues a new token row
+// and revokes (sets revokedAt on) the one presented.
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  replacedByTokenId String?
+  createdByIp String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// Curriculum (minimal — just enough to resolve continueLesson/todaysLesson)
+// ---------------------------------------------------------------------------
+
+model Unit {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  level       CEFRLevel
+  order       Int // display/sequence order within the level
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  lessons Lesson[]
+
+  @@index([level, order])
+  @@map("units")
+}
+
+model Lesson {
+  id                String    @id @default(uuid())
+  unitId            String
+  unit              Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  title             String
+  subtitle          String
+  level             CEFRLevel
+  order             Int // sequence order within the unit
+  estimatedMinutes  Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  progressRecords LessonProgress[]
+
+  @@index([unitId, order])
+  @@index([level])
+  @@map("lessons")
+}
+
+// One row per (user, lesson). progress drives continueLesson/todaysLesson
+// selection: continueLesson = most recently updated row with 1-99 progress;
+// todaysLesson = next recommended lesson (see DashboardService for the
+// selection algorithm and its documented adaptive-learning placeholder).
+model LessonProgress {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  progress  Int      @default(0) // 0-100
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([userId, updatedAt])
+  @@map("lesson_progress")
+}
+
+// ---------------------------------------------------------------------------
+// Skill scores
+// ---------------------------------------------------------------------------
+
+// Latest-known score per (user, skill). Written whenever a scoring event
+// happens elsewhere (quiz, pronunciation drill, etc. — out of scope today).
+// Dashboard reads the single latest snapshot per skill; see open question
+// in README about live-compute vs. materialized scoring.
+model SkillScoreSnapshot {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillKey  SkillKey
+  score     Int // 0-100
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, skillKey])
+  @@index([userId])
+  @@map("skill_score_snapshots")
+}
+
+// ---------------------------------------------------------------------------
+// Mistake tracking (drives weakTopics)
+// ---------------------------------------------------------------------------
+
+model MistakeLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicTitle String // e.g. "Passé composé vs. imparfait"
+  skillKey   SkillKey
+  correct    Boolean // false = mistake, true = a correct attempt on that topic (for accuracy denominator)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, topicTitle])
+  @@index([userId, createdAt])
+  @@map("mistake_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Achievements / gamification
+// ---------------------------------------------------------------------------
+
+model Achievement {
+  id          String          @id @default(uuid())
+  code        String          @unique // stable machine key, e.g. "streak_7"
+  title       String
+  description String
+  icon        AchievementIcon
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement  @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  progress      Int          @default(0) // 0-100
+  unlockedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@map("user_achievements")
+}
+
+// ---------------------------------------------------------------------------
+// Streaks / study time
+// ---------------------------------------------------------------------------
+
+// One row per (user, calendar day, UTC). minutesStudied accumulates from
+// completed lesson/practice sessions (out of scope today, so seeded/faked).
+// Streak & "this week" aggregates are derived from this table in
+// DashboardService — see README for the UTC-day-boundary open question.
+model DailyActivity {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date           DateTime @db.Date // UTC calendar day, normalized to midnight
+  minutesStudied Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@map("daily_activity")
+}
+
+// ---------------------------------------------------------------------------
+// XP
+// ---------------------------------------------------------------------------
+
+// Append-only ledger. Total XP = sum(amount). Today's earned XP and level
+// curve are derived in DashboardService (see leveling formula documented
+// there). Using a ledger (not a running counter) keeps this auditable and
+// avoids race conditions from concurrent XP awards.
+model XpTransaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String // e.g. "lesson_complete", "quiz_perfect", "streak_bonus"
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("xp_transactions")
+}
+
+// ---------------------------------------------------------------------------
+// Exams (minimal — content authoring is out of scope)
+// ---------------------------------------------------------------------------
+
+// sectionsReady/sectionsTotal model exam-CONTENT readiness (e.g. how many of
+// listening/speaking/reading/writing/grammar/vocabulary/pronunciation
+// sections are published), not the user's personal prep progress. Modeled
+// here as plain counters on the Exam row rather than a child table because
+// there is no content-authoring flow yet (out of scope) — a future
+// ExamSection table with a `published` boolean per section is the natural
+// upgrade path once exam authoring is built; see README.
+model Exam {
+  id             String    @id @default(uuid())
+  level          CEFRLevel
+  title          String
+  availableFrom  DateTime
+  sectionsTotal  Int
+  sectionsReady  Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([level, availableFrom])
+  @@map("exams")
+}
+
+// ---------------------------------------------------------------------------
+// Vocabulary
+// ---------------------------------------------------------------------------
+
+// Shared catalog word (not per-user). `unitTitle` is intentionally a plain
+// free-text label, NOT a foreign key to `Unit` — see
+// docs/BACKEND_API_CONTRACT_VOCABULARY.md open question #2. Linking
+// vocabulary to real curriculum units is a real design decision (does one
+// lesson "teach" a fixed set of words? can a word appear in multiple units?)
+// that should be made deliberately, not implied by adding a relation here.
+model VocabularyWord {
+  id                 String        @id @default(uuid())
+  french             String
+  english            String
+  gender             WordGender? // null for anything that isn't a noun
+  partOfSpeech       PartOfSpeech
+  pronunciationIpa   String
+  audioUrl           String? // null until a TTS pipeline exists (out of scope)
+  exampleFr          String
+  exampleEn          String
+  imageUrl           String? // null until an image pipeline exists (out of scope)
+  synonyms           String[] // display text only, not relations to other words
+  commonMistake      String?
+  level              CEFRLevel
+  unitTitle          String // free-text category label, e.g. "Greetings" — see note above
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  userProgress UserVocabularyProgress[]
+
+  @@index([level])
+  @@index([unitTitle])
+  @@map("vocabulary_words")
+}
+
+// Per-(user, word) state: favorite flag + simple manual mastery progression.
+// Deliberately NOT a real SRS schedule (no interval/due-date fields) — see
+// docs/BACKEND_API_CONTRACT_VOCABULARY.md open question #3/#4. A row only
+// exists once a user has favorited or reviewed that word at least once
+// (created lazily via upsert); a word with no row is implicitly
+// { isFavorite: false, masteryStatus: "new", lastReviewedAt: null }.
+model UserVocabularyProgress {
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wordId         String
+  word           VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  isFavorite     Boolean        @default(false)
+  masteryStatus  MasteryStatus  @default(new)
+  lastReviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, wordId])
+  @@index([userId])
+  @@index([userId, isFavorite])
+  @@index([userId, masteryStatus])
+  @@map("user_vocabulary_progress")
+}

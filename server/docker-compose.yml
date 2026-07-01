@@ -1,0 +1,38 @@
+# Local development infrastructure only (Postgres + Redis).
+# NOT a production deployment configuration.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: frenchmaster-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: frenchmaster
+      POSTGRES_PASSWORD: frenchmaster
+      POSTGRES_DB: frenchmaster
+    ports:
+      - "5432:5432"
+    volumes:
+      - frenchmaster_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U frenchmaster"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: frenchmaster-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - frenchmaster_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  frenchmaster_postgres_data:
+  frenchmaster_redis_data:
