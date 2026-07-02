@@ -1,0 +1,194 @@
+{
+  "id": "es_a1_lesson_001",
+  "language": "es",
+  "level": "A1",
+  "title": "Saludos y Cortesía",
+  "description": "Greet, thank, and be polite in everyday Spanish.",
+  "metadata": { "estimatedMinutes": 5, "xpReward": 40 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "¡Bienvenido!",
+      "content": {
+        "subtitle": "Lección 1 · A1",
+        "body": "In this lesson you'll learn the most common Spanish greetings and polite expressions. ¡Vamos!"
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Hola",
+        "nativeTranslation": "Hola",
+        "englishTranslation": "Hello / Hi",
+        "pronunciation": "OH-lah",
+        "ipa": "ola",
+        "partOfSpeech": "interjection",
+        "difficulty": "easy",
+        "exampleSentence": "¡Hola! ¿Cómo estás?",
+        "nativeExample": "Hi! How are you?",
+        "audio": { "key": "es/a1/hola.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Gracias",
+        "nativeTranslation": "Gracias",
+        "englishTranslation": "Thank you",
+        "pronunciation": "GRAH-syas",
+        "ipa": "ˈɡɾasjas",
+        "partOfSpeech": "interjection",
+        "difficulty": "easy",
+        "exampleSentence": "¡Muchas gracias!",
+        "nativeExample": "Thank you very much!",
+        "audio": { "key": "es/a1/gracias.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "InfoCard",
+      "title": "Morning vs. evening",
+      "content": {
+        "tone": "tip",
+        "body": "Use \"Buenos días\" in the morning, \"Buenas tardes\" in the afternoon, and \"Buenas noches\" at night. \"Hola\" works any time!"
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c5",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "Adiós", "back": "Goodbye", "hint": "Tap to reveal" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c6",
+      "type": "MultipleChoiceCard",
+      "title": "Choose the word",
+      "content": {
+        "prompt": "Which word means \"Thank you\"?",
+        "options": [
+          { "id": "a", "text": "Hola" },
+          { "id": "b", "text": "Gracias" },
+          { "id": "c", "text": "Adiós" },
+          { "id": "d", "text": "Por favor" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c7",
+      "type": "TrueFalseCard",
+      "title": "True or false?",
+      "content": { "statement": "\"Buenas noches\" is used in the morning." },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "FillBlankCard",
+      "title": "Complete the phrase",
+      "content": { "textWithBlanks": "¡___! ¿Cómo estás?", "hint": "A casual greeting" },
+      "validation": { "acceptedAnswers": ["Hola", "hola"] },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c9",
+      "type": "MatchingCard",
+      "title": "Match the pairs",
+      "content": {
+        "prompt": "Match each Spanish word to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "Hola", "right": "Hello" },
+          { "id": "p2", "left": "Gracias", "right": "Thank you" },
+          { "id": "p3", "left": "Adiós", "right": "Goodbye" },
+          { "id": "p4", "left": "Sí", "right": "Yes" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c10",
+      "type": "DragOrderCard",
+      "title": "Build the sentence",
+      "content": {
+        "prompt": "Arrange the words to say \"Hi, thank you very much\".",
+        "items": [
+          { "id": "w2", "text": "muchas" },
+          { "id": "w1", "text": "Hola," },
+          { "id": "w3", "text": "gracias" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c11",
+      "type": "SpeakingCard",
+      "title": "Your turn to speak",
+      "content": {
+        "prompt": "Repeat this greeting out loud.",
+        "targetText": "¡Hola, muchas gracias!",
+        "referenceAudio": { "key": "es/a1/hola.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c12",
+      "type": "QuizCard",
+      "title": "Mini quiz",
+      "content": {
+        "intro": "Two quick questions.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "How do you say \"Goodbye\"?",
+            "options": [
+              { "id": "a", "text": "Hola" },
+              { "id": "b", "text": "Adiós" },
+              { "id": "c", "text": "Gracias" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Buenos días\" is a morning greeting." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "SummaryCard",
+      "title": "What you learned",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Hola works as a greeting any time of day",
+          "Buenos días / Buenas tardes / Buenas noches by time",
+          "Gracias and Por favor for politeness",
+          "Adiós to say goodbye"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c14",
+      "type": "RewardCard",
+      "content": {
+        "title": "¡Lección completada!",
+        "message": "¡Felicidades! You've learned your first Spanish greetings.",
+        "xp": 40,
+        "badge": "Primeras Palabras"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

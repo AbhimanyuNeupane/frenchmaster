@@ -1,0 +1,255 @@
+{
+  "id": "fr_a1_lesson_001",
+  "language": "fr",
+  "level": "A1",
+  "title": "Greetings & Politeness",
+  "description": "Say hello, goodbye, and be polite in everyday French.",
+  "metadata": { "estimatedMinutes": 6, "xpReward": 40 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Bienvenue !",
+      "content": {
+        "subtitle": "Lesson 1 · A1",
+        "body": "In this lesson you'll learn the essential French greetings and polite words you'll use every single day. Ready? Let's begin!"
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Bonjour",
+        "nativeTranslation": "Bonjour",
+        "englishTranslation": "Hello / Good morning",
+        "pronunciation": "bon-ZHOOR",
+        "ipa": "bɔ̃ʒuʁ",
+        "partOfSpeech": "interjection",
+        "difficulty": "easy",
+        "exampleSentence": "Bonjour, comment ça va ?",
+        "nativeExample": "Hello, how are you?",
+        "audio": { "key": "fr/a1/bonjour.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Merci",
+        "nativeTranslation": "Merci",
+        "englishTranslation": "Thank you",
+        "pronunciation": "mair-SEE",
+        "ipa": "mɛʁsi",
+        "partOfSpeech": "interjection",
+        "difficulty": "easy",
+        "exampleSentence": "Merci beaucoup !",
+        "nativeExample": "Thank you very much!",
+        "audio": { "key": "fr/a1/merci.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "InfoCard",
+      "title": "Formal vs. informal",
+      "content": {
+        "tone": "tip",
+        "body": "Use \"Bonjour\" during the day and \"Bonsoir\" in the evening. \"Salut\" is casual — save it for friends, not your boss!"
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "Politeness formulas",
+      "content": {
+        "explanation": "French politeness often pairs a greeting with a title. Notice how \"s'il vous plaît\" (please) uses the formal \"vous\".",
+        "examples": [
+          { "text": "S'il vous plaît", "translation": "Please (formal)" },
+          { "text": "S'il te plaît", "translation": "Please (informal)" },
+          { "text": "De rien", "translation": "You're welcome" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c6",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "Au revoir", "back": "Goodbye", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Choose the greeting",
+      "content": {
+        "prompt": "Which word means \"Thank you\"?",
+        "options": [
+          { "id": "a", "text": "Bonjour" },
+          { "id": "b", "text": "Merci" },
+          { "id": "c", "text": "Au revoir" },
+          { "id": "d", "text": "Salut" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c8",
+      "type": "TrueFalseCard",
+      "title": "True or false?",
+      "content": { "statement": "\"Salut\" is a formal greeting you'd use with your boss." },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complete the phrase",
+      "content": { "textWithBlanks": "___, comment ça va ?", "hint": "A daytime greeting" },
+      "validation": { "acceptedAnswers": ["Bonjour", "bonjour"] },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c10",
+      "type": "MatchingCard",
+      "title": "Match the pairs",
+      "content": {
+        "prompt": "Match each French word to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "Bonjour", "right": "Hello" },
+          { "id": "p2", "left": "Merci", "right": "Thank you" },
+          { "id": "p3", "left": "Au revoir", "right": "Goodbye" },
+          { "id": "p4", "left": "Oui", "right": "Yes" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c11",
+      "type": "DragOrderCard",
+      "title": "Build the sentence",
+      "content": {
+        "prompt": "Arrange the words to say \"Hello, thank you very much\".",
+        "items": [
+          { "id": "w3", "text": "beaucoup" },
+          { "id": "w1", "text": "Bonjour," },
+          { "id": "w2", "text": "merci" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c12",
+      "type": "MultipleSelectCard",
+      "title": "Pick the greetings",
+      "content": {
+        "prompt": "Which of these are ways to greet someone?",
+        "options": [
+          { "id": "a", "text": "Bonjour" },
+          { "id": "b", "text": "Salut" },
+          { "id": "c", "text": "Merci" },
+          { "id": "d", "text": "Bonsoir" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "b", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c13",
+      "type": "ListeningCard",
+      "title": "Listen carefully",
+      "content": {
+        "prompt": "Which word did you hear?",
+        "audio": { "key": "fr/a1/merci.mp3" },
+        "options": [
+          { "id": "a", "text": "Merci" },
+          { "id": "b", "text": "Pardon" },
+          { "id": "c", "text": "Bonjour" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c14",
+      "type": "SpeakingCard",
+      "title": "Your turn to speak",
+      "content": {
+        "prompt": "Repeat this greeting out loud.",
+        "targetText": "Bonjour, merci beaucoup !",
+        "referenceAudio": { "key": "fr/a1/bonjour.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "A quick exchange",
+      "content": {
+        "scenario": "At a bakery",
+        "lines": [
+          { "speaker": "Vous", "text": "Bonjour !", "translation": "Hello!" },
+          { "speaker": "Boulanger", "text": "Bonjour ! Vous désirez ?", "translation": "Hello! What would you like?" },
+          { "speaker": "Vous", "text": "Une baguette, s'il vous plaît.", "translation": "A baguette, please." },
+          { "speaker": "Boulanger", "text": "Voilà. Merci, au revoir !", "translation": "Here you go. Thank you, goodbye!" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c16",
+      "type": "QuizCard",
+      "title": "Mini quiz",
+      "content": {
+        "intro": "Two quick questions to lock it in.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "How do you say \"Goodbye\"?",
+            "options": [
+              { "id": "a", "text": "Bonjour" },
+              { "id": "b", "text": "Au revoir" },
+              { "id": "c", "text": "Merci" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Bonsoir\" is used in the evening." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c17",
+      "type": "SummaryCard",
+      "title": "What you learned",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Bonjour / Bonsoir / Salut for greetings",
+          "Merci and De rien for thanks and replies",
+          "S'il vous plaît (formal) vs s'il te plaît (informal)",
+          "Au revoir to say goodbye"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c18",
+      "type": "RewardCard",
+      "content": {
+        "title": "Lesson complete !",
+        "message": "Félicitations! You've mastered your first French greetings.",
+        "xp": 40,
+        "badge": "First Words"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}
