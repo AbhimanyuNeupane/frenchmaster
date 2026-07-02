@@ -8,9 +8,11 @@ import { VocabularyStatsBar } from "@/components/vocabulary/vocabulary-stats-bar
 import { VocabularyFilters } from "@/components/vocabulary/vocabulary-filters";
 import { VocabularyCard } from "@/components/vocabulary/vocabulary-card";
 import { VocabularyDetailDialog } from "@/components/vocabulary/vocabulary-detail-dialog";
+import { useAuth } from "@/contexts/auth-context";
 import type { CEFRLevel, VocabularyListResponse, VocabularyWord } from "@/types";
 
 export function VocabularyExplorer({ initialData }: { initialData: VocabularyListResponse }) {
+  const { authedFetch } = useAuth();
   const [words, setWords] = useState<VocabularyWord[]>(initialData.words);
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState<CEFRLevel | "all">("all");
@@ -48,13 +50,23 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
 
   const activeWord = words.find((w) => w.id === activeWordId) ?? null;
 
-  function toggleFavorite(id: string) {
+  async function toggleFavorite(id: string) {
+    const previous = words;
     setWords((prev) =>
       prev.map((w) => (w.id === id ? { ...w, isFavorite: !w.isFavorite } : w))
     );
+    try {
+      const updated = await authedFetch<VocabularyWord>(`/api/vocabulary/${id}/favorite`, {
+        method: "POST",
+      });
+      setWords((prev) => prev.map((w) => (w.id === id ? updated : w)));
+    } catch {
+      setWords(previous);
+    }
   }
 
-  function markReviewed(id: string) {
+  async function markReviewed(id: string) {
+    const previous = words;
     setWords((prev) =>
       prev.map((w) =>
         w.id === id
@@ -66,6 +78,14 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
           : w
       )
     );
+    try {
+      const updated = await authedFetch<VocabularyWord>(`/api/vocabulary/${id}/review`, {
+        method: "POST",
+      });
+      setWords((prev) => prev.map((w) => (w.id === id ? updated : w)));
+    } catch {
+      setWords(previous);
+    }
   }
 
   return (

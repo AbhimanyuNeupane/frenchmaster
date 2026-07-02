@@ -1,6 +1,9 @@
+"use client";
+
 import { Clock, Flame, Mic, Sparkles } from "lucide-react";
 
 import { Reveal } from "@/components/layout/reveal";
+import { PageError, PageLoading } from "@/components/layout/page-state";
 import { WelcomeHeader } from "@/components/dashboard/welcome-header";
 import { ContinueLearningCard } from "@/components/dashboard/continue-learning-card";
 import { DailyGoalCard } from "@/components/dashboard/daily-goal-card";
@@ -10,12 +13,16 @@ import { SkillScoresCard } from "@/components/dashboard/skill-scores-card";
 import { WeakTopicsCard } from "@/components/dashboard/weak-topics-card";
 import { AchievementsCard } from "@/components/dashboard/achievements-card";
 import { UpcomingExamCard } from "@/components/dashboard/upcoming-exam-card";
-import { mockDashboardData } from "@/lib/mock-data";
+import { useApiQuery } from "@/hooks/use-api-query";
+import type { DashboardData } from "@/types";
 
 export default function DashboardPage() {
-  const data = mockDashboardData;
-  const pronunciationScore =
-    data.skillScores.find((s) => s.key === "pronunciation")?.score ?? 0;
+  const { data, isLoading, error, refetch } = useApiQuery<DashboardData>("/api/dashboard");
+
+  if (isLoading) return <PageLoading />;
+  if (error || !data) return <PageError message={error ?? "No data returned."} onRetry={refetch} />;
+
+  const pronunciationScore = data.skillScores.find((s) => s.key === "pronunciation")?.score ?? 0;
 
   return (
     <div className="flex flex-col gap-6 pb-10">

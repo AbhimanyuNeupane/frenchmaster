@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { Bell, Flame, Coins } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Bell } from "lucide-react";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,10 +14,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { mockDashboardData } from "@/lib/mock-data";
+import { useAuth } from "@/contexts/auth-context";
 
 export function Topbar() {
-  const { user, streak } = mockDashboardData;
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  if (!user) return null;
+
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
@@ -22,20 +29,16 @@ export function Topbar() {
     .slice(0, 2)
     .toUpperCase();
 
+  async function handleLogout() {
+    await logout();
+    router.replace("/login");
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6 lg:pl-6">
       <MobileNav />
 
       <div className="ml-auto flex items-center gap-2 sm:gap-3">
-        <div className="hidden items-center gap-1.5 rounded-full bg-warning/10 px-3 py-1.5 text-sm font-semibold text-warning sm:flex">
-          <Flame className="size-4 fill-warning/20" />
-          {streak.current}
-        </div>
-        <div className="hidden items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-sm font-semibold text-accent sm:flex">
-          <Coins className="size-4" />
-          {user.coins.toLocaleString()}
-        </div>
-
         <button
           aria-label="Notifications"
           className="relative flex size-10 items-center justify-center rounded-xl text-navy hover:bg-secondary"
@@ -60,8 +63,15 @@ export function Topbar() {
             <DropdownMenuItem asChild>
               <Link href="/settings">Settings</Link>
             </DropdownMenuItem>
+            {user.role === "ADMIN" && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin">Admin Dashboard</Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onClick={handleLogout}>
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma";
-import type { CEFRLevel, MasteryStatus } from "@prisma/client";
+import type { CEFRLevel, MasteryStatus, Prisma } from "@prisma/client";
 
 /**
  * All raw queries backing the vocabulary feature. Kept separate from
@@ -76,5 +76,20 @@ export const vocabularyRepository = {
         lastReviewedAt: data.lastReviewedAt ?? null,
       },
     });
+  },
+
+  // --- Admin content management ---
+
+  createWord(data: Prisma.VocabularyWordCreateInput) {
+    return prisma.vocabularyWord.create({ data });
+  },
+
+  updateWord(id: string, data: Prisma.VocabularyWordUpdateInput) {
+    return prisma.vocabularyWord.update({ where: { id }, data });
+  },
+
+  /** Soft delete via the existing `deletedAt` column — never a hard delete. */
+  softDeleteWord(id: string) {
+    return prisma.vocabularyWord.update({ where: { id }, data: { deletedAt: new Date() } });
   },
 };
