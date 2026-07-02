@@ -1,13 +1,16 @@
-import { BookOpen } from "lucide-react";
+"use client";
 
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { PageError, PageLoading } from "@/components/layout/page-state";
+import { CourseMap } from "@/components/learn/course-map";
+import { useApiQuery } from "@/hooks/use-api-query";
+import type { CourseMapUnit } from "@/types/lesson";
 
 export default function LearnPage() {
-  return (
-    <ComingSoon
-      icon={BookOpen}
-      title="Structured Learning"
-      description="Your A1–B2 course map with units and lessons is being built here."
-    />
-  );
+  const { data, isLoading, error, refetch } =
+    useApiQuery<CourseMapUnit[]>("/api/lessons/units");
+
+  if (isLoading) return <PageLoading />;
+  if (error || !data) return <PageError message={error ?? "No data returned."} onRetry={refetch} />;
+
+  return <CourseMap units={data} />;
 }
