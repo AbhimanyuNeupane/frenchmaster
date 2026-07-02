@@ -4,12 +4,12 @@ import cors from "cors";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
-import { env } from "@/config/env";
-import { logger } from "@/config/logger";
-import { apiRouter } from "@/routes";
-import { healthRouter } from "@/routes/health.routes";
-import { apiRateLimiter } from "@/middleware/rateLimiter";
-import { errorHandler, notFoundHandler } from "@/middleware/errorHandler";
+import { env } from "./config/env";
+import { logger } from "./config/logger";
+import { apiRouter } from "./routes";
+import { healthRouter } from "./routes/health.routes";
+import { apiRateLimiter } from "./middleware/rateLimiter";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 export function createApp(): Application {
   const app = express();
@@ -47,3 +47,8 @@ export function createApp(): Application {
 
   return app;
 }
+
+// Vercel's Express framework preset bundles src/app.ts directly (bypassing
+// our own tsc build) and expects a default-exported app instance as the
+// function handler — see server/README.md "Deploying to Vercel".
+export default createApp();

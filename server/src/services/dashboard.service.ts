@@ -1,7 +1,7 @@
-import { dashboardRepository } from "@/repositories/dashboard.repository";
-import { ApiError } from "@/utils/ApiError";
-import { computeLevelInfo } from "@/utils/xpCurve";
-import { addDays, startOfTodayUtc, startOfWeekMondayUtc } from "@/utils/dateUtils";
+import { dashboardRepository } from "../repositories/dashboard.repository";
+import { ApiError } from "../utils/ApiError";
+import { computeLevelInfo } from "../utils/xpCurve";
+import { addDays, startOfTodayUtc, startOfWeekMondayUtc } from "../utils/dateUtils";
 import type { SkillKey as PrismaSkillKey } from "@prisma/client";
 
 /**

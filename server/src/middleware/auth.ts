@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Role } from "@prisma/client";
-import { ApiError } from "@/utils/ApiError";
-import { verifyAccessToken } from "@/services/token.service";
+import { ApiError } from "../utils/ApiError";
+import { verifyAccessToken } from "../services/token.service";
 
 /**
  * Requires a valid `Authorization: Bearer <token>` header. On success,

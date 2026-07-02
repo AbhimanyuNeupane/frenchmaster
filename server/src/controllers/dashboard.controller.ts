@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { dashboardService } from "@/services/dashboard.service";
-import { sendSuccess } from "@/utils/apiResponse";
-import { asyncHandler } from "@/utils/asyncHandler";
-import { ApiError } from "@/utils/ApiError";
+import { dashboardService } from "../services/dashboard.service";
+import { sendSuccess } from "../utils/apiResponse";
+import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiError";
 
 export const dashboardController = {
   getDashboard: asyncHandler(async (req: Request, res: Response) => {

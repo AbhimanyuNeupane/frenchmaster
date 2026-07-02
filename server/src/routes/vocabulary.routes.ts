@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { vocabularyController } from "@/controllers/vocabulary.controller";
-import { requireAuth } from "@/middleware/auth";
-import { validate } from "@/middleware/validate";
-import { listVocabularySchema, vocabularyIdParamSchema } from "@/validators/vocabulary.validators";
+import { vocabularyController } from "../controllers/vocabulary.controller";
+import { requireAuth } from "../middleware/auth";
+import { validate } from "../middleware/validate";
+import { listVocabularySchema, vocabularyIdParamSchema } from "../validators/vocabulary.validators";
 
 export const vocabularyRouter = Router();
 

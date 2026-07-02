@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { authService } from "@/services/auth.service";
-import { sendSuccess, sendError } from "@/utils/apiResponse";
-import { asyncHandler } from "@/utils/asyncHandler";
-import type { LoginInput, RefreshInput, RegisterInput } from "@/validators/auth.validators";
+import { authService } from "../services/auth.service";
+import { sendSuccess, sendError } from "../utils/apiResponse";
+import { asyncHandler } from "../utils/asyncHandler";
+import type { LoginInput, RefreshInput, RegisterInput } from "../validators/auth.validators";
 
 export const authController = {
   register: asyncHandler(async (req: Request<unknown, unknown, RegisterInput>, res: Response) => {

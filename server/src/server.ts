@@ -1,8 +1,8 @@
-import { createApp } from "@/app";
-import { env } from "@/config/env";
-import { logger } from "@/config/logger";
-import { prisma } from "@/config/prisma";
-import { redis } from "@/config/redis";
+import { createApp } from "./app";
+import { env } from "./config/env";
+import { logger } from "./config/logger";
+import { prisma } from "./config/prisma";
+import { redis } from "./config/redis";
 
 const app = createApp();
 

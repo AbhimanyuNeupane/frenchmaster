@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authRouter } from "@/routes/auth.routes";
-import { dashboardRouter } from "@/routes/dashboard.routes";
-import { vocabularyRouter } from "@/routes/vocabulary.routes";
+import { authRouter } from "./auth.routes";
+import { dashboardRouter } from "./dashboard.routes";
+import { vocabularyRouter } from "./vocabulary.routes";
 
 export const apiRouter = Router();
 

@@ -1,12 +1,12 @@
-import { vocabularyRepository } from "@/repositories/vocabulary.repository";
-import { ApiError } from "@/utils/ApiError";
+import { vocabularyRepository } from "../repositories/vocabulary.repository";
+import { ApiError } from "../utils/ApiError";
 import type {
   CEFRLevel,
   MasteryStatus,
   UserVocabularyProgress,
   VocabularyWord as PrismaVocabularyWord,
 } from "@prisma/client";
-import type { ListVocabularyQuery } from "@/validators/vocabulary.validators";
+import type { ListVocabularyQuery } from "../validators/vocabulary.validators";
 
 const MASTERY_PROGRESSION: Record<MasteryStatus, MasteryStatus> = {
   new: "learning",

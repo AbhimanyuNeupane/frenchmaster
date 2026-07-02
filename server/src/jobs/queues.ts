@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import { redis } from "@/config/redis";
+import { redis } from "../config/redis";
 
 /**
  * Skeleton job queue wiring only — no real processors yet. CLAUDE.md calls

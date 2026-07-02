@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { sendSuccess } from "@/utils/apiResponse";
+import { sendSuccess } from "../utils/apiResponse";
 
 export const healthRouter = Router();
 

@@ -1,16 +1,16 @@
 import bcrypt from "bcryptjs";
-import { userRepository } from "@/repositories/user.repository";
-import { refreshTokenRepository } from "@/repositories/refreshToken.repository";
-import { ApiError } from "@/utils/ApiError";
+import { userRepository } from "../repositories/user.repository";
+import { refreshTokenRepository } from "../repositories/refreshToken.repository";
+import { ApiError } from "../utils/ApiError";
 import {
   generateRefreshToken,
   hashRefreshToken,
   refreshTokenExpiryDate,
   signAccessToken,
   verifyAccessToken,
-} from "@/services/token.service";
-import { logger } from "@/config/logger";
-import type { RegisterInput, LoginInput } from "@/validators/auth.validators";
+} from "./token.service";
+import { logger } from "../config/logger";
+import type { RegisterInput, LoginInput } from "../validators/auth.validators";
 import type { User } from "@prisma/client";
 
 const BCRYPT_ROUNDS = 12;

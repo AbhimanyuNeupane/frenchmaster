@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
-import { env } from "@/config/env";
-import type { AccessTokenPayload } from "@/types/jwt";
+import { env } from "../config/env";
+import type { AccessTokenPayload } from "../types/jwt";
 
 /**
  * All JWT signing/verification and refresh-token hashing lives here so the

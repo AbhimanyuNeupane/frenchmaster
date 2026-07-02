@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import { vocabularyService } from "@/services/vocabulary.service";
-import { sendSuccess } from "@/utils/apiResponse";
-import { asyncHandler } from "@/utils/asyncHandler";
-import { ApiError } from "@/utils/ApiError";
-import type { ListVocabularyQuery, VocabularyIdParam } from "@/validators/vocabulary.validators";
+import { vocabularyService } from "../services/vocabulary.service";
+import { sendSuccess } from "../utils/apiResponse";
+import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiError";
+import type { ListVocabularyQuery, VocabularyIdParam } from "../validators/vocabulary.validators";
 
 // `validate()` overwrites req.query/req.params with the Zod-parsed (and thus
 // coerced) values at runtime, but asyncHandler's signature is fixed to the

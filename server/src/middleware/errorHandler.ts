@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { ApiError } from "@/utils/ApiError";
-import { sendError } from "@/utils/apiResponse";
-import { logger } from "@/config/logger";
-import { isProduction } from "@/config/env";
+import { ApiError } from "../utils/ApiError";
+import { sendError } from "../utils/apiResponse";
+import { logger } from "../config/logger";
+import { isProduction } from "../config/env";
 
 /**
  * Single source of truth for turning any thrown error into the standard

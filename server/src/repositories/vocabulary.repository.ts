@@ -1,4 +1,4 @@
-import { prisma } from "@/config/prisma";
+import { prisma } from "../config/prisma";
 import type { CEFRLevel, MasteryStatus } from "@prisma/client";
 
 /**

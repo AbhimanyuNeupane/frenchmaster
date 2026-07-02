@@ -1,5 +1,5 @@
-import { prisma } from "@/config/prisma";
-import { startOfWeekMondayUtc, addDays } from "@/utils/dateUtils";
+import { prisma } from "../config/prisma";
+import { startOfWeekMondayUtc, addDays } from "../utils/dateUtils";
 import type { SkillKey } from "@prisma/client";
 
 /**

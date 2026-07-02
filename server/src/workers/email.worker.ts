@@ -1,6 +1,6 @@
 import { Worker } from "bullmq";
-import { redis } from "@/config/redis";
-import { logger } from "@/config/logger";
+import { redis } from "../config/redis";
+import { logger } from "../config/logger";
 
 /**
  * Skeleton worker — not started by the main server process. This is a
