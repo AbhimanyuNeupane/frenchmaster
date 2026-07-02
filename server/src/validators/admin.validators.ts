@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema } from "./common";
 
 /**
  * Query params for GET /api/admin/users. Offset-based pagination (page +
@@ -15,7 +16,7 @@ export const listUsersSchema = z.object({
 });
 
 export const userIdParamSchema = z.object({
-  id: z.string().uuid("Invalid user id"),
+  id: idSchema,
 });
 
 /**
@@ -59,7 +60,7 @@ export const updateVocabularyWordSchema = createVocabularyWordSchema.partial().r
 );
 
 export const vocabularyWordIdParamSchema = z.object({
-  id: z.string().uuid("Invalid vocabulary word id"),
+  id: idSchema,
 });
 
 export type ListUsersQuery = z.infer<typeof listUsersSchema>;

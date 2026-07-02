@@ -32,16 +32,25 @@ const envSchema = z.object({
   APPLE_KEY_ID: z.string().optional(),
   APPLE_PRIVATE_KEY: z.string().optional(),
 
-  // Storage — not used yet (out of scope), plumbed for future file uploads.
+  // Storage — used by src/services/speech.service.ts to hold pronunciation
+  // recordings (Supabase Storage bucket "pronunciation-audio"). Requires
+  // the service role key (bypasses RLS/bucket policy) since uploads happen
+  // server-side on the user's behalf.
   SUPABASE_URL: z.string().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE: z.string().optional(),
 
-  // AI providers — not used yet (out of scope beyond plumbing).
+  // AI providers.
   ELEVENLABS_API_KEY: z.string().optional(),
   GOOGLE_TTS_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
+  // Speech-to-text for pronunciation scoring (src/services/speech.service.ts).
+  // Falls back to OPENAI_API_KEY if unset, since OpenAI's Whisper endpoint
+  // is the default provider — set this separately only if using a different
+  // Whisper-compatible host (e.g. Groq).
+  WHISPER_API_KEY: z.string().optional(),
+  WHISPER_API_URL: z.string().default("https://api.openai.com/v1/audio/transcriptions"),
 
   // Payments — not used yet (out of scope).
   STRIPE_SECRET: z.string().optional(),

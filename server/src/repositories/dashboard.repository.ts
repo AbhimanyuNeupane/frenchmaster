@@ -71,10 +71,20 @@ export const dashboardRepository = {
     });
   },
 
+  /**
+   * Upcoming published exam for the user's level, with each section's
+   * question count — the service derives sectionsReady/sectionsTotal from
+   * this (a section counts as "ready" once it has at least one question)
+   * rather than a stored counter, now that real ExamSection/ExamQuestion
+   * rows exist.
+   */
   findUpcomingExamForLevel(level: string) {
     return prisma.exam.findFirst({
-      where: { level: level as never, deletedAt: null },
+      where: { level: level as never, deletedAt: null, published: true },
       orderBy: { availableFrom: "asc" },
+      include: {
+        sections: { select: { _count: { select: { questions: true } } } },
+      },
     });
   },
 

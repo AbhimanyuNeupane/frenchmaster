@@ -228,16 +228,68 @@ async function main() {
   });
 
   // --- Upcoming exam ---
-  await prisma.exam.upsert({
+  // Modeled on TEF Canada's real 4 sections (see docs/EXAM_STRUCTURE.md) —
+  // reading/listening comprehension are auto-graded MCQ, writing/speaking
+  // are human-graded. Only reading + listening have a question seeded here
+  // (making them "ready"); writing/speaking are left empty to demonstrate
+  // partial content-authoring progress, same spirit as the original
+  // sectionsReady=5/sectionsTotal=7 placeholder this replaces.
+  const a2Exam = await prisma.exam.upsert({
     where: { id: "seed-exam-a2" },
     update: {},
     create: {
       id: "seed-exam-a2",
       level: "A2",
       title: "A2 Certification Exam",
+      description: "DELF/TEF Canada-style certification exam for A2 level.",
       availableFrom: new Date("2026-07-15T00:00:00.000Z"),
-      sectionsTotal: 7,
-      sectionsReady: 5,
+      published: true,
+    },
+  });
+
+  const examSections = [
+    { id: "seed-exsec-reading", type: "READING_COMPREHENSION" as const, title: "Compréhension écrite", durationMinutes: 60, maxScore: 300, order: 1 },
+    { id: "seed-exsec-writing", type: "WRITING_EXPRESSION" as const, title: "Expression écrite", durationMinutes: 60, maxScore: 450, order: 2 },
+    { id: "seed-exsec-listening", type: "LISTENING_COMPREHENSION" as const, title: "Compréhension orale", durationMinutes: 40, maxScore: 360, order: 3 },
+    { id: "seed-exsec-speaking", type: "SPEAKING_EXPRESSION" as const, title: "Expression orale", durationMinutes: 15, maxScore: 450, order: 4 },
+  ];
+  for (const s of examSections) {
+    await prisma.examSection.upsert({
+      where: { id: s.id },
+      update: {},
+      create: { ...s, examId: a2Exam.id },
+    });
+  }
+
+  await prisma.examQuestion.upsert({
+    where: { id: "seed-exq-reading-1" },
+    update: {},
+    create: {
+      id: "seed-exq-reading-1",
+      sectionId: "seed-exsec-reading",
+      type: "multiple_choice",
+      prompt: "D'après le texte, à quelle heure le magasin ouvre-t-il le samedi ?",
+      passageText: "Le magasin est ouvert du lundi au vendredi de 9h à 18h. Le samedi, l'ouverture est retardée à 10h, et le magasin est fermé le dimanche.",
+      options: ["9h", "10h", "18h", "Fermé"],
+      correctAnswer: "10h",
+      points: 6,
+      order: 1,
+    },
+  });
+
+  await prisma.examQuestion.upsert({
+    where: { id: "seed-exq-listening-1" },
+    update: {},
+    create: {
+      id: "seed-exq-listening-1",
+      sectionId: "seed-exsec-listening",
+      type: "multiple_choice",
+      prompt: "Quel jour la réunion a-t-elle été déplacée ?",
+      audioUrl: null,
+      options: ["Lundi", "Mardi", "Jeudi", "Vendredi"],
+      correctAnswer: "Jeudi",
+      points: 6,
+      order: 1,
     },
   });
 
@@ -524,6 +576,234 @@ async function main() {
   }
 
   console.log(`Seeded ${vocabularyWords.length} vocabulary words with demo progress.`);
+
+  // --- Gold-standard A1 lesson: "Bonjour" (Unit 1 · Greetings) ---
+  // Proves the full lesson-content pattern (vocabulary, grammar,
+  // conversation, reading, listening, exercises) end-to-end before scaling
+  // it across the rest of the A1-B2 curriculum. See
+  // src/services/lesson.service.ts for how this is served.
+  const greetingsUnit = await prisma.unit.upsert({
+    where: { id: "seed-unit-a1-u1" },
+    update: {},
+    create: {
+      id: "seed-unit-a1-u1",
+      title: "Unit 1 · Greetings",
+      description: "Learn to greet people formally and informally in French",
+      level: "A1",
+      order: 1,
+    },
+  });
+
+  const bonjourLesson = await prisma.lesson.upsert({
+    where: { id: "seed-lsn-a1-u1-l1" },
+    update: {},
+    create: {
+      id: "seed-lsn-a1-u1-l1",
+      unitId: greetingsUnit.id,
+      title: "Bonjour",
+      subtitle: "Formal and informal greetings",
+      level: "A1",
+      order: 1,
+      estimatedMinutes: 15,
+    },
+  });
+
+  const greetingsVocab: {
+    id: string;
+    french: string;
+    english: string;
+    gender: WordGender | null;
+    partOfSpeech: PartOfSpeech;
+    ipa: string;
+    exampleFr: string;
+    exampleEn: string;
+    synonyms: string[];
+    commonMistake: string | null;
+  }[] = [
+    { id: "seed-voc-bonjour", french: "Bonjour", english: "Hello / Good morning", gender: null, partOfSpeech: "expression", ipa: "/bɔ̃.ʒuʁ/", exampleFr: "Bonjour, comment allez-vous ?", exampleEn: "Hello, how are you?", synonyms: ["Salut"], commonMistake: "Don't use \"Bonjour\" late in the evening — switch to \"Bonsoir\"." },
+    { id: "seed-voc-bonsoir", french: "Bonsoir", english: "Good evening", gender: null, partOfSpeech: "expression", ipa: "/bɔ̃.swaʁ/", exampleFr: "Bonsoir, Madame Lefevre.", exampleEn: "Good evening, Mrs. Lefevre.", synonyms: [], commonMistake: null },
+    { id: "seed-voc-salut", french: "Salut", english: "Hi / Bye (informal)", gender: null, partOfSpeech: "expression", ipa: "/sa.ly/", exampleFr: "Salut ! Ça va ?", exampleEn: "Hi! How's it going?", synonyms: ["Coucou"], commonMistake: "Only use with friends and family — too casual for formal settings." },
+    { id: "seed-voc-au-revoir", french: "Au revoir", english: "Goodbye", gender: null, partOfSpeech: "expression", ipa: "/o ʁə.vwaʁ/", exampleFr: "Au revoir, à demain !", exampleEn: "Goodbye, see you tomorrow!", synonyms: [], commonMistake: null },
+    { id: "seed-voc-comment-allez-vous", french: "Comment allez-vous ?", english: "How are you? (formal)", gender: null, partOfSpeech: "expression", ipa: "/kɔ.mɑ̃ t‿a.le vu/", exampleFr: "Bonjour Monsieur, comment allez-vous ?", exampleEn: "Hello sir, how are you?", synonyms: [], commonMistake: "Only use \"vous\" here with strangers, elders, or in professional settings." },
+    { id: "seed-voc-comment-ca-va", french: "Comment ça va ?", english: "How's it going? (informal)", gender: null, partOfSpeech: "expression", ipa: "/kɔ.mɑ̃ sa va/", exampleFr: "Salut ! Comment ça va ?", exampleEn: "Hi! How's it going?", synonyms: ["Ça va ?"], commonMistake: null },
+    { id: "seed-voc-enchante", french: "Enchanté(e)", english: "Nice to meet you", gender: null, partOfSpeech: "expression", ipa: "/ɑ̃.ʃɑ̃.te/", exampleFr: "Enchanté, je m'appelle Marc.", exampleEn: "Nice to meet you, my name is Marc.", synonyms: [], commonMistake: "Add an extra \"e\" (enchantée) if the speaker is a woman — pronunciation is the same." },
+    { id: "seed-voc-madame", french: "Madame", english: "Madam / Mrs.", gender: "feminine", partOfSpeech: "noun", ipa: "/ma.dam/", exampleFr: "Excusez-moi, Madame.", exampleEn: "Excuse me, Madam.", synonyms: [], commonMistake: null },
+    { id: "seed-voc-monsieur", french: "Monsieur", english: "Sir / Mr.", gender: "masculine", partOfSpeech: "noun", ipa: "/mə.sjø/", exampleFr: "Bonjour, Monsieur.", exampleEn: "Hello, Sir.", synonyms: [], commonMistake: "The spelling looks nothing like the pronunciation — it's \"muh-syuh\", not \"mon-see-ur\"." },
+    { id: "seed-voc-sil-vous-plait", french: "S'il vous plaît", english: "Please (formal)", gender: null, partOfSpeech: "expression", ipa: "/sil vu plɛ/", exampleFr: "Un café, s'il vous plaît.", exampleEn: "A coffee, please.", synonyms: [], commonMistake: "The informal version is \"s'il te plaît\" (tu form) — don't mix the two." },
+  ];
+
+  for (const [index, w] of greetingsVocab.entries()) {
+    const word = await prisma.vocabularyWord.upsert({
+      where: { id: w.id },
+      update: {},
+      create: {
+        id: w.id,
+        french: w.french,
+        english: w.english,
+        gender: w.gender,
+        partOfSpeech: w.partOfSpeech,
+        pronunciationIpa: w.ipa,
+        audioUrl: null,
+        exampleFr: w.exampleFr,
+        exampleEn: w.exampleEn,
+        imageUrl: null,
+        synonyms: w.synonyms,
+        commonMistake: w.commonMistake,
+        level: "A1",
+        unitTitle: "Greetings",
+      },
+    });
+    await prisma.lessonVocabulary.upsert({
+      where: { lessonId_wordId: { lessonId: bonjourLesson.id, wordId: word.id } },
+      update: {},
+      create: { lessonId: bonjourLesson.id, wordId: word.id, order: index + 1 },
+    });
+  }
+
+  const grammarPoint = await prisma.grammarPoint.upsert({
+    where: { id: "seed-gp-tu-vous" },
+    update: {},
+    create: {
+      id: "seed-gp-tu-vous",
+      lessonId: bonjourLesson.id,
+      title: "Tu vs. Vous — Formal and Informal \"You\"",
+      explanation:
+        'French has two ways to say "you": **tu** (informal) and **vous** (formal, or plural).\n\n' +
+        "Use **tu** with:\n- Friends and family\n- Children\n- People your own age in casual settings\n\n" +
+        "Use **vous** with:\n- Strangers\n- Elders or people in authority\n- Professional and formal settings\n- Anytime you are speaking to more than one person\n\n" +
+        "When in doubt, start with **vous** — it is never rude to be too formal, but it can be rude to be too casual.",
+      order: 1,
+    },
+  });
+
+  const grammarExamples = [
+    { id: "seed-ge-1", fr: "Tu es content ?", en: "Are you happy? (informal)" },
+    { id: "seed-ge-2", fr: "Vous êtes content ?", en: "Are you happy? (formal)" },
+    { id: "seed-ge-3", fr: "Comment vas-tu ?", en: "How are you? (informal)" },
+    { id: "seed-ge-4", fr: "Comment allez-vous ?", en: "How are you? (formal)" },
+  ];
+  for (const [index, ex] of grammarExamples.entries()) {
+    await prisma.grammarExample.upsert({
+      where: { id: ex.id },
+      update: {},
+      create: {
+        id: ex.id,
+        grammarPointId: grammarPoint.id,
+        frenchText: ex.fr,
+        englishText: ex.en,
+        order: index + 1,
+      },
+    });
+  }
+
+  const dialogue = await prisma.conversationDialogue.upsert({
+    where: { id: "seed-dlg-office" },
+    update: {},
+    create: {
+      id: "seed-dlg-office",
+      lessonId: bonjourLesson.id,
+      title: "Meeting a Colleague",
+      context: "Office",
+      order: 1,
+    },
+  });
+
+  const dialogueLines = [
+    { id: "seed-dl-1", speaker: "Sophie", fr: "Bonjour ! Je m'appelle Sophie.", en: "Hello! My name is Sophie." },
+    { id: "seed-dl-2", speaker: "Marc", fr: "Enchanté, Sophie. Je suis Marc.", en: "Nice to meet you, Sophie. I'm Marc." },
+    { id: "seed-dl-3", speaker: "Sophie", fr: "Comment allez-vous, Marc ?", en: "How are you, Marc?" },
+    { id: "seed-dl-4", speaker: "Marc", fr: "Très bien, merci. Et vous ?", en: "Very well, thank you. And you?" },
+    { id: "seed-dl-5", speaker: "Sophie", fr: "Très bien aussi, merci !", en: "Very well too, thank you!" },
+  ];
+  for (const [index, line] of dialogueLines.entries()) {
+    await prisma.dialogueLine.upsert({
+      where: { id: line.id },
+      update: {},
+      create: {
+        id: line.id,
+        dialogueId: dialogue.id,
+        speaker: line.speaker,
+        frenchText: line.fr,
+        englishText: line.en,
+        audioUrl: null,
+        order: index + 1,
+      },
+    });
+  }
+
+  await prisma.readingPassage.upsert({
+    where: { id: "seed-rp-cafe" },
+    update: {},
+    create: {
+      id: "seed-rp-cafe",
+      lessonId: bonjourLesson.id,
+      title: "Une Rencontre au Café",
+      bodyFr:
+        "Le matin, Claire arrive au café. Elle voit son amie Isabelle. « Bonjour, Isabelle ! Comment vas-tu ? » demande Claire. « Très bien, merci ! Et toi ? » répond Isabelle. Les deux amies s'assoient et commandent un café. Elles parlent de leur semaine et rient beaucoup. C'est une belle matinée à Paris.",
+      bodyEn:
+        'In the morning, Claire arrives at the café. She sees her friend Isabelle. "Hello, Isabelle! How are you?" asks Claire. "Very well, thank you! And you?" replies Isabelle. The two friends sit down and order a coffee. They talk about their week and laugh a lot. It\'s a beautiful morning in Paris.',
+      audioUrl: null,
+    },
+  });
+
+  await prisma.listeningClip.upsert({
+    where: { id: "seed-lc-office" },
+    update: {},
+    create: {
+      id: "seed-lc-office",
+      lessonId: bonjourLesson.id,
+      title: "Greetings at the Office",
+      audioUrl: null,
+      transcriptFr:
+        "— Bonjour, Monsieur Dupont. Comment allez-vous aujourd'hui ?\n— Très bien, merci. Et vous, Madame Lefevre ?\n— Ça va bien, merci beaucoup.",
+      transcriptEn:
+        "— Hello, Mr. Dupont. How are you today?\n— Very well, thank you. And you, Mrs. Lefevre?\n— I'm doing well, thank you very much.",
+    },
+  });
+
+  const exercises: {
+    id: string;
+    type:
+      | "multiple_choice"
+      | "true_false"
+      | "fill_blank"
+      | "typing"
+      | "speaking_prompt";
+    prompt: string;
+    options: string[];
+    correctAnswer: string;
+    skillKey: SkillKey;
+    points: number;
+  }[] = [
+    { id: "seed-ex-1", type: "multiple_choice", prompt: 'How do you say "Hello" formally, any time of day?', options: ["Bonjour", "Bonsoir", "Salut", "Au revoir"], correctAnswer: "Bonjour", skillKey: "vocabulary", points: 10 },
+    { id: "seed-ex-2", type: "multiple_choice", prompt: "Which greeting is informal, used only between friends?", options: ["Bonjour", "Comment allez-vous ?", "Salut", "Enchanté"], correctAnswer: "Salut", skillKey: "vocabulary", points: 10 },
+    { id: "seed-ex-3", type: "true_false", prompt: '"Vous" is the right choice when speaking informally to a close friend.', options: ["True", "False"], correctAnswer: "False", skillKey: "grammar", points: 10 },
+    { id: "seed-ex-4", type: "fill_blank", prompt: 'Complete the formal question: "Comment ___-vous ?"', options: [], correctAnswer: "allez", skillKey: "grammar", points: 10 },
+    { id: "seed-ex-5", type: "multiple_choice", prompt: 'What does "Enchanté" mean?', options: ["Goodbye", "Nice to meet you", "Please", "Thank you"], correctAnswer: "Nice to meet you", skillKey: "vocabulary", points: 10 },
+    { id: "seed-ex-6", type: "typing", prompt: 'Translate to French: "Good evening"', options: [], correctAnswer: "Bonsoir", skillKey: "vocabulary", points: 10 },
+    { id: "seed-ex-7", type: "speaking_prompt", prompt: 'Say aloud: "Bonjour, comment allez-vous ?"', options: [], correctAnswer: "Bonjour, comment allez-vous ?", skillKey: "speaking", points: 15 },
+  ];
+  for (const [index, ex] of exercises.entries()) {
+    await prisma.exercise.upsert({
+      where: { id: ex.id },
+      update: {},
+      create: {
+        id: ex.id,
+        lessonId: bonjourLesson.id,
+        type: ex.type,
+        prompt: ex.prompt,
+        options: ex.options,
+        correctAnswer: ex.correctAnswer,
+        audioUrl: null,
+        imageUrl: null,
+        skillKey: ex.skillKey,
+        order: index + 1,
+        points: ex.points,
+      },
+    });
+  }
+
+  console.log(`Seeded gold-standard lesson "${bonjourLesson.title}" with vocabulary, grammar, dialogue, reading, listening, and ${exercises.length} exercises.`);
 
   console.log("Seed complete.");
   console.log(`Demo login: email=camille@frenchmaster.dev password=Password123`);

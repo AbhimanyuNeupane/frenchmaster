@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema } from "./common";
 
 /**
  * Query params for GET /api/vocabulary. All optional per
@@ -20,7 +21,7 @@ export const listVocabularySchema = z.object({
 });
 
 export const vocabularyIdParamSchema = z.object({
-  id: z.string().uuid("Invalid vocabulary word id"),
+  id: idSchema,
 });
 
 export type ListVocabularyQuery = z.infer<typeof listVocabularySchema>;

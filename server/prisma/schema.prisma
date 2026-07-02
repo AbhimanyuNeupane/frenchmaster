@@ -93,6 +93,46 @@ enum MasteryStatus {
   mastered
 }
 
+enum ExerciseType {
+  multiple_choice
+  true_false
+  fill_blank
+  arrange_sentence
+  match
+  audio_question
+  image_question
+  typing
+  speaking_prompt
+}
+
+// Mirrors TEF Canada's real 4 test sections (see docs/EXAM_STRUCTURE.md):
+// Compréhension écrite, Expression écrite, Compréhension orale, Expression
+// orale — each with its own real duration and point scale.
+enum ExamSectionType {
+  READING_COMPREHENSION
+  WRITING_EXPRESSION
+  LISTENING_COMPREHENSION
+  SPEAKING_EXPRESSION
+}
+
+enum ExamQuestionType {
+  multiple_choice // auto-graded: reading/listening comprehension
+  writing_task // human-graded: expression écrite section A/B
+  speaking_task // human-graded: expression orale subjects
+}
+
+enum ExamAttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  GRADED
+}
+
+enum PronunciationSource {
+  vocabulary_word
+  exercise
+  exam_speaking
+}
+
 // ---------------------------------------------------------------------------
 // Auth / Users
 // ---------------------------------------------------------------------------
@@ -128,6 +168,9 @@ model User {
   dailyActivity      DailyActivity[]
   xpTransactions     XpTransaction[]
   vocabularyProgress UserVocabularyProgress[]
+  exerciseAttempts   ExerciseAttempt[]
+  examAttempts       ExamAttempt[]
+  pronunciationAttempts PronunciationAttempt[]
 
   @@index([currentLevel])
   @@index([role])
@@ -191,10 +234,179 @@ model Lesson {
   deletedAt DateTime?
 
   progressRecords LessonProgress[]
+  vocabularyLinks LessonVocabulary[]
+  grammarPoints   GrammarPoint[]
+  dialogues       ConversationDialogue[]
+  readingPassages ReadingPassage[]
+  listeningClips  ListeningClip[]
+  exercises       Exercise[]
 
   @@index([unitId, order])
   @@index([level])
   @@map("lessons")
+}
+
+// ---------------------------------------------------------------------------
+// Lesson content
+// ---------------------------------------------------------------------------
+//
+// Scope note: this is the first fully-modeled lesson end-to-end (see
+// prisma/seed.ts "Bonjour — Greetings" for the gold-standard A1 example that
+// proves this pattern before scaling it across the rest of the A1-B2
+// curriculum). Every content type here maps to a section CLAUDE.md's
+// "Lesson Structure" calls for: Vocabulary (existing VocabularyWord catalog,
+// linked here), Grammar, Conversation, Reading, Listening, Practice/Quiz.
+
+// Links a lesson to catalog VocabularyWord rows it teaches. A word can
+// appear in multiple lessons (e.g. reviewed later); a lesson's word list is
+// this table in `order`, not VocabularyWord.unitTitle (still a free-text
+// display label, unrelated to this relation — see the note on
+// VocabularyWord below).
+model LessonVocabulary {
+  id       String         @id @default(uuid())
+  lessonId String
+  lesson   Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  wordId   String
+  word     VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  order    Int
+
+  @@unique([lessonId, wordId])
+  @@index([lessonId, order])
+  @@map("lesson_vocabulary")
+}
+
+model GrammarPoint {
+  id          String @id @default(uuid())
+  lessonId    String
+  lesson      Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title       String
+  explanation String // markdown
+  order       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  examples GrammarExample[]
+
+  @@index([lessonId, order])
+  @@map("grammar_points")
+}
+
+model GrammarExample {
+  id             String       @id @default(uuid())
+  grammarPointId String
+  grammarPoint   GrammarPoint @relation(fields: [grammarPointId], references: [id], onDelete: Cascade)
+  frenchText     String
+  englishText    String
+  order          Int
+
+  @@index([grammarPointId, order])
+  @@map("grammar_examples")
+}
+
+model ConversationDialogue {
+  id       String @id @default(uuid())
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title    String
+  context  String // e.g. "Restaurant", "Airport", "Meeting a colleague"
+  order    Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lines DialogueLine[]
+
+  @@index([lessonId, order])
+  @@map("conversation_dialogues")
+}
+
+model DialogueLine {
+  id          String               @id @default(uuid())
+  dialogueId  String
+  dialogue    ConversationDialogue @relation(fields: [dialogueId], references: [id], onDelete: Cascade)
+  speaker     String // e.g. "Serveur", "Client"
+  frenchText  String
+  englishText String
+  audioUrl    String? // null until TTS pipeline exists
+  order       Int
+
+  @@index([dialogueId, order])
+  @@map("dialogue_lines")
+}
+
+model ReadingPassage {
+  id       String  @id @default(uuid())
+  lessonId String
+  lesson   Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title    String
+  bodyFr   String
+  bodyEn   String? // translation-toggle support, matches the Vocabulary detail dialog pattern
+  audioUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+  @@map("reading_passages")
+}
+
+model ListeningClip {
+  id           String  @id @default(uuid())
+  lessonId     String
+  lesson       Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title        String
+  audioUrl     String? // null until TTS/audio pipeline exists
+  transcriptFr String
+  transcriptEn String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+  @@map("listening_clips")
+}
+
+// Serves both in-lesson practice and the lesson-ending quiz (CLAUDE.md
+// "Quiz" section) — same shape, no separate Quiz table needed at this
+// scale; a lesson's quiz is simply "its exercises, in order."
+model Exercise {
+  id            String       @id @default(uuid())
+  lessonId      String
+  lesson        Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  type          ExerciseType
+  prompt        String
+  options       String[] // choices for multiple_choice/match; empty for free-text types
+  correctAnswer String // canonical answer; for match/arrange, a serialized reference order
+  audioUrl      String?
+  imageUrl      String?
+  skillKey      SkillKey // which skill this trains — feeds MistakeLog on a wrong attempt
+  order         Int
+  points        Int      @default(10)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attempts ExerciseAttempt[]
+
+  @@index([lessonId, order])
+  @@map("exercises")
+}
+
+model ExerciseAttempt {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId      String
+  exercise        Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  submittedAnswer String
+  isCorrect       Boolean
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, exerciseId])
+  @@index([userId, createdAt])
+  @@map("exercise_attempts")
 }
 
 // One row per (user, lesson). progress drives continueLesson/todaysLesson
@@ -340,30 +552,148 @@ model XpTransaction {
 }
 
 // ---------------------------------------------------------------------------
-// Exams (minimal — content authoring is out of scope)
+// Exams — modeled on real TEF Canada structure (see docs/EXAM_STRUCTURE.md):
+// 4 sections (reading/writing/listening/speaking comprehension+expression),
+// each with real durations and point scales. Reading/listening are
+// auto-graded multiple choice; writing/speaking are human-graded (score +
+// gradedByUserId set later), matching how TEF Canada itself works.
 // ---------------------------------------------------------------------------
 
-// sectionsReady/sectionsTotal model exam-CONTENT readiness (e.g. how many of
-// listening/speaking/reading/writing/grammar/vocabulary/pronunciation
-// sections are published), not the user's personal prep progress. Modeled
-// here as plain counters on the Exam row rather than a child table because
-// there is no content-authoring flow yet (out of scope) — a future
-// ExamSection table with a `published` boolean per section is the natural
-// upgrade path once exam authoring is built; see README.
 model Exam {
-  id             String    @id @default(uuid())
-  level          CEFRLevel
-  title          String
-  availableFrom  DateTime
-  sectionsTotal  Int
-  sectionsReady  Int
+  id            String    @id @default(uuid())
+  level         CEFRLevel
+  title         String
+  description   String?
+  availableFrom DateTime
+  published     Boolean   @default(false)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  sections ExamSection[]
+  attempts ExamAttempt[]
+
   @@index([level, availableFrom])
   @@map("exams")
+}
+
+model ExamSection {
+  id              String          @id @default(uuid())
+  examId          String
+  exam            Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  type            ExamSectionType
+  title           String
+  durationMinutes Int
+  maxScore        Int
+  order           Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions ExamQuestion[]
+  responses ExamSectionResponse[]
+
+  @@index([examId, order])
+  @@map("exam_sections")
+}
+
+model ExamQuestion {
+  id            String           @id @default(uuid())
+  sectionId     String
+  section       ExamSection      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  type          ExamQuestionType
+  prompt        String
+  passageText   String? // reading comprehension source text
+  audioUrl      String? // listening comprehension audio
+  options       String[] // multiple_choice choices
+  correctAnswer String? // null for writing_task/speaking_task — human-graded
+  points        Int
+  order         Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  responses ExamSectionResponse[]
+
+  @@index([sectionId, order])
+  @@map("exam_questions")
+}
+
+model ExamAttempt {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId      String
+  exam        Exam              @relation(fields: [examId], references: [id], onDelete: Cascade)
+  status      ExamAttemptStatus @default(IN_PROGRESS)
+  startedAt   DateTime          @default(now())
+  submittedAt DateTime?
+  totalScore  Int?
+  clbLevel    Int? // Canadian Language Benchmark, 1-12 — set once fully graded
+
+  responses ExamSectionResponse[]
+
+  @@index([userId, examId])
+  @@index([userId, status])
+  @@map("exam_attempts")
+}
+
+// One row per (attempt, question). isCorrect is set immediately for
+// auto-graded multiple_choice; score/gradedByUserId/gradedAt are set later
+// by an admin for writing_task/speaking_task, mirroring TEF Canada's real
+// two-independent-evaluator model for those sections.
+model ExamSectionResponse {
+  id              String       @id @default(uuid())
+  attemptId       String
+  attempt         ExamAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  sectionId       String
+  section         ExamSection  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  submittedAnswer String? // text answer or speech transcript
+  audioUrl        String? // speaking_task recording
+  isCorrect       Boolean? // auto-graded multiple_choice
+  score           Int? // human-graded writing/speaking
+  gradedByUserId  String?
+  gradedAt        DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@map("exam_section_responses")
+}
+
+// ---------------------------------------------------------------------------
+// Pronunciation / speech recognition (Whisper integration point)
+// ---------------------------------------------------------------------------
+
+// Generic pronunciation-attempt record regardless of where it was triggered
+// from (a vocabulary word's practice button, a lesson exercise, or an exam
+// speaking section). audioUrl points at Supabase Storage; transcript/score/
+// feedback are null until the Whisper transcription + scoring pipeline
+// processes it (see src/services/speech.service.ts — needs a real
+// WHISPER_API_KEY to actually run, currently scaffolded not wired).
+model PronunciationAttempt {
+  id                String              @id @default(uuid())
+  userId            String
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source            PronunciationSource
+  targetText        String // what the user was supposed to say
+  audioUrl          String // Supabase Storage URL of their recording
+  transcript        String? // Whisper transcription result
+  score             Int? // 0-100
+  feedback          Json? // structured word-level feedback
+  vocabularyWordId  String?
+  vocabularyWord    VocabularyWord?     @relation(fields: [vocabularyWordId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@map("pronunciation_attempts")
 }
 
 // ---------------------------------------------------------------------------
@@ -397,6 +727,8 @@ model VocabularyWord {
   deletedAt DateTime?
 
   userProgress UserVocabularyProgress[]
+  lessonLinks  LessonVocabulary[]
+  pronunciationAttempts PronunciationAttempt[]
 
   @@index([level])
   @@index([unitTitle])

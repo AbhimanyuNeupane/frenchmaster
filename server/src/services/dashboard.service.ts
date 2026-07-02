@@ -158,8 +158,8 @@ export const dashboardService = {
             level: upcomingExamRow.level,
             title: upcomingExamRow.title,
             availableFrom: upcomingExamRow.availableFrom.toISOString(),
-            sectionsReady: upcomingExamRow.sectionsReady,
-            sectionsTotal: upcomingExamRow.sectionsTotal,
+            sectionsTotal: upcomingExamRow.sections.length,
+            sectionsReady: upcomingExamRow.sections.filter((s) => s._count.questions > 0).length,
           }
         : null,
       studyTimeMinutesThisWeek,
