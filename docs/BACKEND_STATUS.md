@@ -3,11 +3,37 @@
 Written after building and verifying the backend, feature by feature,
 following the contract-first pattern (frontend UI + contract doc → backend
 implementation → independent verification). Covers **Dashboard**
-([`BACKEND_API_CONTRACT.md`](./BACKEND_API_CONTRACT.md)) and **Vocabulary**
+([`BACKEND_API_CONTRACT.md`](./BACKEND_API_CONTRACT.md)), **Vocabulary**
 ([`BACKEND_API_CONTRACT_VOCABULARY.md`](./BACKEND_API_CONTRACT_VOCABULARY.md)),
-plus the minimal auth needed to protect both. Everything else in CLAUDE.md's
-product spec (admin panel, payments, CMS, exam content authoring, speech AI,
-the other 12 sidebar sections) is intentionally **not** built yet.
+**Auth** (real login/signup, JWT + refresh rotation, RBAC), the **Admin
+Dashboard** (users, vocabulary content CRUD, analytics overview), a **lesson
+content engine** (grammar/conversation/reading/listening/exercises — see one
+fully-seeded example lesson below), an **exam schema redesigned around real
+TEF Canada structure** ([`EXAM_STRUCTURE.md`](./EXAM_STRUCTURE.md)), and a
+**Whisper/Supabase Storage scaffold** for pronunciation scoring (not yet
+functional — needs API keys). CMS, payments, and full A1-B2 course content
+authoring are still not built — see "Still not built" below.
+
+## Latest session update
+
+This pass fixed a **real production bug found through live testing, not
+inspection**: every `:id` route param validator (lesson, exercise,
+vocabulary, admin user, admin vocabulary) required strict `.uuid()` format —
+which silently rejected this codebase's own established convention of
+human-readable seed IDs (e.g. `seed-lsn-a1-u1-l1`). This had already broken
+vocabulary favorite/review on any seeded word without anyone noticing,
+because the catalog was empty when that feature was last verified. Fixed
+via a shared `idSchema` (`server/src/validators/common.ts`) used everywhere
+an id param is accepted. **Lesson learned for future passes: re-verify
+previously-shipped endpoints once real seed data exists, not just once at
+ship time against an empty database.**
+
+Also seeded one complete, real gold-standard lesson ("Bonjour" — A1 Unit 1
+Greetings: 10 vocabulary words, a grammar point, a dialogue, a reading
+passage, a listening transcript, 7 exercises) to prove the content pattern
+end-to-end before scaling across the curriculum — this is a deliberate,
+user-approved scope decision, not a shortcut. The rest of the A1-B2
+curriculum (per CLAUDE.md's full course structure) does not exist yet.
 
 ## What exists
 
