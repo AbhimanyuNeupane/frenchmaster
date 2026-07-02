@@ -1,9 +1,12 @@
 import { vocabularyRepository } from "../repositories/vocabulary.repository";
+import { userRepository } from "../repositories/user.repository";
 import { ApiError } from "../utils/ApiError";
+import { resolveVocabularyTranslation } from "../utils/vocabularyTranslation";
 import type {
   CEFRLevel,
   MasteryStatus,
   UserVocabularyProgress,
+  VocabularyTranslation,
   VocabularyWord as PrismaVocabularyWord,
 } from "@prisma/client";
 import type { ListVocabularyQuery } from "../validators/vocabulary.validators";
@@ -21,15 +24,20 @@ const DEFAULT_PROGRESS = {
   lastReviewedAt: null as Date | null,
 };
 
+type WordWithTranslations = PrismaVocabularyWord & { translations: VocabularyTranslation[] };
+
 function toVocabularyWord(
-  word: PrismaVocabularyWord,
-  progress: Pick<UserVocabularyProgress, "isFavorite" | "masteryStatus" | "lastReviewedAt"> | undefined
+  word: WordWithTranslations,
+  progress: Pick<UserVocabularyProgress, "isFavorite" | "masteryStatus" | "lastReviewedAt"> | undefined,
+  primaryLanguageCode: string
 ) {
   const effective = progress ?? DEFAULT_PROGRESS;
+  const { english, nativeTranslation } = resolveVocabularyTranslation(word.translations, primaryLanguageCode);
   return {
     id: word.id,
     french: word.french,
-    english: word.english,
+    english,
+    nativeTranslation,
     gender: word.gender,
     partOfSpeech: word.partOfSpeech,
     pronunciationIpa: word.pronunciationIpa,
@@ -47,6 +55,18 @@ function toVocabularyWord(
   };
 }
 
+/**
+ * Fresh per-request read of the user's language preference. Deliberately
+ * NOT taken from the JWT payload (`req.user`) — the access token is signed
+ * once at login/refresh time with only {sub, email, role}, so it would go
+ * stale the instant a user changes their primary language via
+ * PATCH /api/auth/me until their next token refresh.
+ */
+async function getPrimaryLanguageCode(userId: string): Promise<string> {
+  const user = await userRepository.findById(userId);
+  return user?.primaryLanguageCode ?? "en";
+}
+
 export const vocabularyService = {
   /**
    * Returns the (optionally filtered) word list plus stats computed over
@@ -55,13 +75,14 @@ export const vocabularyService = {
    * the filtered/paginated page.
    */
   async getVocabulary(userId: string, query: ListVocabularyQuery) {
-    const [filteredWords, allWordIds, progressRows] = await Promise.all([
+    const [filteredWords, allWordIds, progressRows, primaryLanguageCode] = await Promise.all([
       vocabularyRepository.findWords({
         level: query.level as CEFRLevel | undefined,
         search: query.search,
       }),
       vocabularyRepository.findAllWordIds(),
       vocabularyRepository.findAllProgressForUser(userId),
+      getPrimaryLanguageCode(userId),
     ]);
 
     const progressByWordId = new Map(progressRows.map((p) => [p.wordId, p]));
@@ -85,7 +106,9 @@ export const vocabularyService = {
 
     // --- words: filtered set (level/search applied in the repo query),
     // plus in-memory favoritesOnly/dueOnly filters, joined with progress ---
-    let words = filteredWords.map((word) => toVocabularyWord(word, progressByWordId.get(word.id)));
+    let words = filteredWords.map((word) =>
+      toVocabularyWord(word, progressByWordId.get(word.id), primaryLanguageCode)
+    );
 
     if (query.favoritesOnly) {
       words = words.filter((w) => w.isFavorite);
@@ -98,7 +121,10 @@ export const vocabularyService = {
   },
 
   async toggleFavorite(userId: string, wordId: string) {
-    const word = await vocabularyRepository.findWordById(wordId);
+    const [word, primaryLanguageCode] = await Promise.all([
+      vocabularyRepository.findWordById(wordId),
+      getPrimaryLanguageCode(userId),
+    ]);
     if (!word) {
       throw ApiError.notFound("Vocabulary word not found");
     }
@@ -110,11 +136,14 @@ export const vocabularyService = {
       isFavorite: nextIsFavorite,
     });
 
-    return toVocabularyWord(word, updated);
+    return toVocabularyWord(word, updated, primaryLanguageCode);
   },
 
   async markReviewed(userId: string, wordId: string) {
-    const word = await vocabularyRepository.findWordById(wordId);
+    const [word, primaryLanguageCode] = await Promise.all([
+      vocabularyRepository.findWordById(wordId),
+      getPrimaryLanguageCode(userId),
+    ]);
     if (!word) {
       throw ApiError.notFound("Vocabulary word not found");
     }
@@ -128,6 +157,6 @@ export const vocabularyService = {
       lastReviewedAt: new Date(),
     });
 
-    return toVocabularyWord(word, updated);
+    return toVocabularyWord(word, updated, primaryLanguageCode);
   },
 };

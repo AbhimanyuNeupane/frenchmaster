@@ -2,6 +2,7 @@ import { Volume2 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { NativeTranslation } from "@/components/vocabulary/native-translation";
 import type { LessonVocabularyWord } from "@/types/lesson";
 
 const GENDER_LABEL: Record<NonNullable<LessonVocabularyWord["gender"]>, string> = {
@@ -40,6 +41,7 @@ function VocabItem({ word }: { word: LessonVocabularyWord }) {
           <span className="text-xs text-muted-foreground">{word.pronunciationIpa}</span>
         </div>
         <p className="text-sm text-foreground/80">{word.english}</p>
+        <NativeTranslation translation={word.nativeTranslation} className="mt-0.5" />
       </div>
 
       <div className="rounded-lg bg-secondary/60 p-2.5">

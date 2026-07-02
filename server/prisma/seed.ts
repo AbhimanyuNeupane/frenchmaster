@@ -524,10 +524,19 @@ async function main() {
 
   const vocabularyWords = [];
   for (const def of vocabularyDefs) {
+    const { english, ...scalarFields } = def;
     const word = await prisma.vocabularyWord.upsert({
       where: { id: def.id },
-      update: { ...def },
-      create: { ...def },
+      update: { ...scalarFields },
+      create: { ...scalarFields },
+    });
+    // English translation now lives in VocabularyTranslation (languageCode
+    // "en"), not a flat `english` column — see Language/VocabularyTranslation
+    // in schema.prisma. Upsert-by-composite-key keeps this idempotent.
+    await prisma.vocabularyTranslation.upsert({
+      where: { vocabularyWordId_languageCode: { vocabularyWordId: word.id, languageCode: "en" } },
+      update: { translatedText: english },
+      create: { vocabularyWordId: word.id, languageCode: "en", translatedText: english },
     });
     vocabularyWords.push(word);
   }
@@ -639,7 +648,6 @@ async function main() {
       create: {
         id: w.id,
         french: w.french,
-        english: w.english,
         gender: w.gender,
         partOfSpeech: w.partOfSpeech,
         pronunciationIpa: w.ipa,
@@ -652,6 +660,11 @@ async function main() {
         level: "A1",
         unitTitle: "Greetings",
       },
+    });
+    await prisma.vocabularyTranslation.upsert({
+      where: { vocabularyWordId_languageCode: { vocabularyWordId: word.id, languageCode: "en" } },
+      update: { translatedText: w.english },
+      create: { vocabularyWordId: word.id, languageCode: "en", translatedText: w.english },
     });
     await prisma.lessonVocabulary.upsert({
       where: { lessonId_wordId: { lessonId: bonjourLesson.id, wordId: word.id } },

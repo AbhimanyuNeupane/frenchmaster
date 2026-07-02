@@ -4,13 +4,19 @@ import { sendSuccess } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import type {
+  CommitVocabularyImportInput,
+  CreateLanguageInput,
   CreateVocabularyWordInput,
+  LanguageCodeParam,
   ListUsersQuery,
+  UpdateLanguageInput,
   UpdateUserInput,
   UpdateVocabularyWordInput,
   UserIdParam,
   VocabularyWordIdParam,
 } from "../validators/admin.validators";
+
+const MAX_IMPORT_CSV_BYTES = 2 * 1024 * 1024; // 2MB
 
 // Same convention as vocabulary.controller.ts: `validate()` has already
 // overwritten req.query/req.params/req.body with the Zod-parsed values at
@@ -61,5 +67,59 @@ export const adminController = {
     const { id } = req.params as unknown as VocabularyWordIdParam;
     await adminService.deleteVocabularyWord(id);
     sendSuccess(res, null, "Vocabulary word deleted");
+  }),
+
+  // --- Vocabulary CSV import/export ---
+
+  previewVocabularyImport: asyncHandler(async (req: Request, res: Response) => {
+    const file = req.file;
+    if (!file) {
+      throw ApiError.badRequest("No CSV file uploaded (expected multipart field 'file')");
+    }
+    if (file.size > MAX_IMPORT_CSV_BYTES) {
+      throw ApiError.badRequest("CSV file too large (max 2MB)");
+    }
+    const result = await adminService.previewVocabularyImport(file.buffer);
+    sendSuccess(res, result);
+  }),
+
+  commitVocabularyImport: asyncHandler(async (req: Request, res: Response) => {
+    const input = req.body as CommitVocabularyImportInput;
+    const result = await adminService.commitVocabularyImport(input);
+    sendSuccess(res, result, "Vocabulary import completed");
+  }),
+
+  downloadImportExample: asyncHandler(async (_req: Request, res: Response) => {
+    const csv = await adminService.buildExampleCsv();
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", 'attachment; filename="vocabulary-import-example.csv"');
+    res.status(200).send(csv);
+  }),
+
+  exportVocabulary: asyncHandler(async (_req: Request, res: Response) => {
+    const csv = await adminService.buildExportCsv();
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", 'attachment; filename="vocabulary-export.csv"');
+    res.status(200).send(csv);
+  }),
+
+  // --- Language management ---
+
+  listLanguages: asyncHandler(async (_req: Request, res: Response) => {
+    const languages = await adminService.listLanguages();
+    sendSuccess(res, languages);
+  }),
+
+  createLanguage: asyncHandler(async (req: Request, res: Response) => {
+    const input = req.body as CreateLanguageInput;
+    const language = await adminService.createLanguage(input);
+    sendSuccess(res, language, "Language created", 201);
+  }),
+
+  updateLanguage: asyncHandler(async (req: Request, res: Response) => {
+    const { code } = req.params as unknown as LanguageCodeParam;
+    const input = req.body as UpdateLanguageInput;
+    const language = await adminService.updateLanguage(code, input);
+    sendSuccess(res, language, "Language updated");
   }),
 };

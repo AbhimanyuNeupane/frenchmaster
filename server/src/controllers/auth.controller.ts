@@ -2,7 +2,13 @@ import type { Request, Response } from "express";
 import { authService } from "../services/auth.service";
 import { sendSuccess, sendError } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
-import type { LoginInput, RefreshInput, RegisterInput } from "../validators/auth.validators";
+import { ApiError } from "../utils/ApiError";
+import type {
+  LoginInput,
+  RefreshInput,
+  RegisterInput,
+  UpdateProfileInput,
+} from "../validators/auth.validators";
 
 export const authController = {
   register: asyncHandler(async (req: Request<unknown, unknown, RegisterInput>, res: Response) => {
@@ -23,6 +29,15 @@ export const authController = {
   logout: asyncHandler(async (req: Request<unknown, unknown, RefreshInput>, res: Response) => {
     await authService.logout(req.body.refreshToken);
     sendSuccess(res, null, "Logged out successfully");
+  }),
+
+  updateProfile: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw ApiError.unauthorized();
+    }
+    const input = req.body as UpdateProfileInput;
+    const user = await authService.updateProfile(req.user.sub, input);
+    sendSuccess(res, user, "Profile updated");
   }),
 
   // OAuth stubs — CLAUDE.md requires Google/Apple login, but no real client

@@ -1,5 +1,6 @@
 import type { CEFRLevel, PartOfSpeech, WordGender } from "@/types";
 import type { UserRole } from "@/types/auth";
+import type { Translation } from "@/types/language";
 
 /** Account moderation state — mirrors the backend `status` enum. */
 export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED";
@@ -50,7 +51,12 @@ export interface AnalyticsOverview {
 export interface AdminVocabularyWord {
   id: string;
   french: string;
-  english: string;
+  /**
+   * Every translation authored for this word (all languages, not just the
+   * viewer's) — must always include exactly one entry with languageCode "en".
+   * Replaces the old flat `english` field.
+   */
+  translations: Translation[];
   gender: WordGender | null;
   partOfSpeech: PartOfSpeech;
   pronunciationIpa: string;
@@ -78,7 +84,8 @@ export interface AdminVocabularyListResponse {
  */
 export interface VocabularyWordPayload {
   french: string;
-  english: string;
+  /** Must include exactly one entry with languageCode "en" and no duplicate codes. */
+  translations: Translation[];
   gender: WordGender | null;
   partOfSpeech: PartOfSpeech;
   pronunciationIpa: string;
@@ -90,4 +97,65 @@ export interface VocabularyWordPayload {
   commonMistake: string | null;
   level: CEFRLevel;
   unitTitle: string;
+}
+
+// --- Language management (POST/PATCH /api/admin/languages) ---
+
+/** Body for `POST /api/admin/languages`. `code`/`isDefault` are immutable after creation. */
+export interface CreateLanguagePayload {
+  code: string;
+  name: string;
+  flagEmoji: string;
+  displayOrder: number;
+  enabled: boolean;
+}
+
+/** Body for `PATCH /api/admin/languages/:code` — only these fields are mutable. */
+export interface UpdateLanguagePayload {
+  name?: string;
+  flagEmoji?: string;
+  displayOrder?: number;
+  enabled?: boolean;
+}
+
+// --- Vocabulary CSV import/export ---
+
+/** The per-row `data` payload shared by the preview response and commit request. */
+export interface ImportRowData {
+  french: string;
+  english: string;
+  pronunciation: string;
+  translations: Translation[];
+}
+
+/** One parsed CSV row with any per-row validation errors. */
+export interface ImportRowResult {
+  rowNumber: number;
+  data: ImportRowData;
+  errors: string[];
+}
+
+/** Response from `POST /api/admin/vocabulary/import/preview` (writes nothing). */
+export interface ImportPreviewResponse {
+  rows: ImportRowResult[];
+  totalRows: number;
+  validRowCount: number;
+  errorRowCount: number;
+  unrecognizedColumns: string[];
+  /** Set when the file couldn't be parsed at all (bad encoding, missing required column). */
+  fatalError?: string;
+}
+
+/** Body for `POST /api/admin/vocabulary/import/commit`. */
+export interface ImportCommitPayload {
+  rows: ImportRowData[];
+  level: CEFRLevel;
+  unitTitle: string;
+}
+
+/** Response from `POST /api/admin/vocabulary/import/commit`. */
+export interface ImportCommitResponse {
+  imported: number;
+  skipped: number;
+  errors: { rowNumber: number; errors: string[] }[];
 }

@@ -1,13 +1,5 @@
-import { Settings } from "lucide-react";
-
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { SettingsManager } from "@/components/settings/settings-manager";
 
 export default function SettingsPage() {
-  return (
-    <ComingSoon
-      icon={Settings}
-      title="Settings"
-      description="Account, notification, audio, and privacy preferences are coming here."
-    />
-  );
+  return <SettingsManager />;
 }

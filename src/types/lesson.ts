@@ -1,4 +1,5 @@
 import type { CEFRLevel, PartOfSpeech, WordGender } from "@/types";
+import type { Translation } from "@/types/language";
 
 /**
  * Lesson-domain types mirroring the backend lesson API contract
@@ -24,6 +25,8 @@ export interface LessonVocabularyWord {
   id: string;
   french: string;
   english: string;
+  /** Same per-user native-language translation as VocabularyWord; null when N/A. */
+  nativeTranslation: Translation | null;
   gender: WordGender | null;
   partOfSpeech: PartOfSpeech;
   pronunciationIpa: string;

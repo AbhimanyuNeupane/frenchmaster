@@ -156,6 +156,12 @@ model User {
 
   goalMinutesPerDay Int @default(15)
 
+  // Drives which translation column shows alongside French/English
+  // everywhere vocabulary is rendered — see Language/VocabularyTranslation
+  // below. Always defaults to "en" so no user is ever left without a value.
+  primaryLanguageCode String   @default("en")
+  primaryLanguage     Language @relation(fields: [primaryLanguageCode], references: [code])
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -175,6 +181,7 @@ model User {
   @@index([currentLevel])
   @@index([role])
   @@index([status])
+  @@index([primaryLanguageCode])
   @@map("users")
 }
 
@@ -706,10 +713,14 @@ model PronunciationAttempt {
 // vocabulary to real curriculum units is a real design decision (does one
 // lesson "teach" a fixed set of words? can a word appear in multiple units?)
 // that should be made deliberately, not implied by adding a relation here.
+//
+// Translations (English + any native language) deliberately live in
+// `VocabularyTranslation`, not as fixed columns here (no `english`,
+// `nepali`, `hindi`, ...) — see `Language`/`VocabularyTranslation` below.
+// This lets new languages be added purely as data, with no schema change.
 model VocabularyWord {
   id                 String        @id @default(uuid())
   french             String
-  english            String
   gender             WordGender? // null for anything that isn't a noun
   partOfSpeech       PartOfSpeech
   pronunciationIpa   String
@@ -729,10 +740,53 @@ model VocabularyWord {
   userProgress UserVocabularyProgress[]
   lessonLinks  LessonVocabulary[]
   pronunciationAttempts PronunciationAttempt[]
+  translations VocabularyTranslation[]
 
   @@index([level])
   @@index([unitTitle])
   @@map("vocabulary_words")
+}
+
+// One supported UI/translation language. `code` is the ISO 639-1 code used
+// everywhere else (User.primaryLanguageCode, VocabularyTranslation.languageCode).
+// Adding a new language is a pure data operation (admin creates a row here) —
+// no schema or code change required, per the scalability requirement this
+// was built against.
+model Language {
+  code         String  @id // e.g. "en", "ne", "hi"
+  name         String // e.g. "English"
+  flagEmoji    String // e.g. "🇬🇧"
+  displayOrder Int     @default(0)
+  enabled      Boolean @default(true)
+  isDefault    Boolean @default(false) // exactly one row (English) should be true
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations VocabularyTranslation[]
+  users        User[]
+
+  @@index([enabled])
+  @@map("languages")
+}
+
+// (vocabularyWordId, languageCode) -> translated text. English is stored
+// here too (languageCode: "en"), not as a special-cased column, so the
+// read path never needs to know English is "special".
+model VocabularyTranslation {
+  id               String         @id @default(uuid())
+  vocabularyWordId String
+  vocabularyWord   VocabularyWord @relation(fields: [vocabularyWordId], references: [id], onDelete: Cascade)
+  languageCode     String
+  language         Language       @relation(fields: [languageCode], references: [code])
+  translatedText   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([vocabularyWordId, languageCode])
+  @@index([languageCode])
+  @@map("vocabulary_translations")
 }
 
 // Per-(user, word) state: favorite flag + simple manual mastery progression.

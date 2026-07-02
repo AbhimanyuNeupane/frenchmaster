@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { apiAuthed, apiPublic, ApiRequestError } from "@/lib/api-client";
+import { apiAuthed, apiAuthedRaw, apiPublic, ApiRequestError } from "@/lib/api-client";
 import type { AuthResponse, AuthUser } from "@/types/auth";
 
 const REFRESH_TOKEN_KEY = "fm_refresh_token";
@@ -20,10 +20,26 @@ interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    name: string,
+    primaryLanguage?: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   /** Authenticated fetch that transparently refreshes the access token once on 401. */
   authedFetch: <T>(path: string, options?: RequestInit) => Promise<T>;
+  /**
+   * Like {@link authedFetch} but returns the raw Response (same 401
+   * refresh-retry). For FormData uploads and binary downloads that can't go
+   * through the JSON-decoding path.
+   */
+  authedFetchRaw: (path: string, options?: RequestInit) => Promise<Response>;
+  /**
+   * Updates the signed-in user's primary language (PATCH /api/auth/me),
+   * optimistically updating local state and rolling back on failure.
+   */
+  updatePrimaryLanguage: (languageCode: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -83,10 +99,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const register = useCallback(
-    async (email: string, password: string, name: string) => {
+    async (email: string, password: string, name: string, primaryLanguage?: string) => {
       const session = await apiPublic<AuthResponse>("/api/auth/register", {
         method: "POST",
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          // Omit entirely when unset so the backend applies its "en" default.
+          ...(primaryLanguage ? { primaryLanguage } : {}),
+        }),
       });
       applySession(session);
     },
@@ -131,9 +153,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [refresh]
   );
 
+  const authedFetchRaw = useCallback(
+    async (path: string, options: RequestInit = {}): Promise<Response> => {
+      let token = accessTokenRef.current;
+      if (!token) {
+        token = await refresh();
+      }
+      if (!token) {
+        throw new ApiRequestError("Not authenticated", 401);
+      }
+
+      let res = await apiAuthedRaw(path, token, options);
+      if (res.status === 401) {
+        const refreshed = await refresh();
+        if (refreshed) {
+          res = await apiAuthedRaw(path, refreshed, options);
+        }
+      }
+      return res;
+    },
+    [refresh]
+  );
+
+  const updatePrimaryLanguage = useCallback(
+    async (languageCode: string) => {
+      const previous = user;
+      // Optimistic: reflect immediately so vocabulary/lesson native
+      // translations re-resolve without waiting on the round-trip.
+      setUser((prev) => (prev ? { ...prev, primaryLanguage: languageCode } : prev));
+      try {
+        const updated = await authedFetch<AuthUser>("/api/auth/me", {
+          method: "PATCH",
+          body: JSON.stringify({ primaryLanguage: languageCode }),
+        });
+        setUser(updated);
+      } catch (err) {
+        setUser(previous);
+        throw err;
+      }
+    },
+    [user, authedFetch]
+  );
+
   const value = useMemo<AuthContextValue>(
-    () => ({ user, isLoading, login, register, logout, authedFetch }),
-    [user, isLoading, login, register, logout, authedFetch]
+    () => ({
+      user,
+      isLoading,
+      login,
+      register,
+      logout,
+      authedFetch,
+      authedFetchRaw,
+      updatePrimaryLanguage,
+    }),
+    [user, isLoading, login, register, logout, authedFetch, authedFetchRaw, updatePrimaryLanguage]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

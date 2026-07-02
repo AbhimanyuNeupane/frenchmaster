@@ -1,3 +1,5 @@
+import type { Translation } from "@/types/language";
+
 export type CEFRLevel = "A1" | "A2" | "B1" | "B2";
 
 export type SkillKey =
@@ -105,6 +107,12 @@ export interface VocabularyWord {
   id: string;
   french: string;
   english: string;
+  /**
+   * The user's primary-language translation, or null when their primary
+   * language is English or no translation exists yet. The backend encodes
+   * the "skip if English" rule — render conditionally on this being non-null.
+   */
+  nativeTranslation: Translation | null;
   gender: WordGender | null; // null for non-nouns
   partOfSpeech: PartOfSpeech;
   pronunciationIpa: string;

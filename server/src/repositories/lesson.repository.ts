@@ -29,7 +29,7 @@ export const lessonRepository = {
         unit: { select: { id: true, title: true, level: true } },
         vocabularyLinks: {
           orderBy: { order: "asc" },
-          include: { word: true },
+          include: { word: { include: { translations: true } } },
         },
         grammarPoints: {
           orderBy: { order: "asc" },

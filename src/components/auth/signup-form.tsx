@@ -3,21 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, Lock, Mail, User as UserIcon } from "lucide-react";
+import { ChevronDown, Globe, Loader2, Lock, Mail, User as UserIcon } from "lucide-react";
 
 import { useAuth } from "@/contexts/auth-context";
+import { useLanguages } from "@/hooks/use-languages";
 import { ApiRequestError } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+const DEFAULT_LANGUAGE = "en";
+
 export function SignupForm() {
   const { register } = useAuth();
+  const { languages } = useLanguages();
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,7 +31,7 @@ export function SignupForm() {
     setError(null);
     setIsSubmitting(true);
     try {
-      await register(email, password, name);
+      await register(email, password, name, language);
       router.push("/dashboard");
     } catch (err) {
       setError(
@@ -99,6 +104,33 @@ export function SignupForm() {
             </div>
             <p className="mt-1.5 text-xs text-muted-foreground">
               8+ characters, with an uppercase letter, a lowercase letter, and a number.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="signup-language">Your language</Label>
+            <div className="relative">
+              <Globe className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <select
+                id="signup-language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="flex h-11 w-full appearance-none rounded-xl border border-border bg-card pl-10 pr-10 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                {languages.length > 0 ? (
+                  languages.map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.flagEmoji} {l.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value={DEFAULT_LANGUAGE}>English</option>
+                )}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              We&apos;ll show word translations in this language. You can change it later.
             </p>
           </div>
 

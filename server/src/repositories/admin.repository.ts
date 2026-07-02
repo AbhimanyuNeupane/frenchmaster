@@ -1,5 +1,27 @@
 import { prisma } from "../config/prisma";
-import type { Prisma } from "@prisma/client";
+import type { CEFRLevel, Prisma, WordGender, PartOfSpeech } from "@prisma/client";
+
+/** A single (languageCode, text) translation entry, admin-authoring shape. */
+export interface TranslationEntryInput {
+  languageCode: string;
+  text: string;
+}
+
+/** VocabularyWord scalar fields an admin can author, minus id/timestamps/translations. */
+type VocabularyWordScalarInput = {
+  french: string;
+  gender?: WordGender | null;
+  partOfSpeech: PartOfSpeech;
+  pronunciationIpa: string;
+  audioUrl?: string | null;
+  exampleFr: string;
+  exampleEn: string;
+  imageUrl?: string | null;
+  synonyms?: string[];
+  commonMistake?: string | null;
+  level: CEFRLevel;
+  unitTitle: string;
+};
 
 /**
  * Raw queries backing the admin user-management and analytics endpoints.
@@ -76,10 +98,16 @@ export const adminRepository = {
   },
 
   // --- Vocabulary content authoring ---
+  //
+  // Admin CRUD sees/edits ALL languages a word has been translated into
+  // (unlike the learner-facing vocabulary.service.ts, which only surfaces
+  // French/English/the user's own primary language) — always `include:
+  // { translations: true }` here.
 
   findVocabularyWordsForAdmin(skip: number, take: number) {
     return prisma.vocabularyWord.findMany({
       where: { deletedAt: null },
+      include: { translations: true },
       orderBy: { createdAt: "desc" },
       skip,
       take,
@@ -87,19 +115,144 @@ export const adminRepository = {
   },
 
   findVocabularyWordById(id: string) {
-    return prisma.vocabularyWord.findUnique({ where: { id } });
+    return prisma.vocabularyWord.findUnique({
+      where: { id },
+      include: { translations: true },
+    });
   },
 
-  createVocabularyWord(data: Prisma.VocabularyWordCreateInput) {
-    return prisma.vocabularyWord.create({ data });
+  /**
+   * Case-insensitive lookup of existing (non-deleted) catalog words by
+   * their French text — used by CSV import to flag "duplicate vocabulary:
+   * already exists" without an N+1 query per row.
+   */
+  findVocabularyWordsByFrenchTexts(frenchTexts: string[]) {
+    if (frenchTexts.length === 0) return Promise.resolve([]);
+    return prisma.vocabularyWord.findMany({
+      where: { deletedAt: null, french: { in: frenchTexts, mode: "insensitive" } },
+      select: { id: true, french: true },
+    });
   },
 
-  updateVocabularyWord(id: string, data: Prisma.VocabularyWordUpdateInput) {
-    return prisma.vocabularyWord.update({ where: { id }, data });
+  createVocabularyWord(input: VocabularyWordScalarInput & { translations: TranslationEntryInput[] }) {
+    const { translations, ...rest } = input;
+    return prisma.vocabularyWord.create({
+      data: {
+        ...rest,
+        translations: {
+          create: translations.map((t) => ({ languageCode: t.languageCode, translatedText: t.text })),
+        },
+      },
+      include: { translations: true },
+    });
+  },
+
+  /**
+   * Translations can be added/edited/removed arbitrarily on update, so the
+   * simplest correct approach — at this word-catalog scale — is
+   * delete-all-then-recreate inside a transaction, rather than diffing.
+   */
+  updateVocabularyWord(
+    id: string,
+    input: Partial<VocabularyWordScalarInput> & { translations?: TranslationEntryInput[] }
+  ) {
+    const { translations, ...rest } = input;
+
+    if (!translations) {
+      return prisma.vocabularyWord.update({
+        where: { id },
+        data: rest,
+        include: { translations: true },
+      });
+    }
+
+    return prisma.$transaction(async (tx) => {
+      await tx.vocabularyTranslation.deleteMany({ where: { vocabularyWordId: id } });
+      return tx.vocabularyWord.update({
+        where: { id },
+        data: {
+          ...rest,
+          translations: {
+            create: translations.map((t) => ({ languageCode: t.languageCode, translatedText: t.text })),
+          },
+        },
+        include: { translations: true },
+      });
+    });
   },
 
   /** Soft delete — preserves history for any UserVocabularyProgress rows pointing at it. */
   softDeleteVocabularyWord(id: string) {
     return prisma.vocabularyWord.update({ where: { id }, data: { deletedAt: new Date() } });
+  },
+
+  /**
+   * Bulk-creates words from a validated CSV import batch, all-or-nothing
+   * per row within a single transaction. Each row gets partOfSpeech:
+   * "noun" and gender: null as defaults (not present in the CSV format —
+   * the admin can refine specifics afterward via the normal edit dialog).
+   */
+  createVocabularyWordsBulk(
+    rows: {
+      french: string;
+      pronunciationIpa: string;
+      level: CEFRLevel;
+      unitTitle: string;
+      translations: TranslationEntryInput[];
+    }[]
+  ) {
+    return prisma.$transaction(
+      rows.map((row) =>
+        prisma.vocabularyWord.create({
+          data: {
+            french: row.french,
+            gender: null,
+            partOfSpeech: "noun",
+            pronunciationIpa: row.pronunciationIpa,
+            exampleFr: "",
+            exampleEn: "",
+            synonyms: [],
+            level: row.level,
+            unitTitle: row.unitTitle,
+            translations: {
+              create: row.translations.map((t) => ({ languageCode: t.languageCode, translatedText: t.text })),
+            },
+          },
+        })
+      )
+    );
+  },
+
+  // --- Language management ---
+  //
+  // Adding a new language is a pure data operation (this CRUD surface) —
+  // no schema/code change required. See Language model note in schema.prisma.
+
+  findAllLanguages() {
+    return prisma.language.findMany({ orderBy: [{ displayOrder: "asc" }, { code: "asc" }] });
+  },
+
+  findLanguageByCode(code: string) {
+    return prisma.language.findUnique({ where: { code } });
+  },
+
+  createLanguage(data: Prisma.LanguageCreateInput) {
+    return prisma.language.create({ data });
+  },
+
+  updateLanguage(code: string, data: Prisma.LanguageUpdateInput) {
+    return prisma.language.update({ where: { code }, data });
+  },
+
+  /** Diffs the given codes against the Language table; returns any that don't exist (any status). */
+  async languageCodesExist(codes: string[]): Promise<{ missing: string[] }> {
+    const unique = Array.from(new Set(codes));
+    if (unique.length === 0) return { missing: [] };
+    const rows = await prisma.language.findMany({
+      where: { code: { in: unique } },
+      select: { code: true },
+    });
+    const found = new Set(rows.map((r) => r.code));
+    return { missing: unique.filter((c) => !found.has(c)) };
   },
 };

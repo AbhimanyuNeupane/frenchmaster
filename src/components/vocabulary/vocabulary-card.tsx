@@ -4,6 +4,7 @@ import { Star, Volume2 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { NativeTranslation } from "@/components/vocabulary/native-translation";
 import { cn } from "@/lib/utils";
 import type { VocabularyWord } from "@/types";
 
@@ -86,7 +87,10 @@ export function VocabularyCard({
         <p className="text-xs text-muted-foreground">{word.pronunciationIpa}</p>
       </div>
 
-      <p className="text-sm text-foreground/80">{word.english}</p>
+      <div className="flex flex-col gap-1">
+        <p className="text-sm text-foreground/80">{word.english}</p>
+        <NativeTranslation translation={word.nativeTranslation} />
+      </div>
 
       <div className="mt-auto flex items-center justify-between pt-1">
         <span className="text-[11px] font-medium text-muted-foreground">{word.unitTitle}</span>

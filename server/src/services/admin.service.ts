@@ -1,13 +1,47 @@
 import { adminRepository } from "../repositories/admin.repository";
 import { ApiError } from "../utils/ApiError";
 import { addDays, startOfTodayUtc } from "../utils/dateUtils";
-import type { Prisma } from "@prisma/client";
+import {
+  parseAndValidateCsv,
+  revalidateImportRows,
+  buildExampleCsv,
+  buildExportCsv,
+} from "./vocabularyImport.service";
+import type { Prisma, VocabularyTranslation, VocabularyWord } from "@prisma/client";
 import type {
+  CommitVocabularyImportInput,
+  CreateLanguageInput,
   CreateVocabularyWordInput,
   ListUsersQuery,
+  UpdateLanguageInput,
   UpdateUserInput,
   UpdateVocabularyWordInput,
 } from "../validators/admin.validators";
+
+type VocabularyWordWithTranslations = VocabularyWord & { translations: VocabularyTranslation[] };
+
+/**
+ * Admin-facing vocabulary word shape: ALL languages the word has been
+ * translated into (unlike the learner-facing vocabulary.service.ts, which
+ * only surfaces French/English/the user's own primary language) — the
+ * admin UI needs to see/edit every language at once. Renames
+ * `translatedText` -> `text` on the API surface.
+ */
+function toAdminVocabularyWord(word: VocabularyWordWithTranslations) {
+  const { translations, ...rest } = word;
+  return {
+    ...rest,
+    translations: translations.map((t) => ({ languageCode: t.languageCode, text: t.translatedText })),
+  };
+}
+
+/** Throws ApiError.badRequest listing any languageCode not present in the Language table. */
+async function assertLanguageCodesExist(codes: string[]): Promise<void> {
+  const { missing } = await adminRepository.languageCodesExist(codes);
+  if (missing.length > 0) {
+    throw ApiError.badRequest(`Unknown language code: ${missing.join(", ")}`);
+  }
+}
 
 export const adminService = {
   /**
@@ -104,7 +138,7 @@ export const adminService = {
       adminRepository.countVocabularyWords(),
     ]);
     return {
-      words,
+      words: words.map(toAdminVocabularyWord),
       pagination: {
         page,
         pageSize,
@@ -114,8 +148,10 @@ export const adminService = {
     };
   },
 
-  createVocabularyWord(input: CreateVocabularyWordInput) {
-    return adminRepository.createVocabularyWord(input);
+  async createVocabularyWord(input: CreateVocabularyWordInput) {
+    await assertLanguageCodesExist(input.translations.map((t) => t.languageCode));
+    const word = await adminRepository.createVocabularyWord(input);
+    return toAdminVocabularyWord(word);
   },
 
   async updateVocabularyWord(id: string, input: UpdateVocabularyWordInput) {
@@ -123,7 +159,11 @@ export const adminService = {
     if (!existing || existing.deletedAt) {
       throw ApiError.notFound("Vocabulary word not found");
     }
-    return adminRepository.updateVocabularyWord(id, input);
+    if (input.translations) {
+      await assertLanguageCodesExist(input.translations.map((t) => t.languageCode));
+    }
+    const word = await adminRepository.updateVocabularyWord(id, input);
+    return toAdminVocabularyWord(word);
   },
 
   async deleteVocabularyWord(id: string) {
@@ -132,5 +172,84 @@ export const adminService = {
       throw ApiError.notFound("Vocabulary word not found");
     }
     await adminRepository.softDeleteVocabularyWord(id);
+  },
+
+  // --- Vocabulary CSV import/export ---
+
+  previewVocabularyImport(fileBuffer: Buffer) {
+    return parseAndValidateCsv(fileBuffer);
+  },
+
+  /**
+   * Commits a previously-previewed batch. Re-validates every row itself
+   * (never trusts client-reported errors) and only imports rows with zero
+   * errors; everything else is reported back as skipped.
+   */
+  async commitVocabularyImport(input: CommitVocabularyImportInput) {
+    const revalidated = await revalidateImportRows(input.rows);
+
+    const validRows = revalidated.filter((r) => r.errors.length === 0);
+    const invalidRows = revalidated.filter((r) => r.errors.length > 0);
+
+    if (validRows.length === 0) {
+      return {
+        imported: 0,
+        skipped: invalidRows.length,
+        errors: invalidRows.map((r) => ({ rowNumber: r.rowNumber, errors: r.errors })),
+      };
+    }
+
+    // English translation is always present (validated above) alongside
+    // any native-language translations parsed from the CSV columns.
+    const created = await adminRepository.createVocabularyWordsBulk(
+      validRows.map((r) => ({
+        french: r.data.french,
+        pronunciationIpa: r.data.pronunciation,
+        level: input.level,
+        unitTitle: input.unitTitle,
+        translations: [{ languageCode: "en", text: r.data.english }, ...r.data.translations],
+      }))
+    );
+
+    return {
+      imported: created.length,
+      skipped: invalidRows.length,
+      errors: invalidRows.map((r) => ({ rowNumber: r.rowNumber, errors: r.errors })),
+    };
+  },
+
+  buildExampleCsv,
+  buildExportCsv,
+
+  // --- Language management ---
+
+  listLanguages() {
+    return adminRepository.findAllLanguages();
+  },
+
+  async createLanguage(input: CreateLanguageInput) {
+    const existing = await adminRepository.findLanguageByCode(input.code);
+    if (existing) {
+      throw ApiError.conflict(`Language code "${input.code}" already exists`);
+    }
+    return adminRepository.createLanguage(input);
+  },
+
+  /**
+   * The default language (English) may never be disabled — it's the
+   * fallback every user without an explicit preference resolves to, and
+   * the one language guaranteed to have translations for every word.
+   * There is intentionally no route to change WHICH language is default in
+   * this pass (isDefault is excluded from the update schema entirely).
+   */
+  async updateLanguage(code: string, input: UpdateLanguageInput) {
+    const existing = await adminRepository.findLanguageByCode(code);
+    if (!existing) {
+      throw ApiError.notFound("Language not found");
+    }
+    if (existing.isDefault && input.enabled === false) {
+      throw ApiError.forbidden("The default language cannot be disabled");
+    }
+    return adminRepository.updateLanguage(code, input);
   },
 };

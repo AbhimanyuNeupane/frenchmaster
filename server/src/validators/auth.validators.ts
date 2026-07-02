@@ -12,6 +12,9 @@ export const registerSchema = z.object({
   email: z.string().trim().toLowerCase().email("Invalid email address"),
   password: passwordSchema,
   name: z.string().trim().min(1, "Name is required").max(100),
+  // Must be an existing, ENABLED Language.code — verified against the DB in
+  // auth.service.ts (Zod alone can't check that). Omitted -> defaults to "en".
+  primaryLanguage: z.string().trim().toLowerCase().min(2).max(10).optional(),
 });
 
 export const loginSchema = z.object({
@@ -23,6 +26,12 @@ export const refreshSchema = z.object({
   refreshToken: z.string().min(1, "refreshToken is required"),
 });
 
+/** PATCH /api/auth/me — the only profile field this pass supports updating. */
+export const updateProfileSchema = z.object({
+  primaryLanguage: z.string().trim().toLowerCase().min(2).max(10),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshInput = z.infer<typeof refreshSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

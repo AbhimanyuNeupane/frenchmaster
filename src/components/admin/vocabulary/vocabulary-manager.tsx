@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Loader2, Library, Plus, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Library, Plus, Pencil, Trash2, Upload, Download } from "lucide-react";
 
 import { Reveal } from "@/components/layout/reveal";
 import { Card } from "@/components/ui/card";
@@ -11,15 +11,22 @@ import { PageError } from "@/components/layout/page-state";
 import { PaginationControls } from "@/components/admin/pagination-controls";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { VocabularyFormDialog } from "@/components/admin/vocabulary/vocabulary-form-dialog";
+import { VocabularyImportDialog } from "@/components/admin/vocabulary/vocabulary-import-dialog";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
+import { downloadAuthedFile } from "@/lib/download";
 import type { AdminVocabularyListResponse, AdminVocabularyWord } from "@/types/admin";
 
 const PAGE_SIZE = 20;
 
+/** English is guaranteed present on every catalog word; fall back defensively. */
+function englishOf(word: AdminVocabularyWord): string {
+  return word.translations.find((t) => t.languageCode === "en")?.text ?? "";
+}
+
 export function VocabularyManager() {
-  const { authedFetch } = useAuth();
+  const { authedFetch, authedFetchRaw } = useAuth();
 
   const [page, setPage] = useState(1);
 
@@ -29,6 +36,10 @@ export function VocabularyManager() {
   const [deleteTarget, setDeleteTarget] = useState<AdminVocabularyWord | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [toolbarError, setToolbarError] = useState<string | null>(null);
 
   const path = useMemo(
     () => `/api/admin/vocabulary?page=${page}&pageSize=${PAGE_SIZE}`,
@@ -49,6 +60,22 @@ export function VocabularyManager() {
   function openEdit(word: AdminVocabularyWord) {
     setActiveWord(word);
     setFormOpen(true);
+  }
+
+  async function handleExport() {
+    setExporting(true);
+    setToolbarError(null);
+    try {
+      await downloadAuthedFile(
+        authedFetchRaw,
+        "/api/admin/vocabulary/export",
+        "vocabulary-export.csv"
+      );
+    } catch (err) {
+      setToolbarError(err instanceof ApiRequestError ? err.message : "Failed to export catalog.");
+    } finally {
+      setExporting(false);
+    }
   }
 
   async function confirmDelete() {
@@ -81,11 +108,31 @@ export function VocabularyManager() {
               Author and manage the words in the learning catalog.
             </p>
           </div>
-          <Button variant="accent" onClick={openCreate} className="w-full sm:w-auto">
-            <Plus className="size-4" />
-            Add word
-          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              disabled={exporting}
+              className="w-full sm:w-auto"
+            >
+              {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+              Export CSV
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setImportOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              <Upload className="size-4" />
+              Import CSV
+            </Button>
+            <Button variant="accent" onClick={openCreate} className="w-full sm:w-auto">
+              <Plus className="size-4" />
+              Add word
+            </Button>
+          </div>
         </div>
+        {toolbarError && <p className="mt-2 text-sm text-danger">{toolbarError}</p>}
       </Reveal>
 
       {error ? (
@@ -121,7 +168,7 @@ export function VocabularyManager() {
                     {word.gender && <Badge variant="outline">{word.gender}</Badge>}
                     <Badge variant="accent">{word.level}</Badge>
                   </div>
-                  <p className="mt-1 truncate text-sm text-muted-foreground">{word.english}</p>
+                  <p className="mt-1 truncate text-sm text-muted-foreground">{englishOf(word)}</p>
                   <p className="mt-0.5 text-[11px] text-muted-foreground">{word.unitTitle}</p>
                 </div>
 
@@ -162,6 +209,15 @@ export function VocabularyManager() {
         open={formOpen}
         onOpenChange={setFormOpen}
         onSaved={() => refetch()}
+      />
+
+      <VocabularyImportDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImported={() => {
+          setPage(1);
+          refetch();
+        }}
       />
 
       <ConfirmDialog

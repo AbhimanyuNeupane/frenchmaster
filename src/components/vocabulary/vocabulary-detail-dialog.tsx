@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { NativeTranslation } from "@/components/vocabulary/native-translation";
 import { cn } from "@/lib/utils";
 import type { VocabularyWord } from "@/types";
 
@@ -74,6 +75,10 @@ export function VocabularyDetailDialog({
             <div>
               <p className="text-sm font-semibold text-navy">{word.pronunciationIpa}</p>
               <p className="text-xs text-muted-foreground">{word.english}</p>
+              <NativeTranslation
+                translation={word.nativeTranslation}
+                className="mt-0.5 text-xs text-muted-foreground"
+              />
             </div>
             <div className="flex items-center gap-2">
               <div className="flex rounded-lg border border-border p-0.5">

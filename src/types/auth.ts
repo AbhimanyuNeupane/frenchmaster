@@ -9,6 +9,8 @@ export interface AuthUser {
   avatarUrl: string | null;
   role: UserRole;
   currentLevel: CEFRLevel;
+  /** Language code of the user's preferred display language (defaults to "en"). */
+  primaryLanguage: string;
 }
 
 export interface AuthTokens {

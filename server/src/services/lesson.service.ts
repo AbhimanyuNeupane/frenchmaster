@@ -1,6 +1,8 @@
 import { lessonRepository } from "../repositories/lesson.repository";
+import { userRepository } from "../repositories/user.repository";
 import { ApiError } from "../utils/ApiError";
 import { prisma } from "../config/prisma";
+import { resolveVocabularyTranslation } from "../utils/vocabularyTranslation";
 import type { SkillKey } from "@prisma/client";
 
 /** Normalizes free-text answers for exact-match grading (trim, case, accents-insensitive-ish via lowercasing). */
@@ -38,14 +40,17 @@ export const lessonService = {
    * everything a lesson-player UI needs in one call.
    */
   async getLessonContent(userId: string, lessonId: string) {
-    const [lesson, progress] = await Promise.all([
+    const [lesson, progress, user] = await Promise.all([
       lessonRepository.findLessonWithContent(lessonId),
       lessonRepository.findLessonProgress(userId, lessonId),
+      userRepository.findById(userId),
     ]);
 
     if (!lesson) {
       throw ApiError.notFound("Lesson not found");
     }
+
+    const primaryLanguageCode = user?.primaryLanguageCode ?? "en";
 
     return {
       id: lesson.id,
@@ -55,7 +60,29 @@ export const lessonService = {
       estimatedMinutes: lesson.estimatedMinutes,
       unit: lesson.unit,
       progress: progress?.progress ?? 0,
-      vocabulary: lesson.vocabularyLinks.map((link) => link.word),
+      vocabulary: lesson.vocabularyLinks.map((link) => {
+        const { english, nativeTranslation } = resolveVocabularyTranslation(
+          link.word.translations,
+          primaryLanguageCode
+        );
+        return {
+          id: link.word.id,
+          french: link.word.french,
+          english,
+          nativeTranslation,
+          gender: link.word.gender,
+          partOfSpeech: link.word.partOfSpeech,
+          pronunciationIpa: link.word.pronunciationIpa,
+          audioUrl: link.word.audioUrl,
+          exampleFr: link.word.exampleFr,
+          exampleEn: link.word.exampleEn,
+          imageUrl: link.word.imageUrl,
+          synonyms: link.word.synonyms,
+          commonMistake: link.word.commonMistake,
+          level: link.word.level,
+          unitTitle: link.word.unitTitle,
+        };
+      }),
       grammarPoints: lesson.grammarPoints.map((gp) => ({
         id: gp.id,
         title: gp.title,

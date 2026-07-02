@@ -22,12 +22,20 @@ export const vocabularyRepository = {
           ? {
               OR: [
                 { french: { contains: filter.search, mode: "insensitive" as const } },
-                { english: { contains: filter.search, mode: "insensitive" as const } },
                 { unitTitle: { contains: filter.search, mode: "insensitive" as const } },
+                {
+                  translations: {
+                    some: {
+                      languageCode: "en",
+                      translatedText: { contains: filter.search, mode: "insensitive" as const },
+                    },
+                  },
+                },
               ],
             }
           : {}),
       },
+      include: { translations: true },
       orderBy: [{ level: "asc" }, { unitTitle: "asc" }, { french: "asc" }],
     });
   },
@@ -46,7 +54,10 @@ export const vocabularyRepository = {
   },
 
   findWordById(id: string) {
-    return prisma.vocabularyWord.findFirst({ where: { id, deletedAt: null } });
+    return prisma.vocabularyWord.findFirst({
+      where: { id, deletedAt: null },
+      include: { translations: true },
+    });
   },
 
   findProgress(userId: string, wordId: string) {

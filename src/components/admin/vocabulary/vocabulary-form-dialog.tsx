@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Loader2, Plus, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import { AdminSelect, AdminTextarea } from "@/components/admin/form-controls";
 import { SynonymsInput } from "@/components/admin/vocabulary/synonyms-input";
+import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
 import type { CEFRLevel, PartOfSpeech, WordGender } from "@/types";
 import type { AdminVocabularyWord, VocabularyWordPayload } from "@/types/admin";
+import type { AdminLanguage } from "@/types/language";
 
 const PARTS_OF_SPEECH: PartOfSpeech[] = [
   "noun",
@@ -31,9 +33,16 @@ const PARTS_OF_SPEECH: PartOfSpeech[] = [
 const GENDERS: WordGender[] = ["masculine", "feminine", "neutral"];
 const LEVELS: CEFRLevel[] = ["A1", "A2", "B1", "B2"];
 
+/** A non-English translation row in the editor. */
+interface TranslationRow {
+  languageCode: string;
+  text: string;
+}
+
 interface FormState {
   french: string;
   english: string;
+  extraTranslations: TranslationRow[];
   gender: WordGender | "none";
   partOfSpeech: PartOfSpeech;
   pronunciationIpa: string;
@@ -50,6 +59,7 @@ interface FormState {
 const EMPTY_FORM: FormState = {
   french: "",
   english: "",
+  extraTranslations: [],
   gender: "none",
   partOfSpeech: "noun",
   pronunciationIpa: "",
@@ -64,9 +74,14 @@ const EMPTY_FORM: FormState = {
 };
 
 function toFormState(word: AdminVocabularyWord): FormState {
+  const english = word.translations.find((t) => t.languageCode === "en")?.text ?? "";
+  const extraTranslations = word.translations
+    .filter((t) => t.languageCode !== "en")
+    .map((t) => ({ languageCode: t.languageCode, text: t.text }));
   return {
     french: word.french,
-    english: word.english,
+    english,
+    extraTranslations,
     gender: word.gender ?? "none",
     partOfSpeech: word.partOfSpeech,
     pronunciationIpa: word.pronunciationIpa,
@@ -95,6 +110,14 @@ export function VocabularyFormDialog({
   const { authedFetch } = useAuth();
   const isEditing = word !== null;
 
+  // All languages (incl. disabled) — an admin may pre-author content for a
+  // language that isn't enabled for learners yet. English is pinned separately.
+  const { data: languages } = useApiQuery<AdminLanguage[]>("/api/admin/languages");
+  const otherLanguages = useMemo(
+    () => (languages ?? []).filter((l) => l.code !== "en"),
+    [languages]
+  );
+
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,6 +138,58 @@ export function VocabularyFormDialog({
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  const usedCodes = form.extraTranslations.map((t) => t.languageCode);
+  const firstUnusedCode = otherLanguages.find((l) => !usedCodes.includes(l.code))?.code;
+
+  function addTranslation() {
+    if (!firstUnusedCode) return;
+    setForm((prev) => ({
+      ...prev,
+      extraTranslations: [...prev.extraTranslations, { languageCode: firstUnusedCode, text: "" }],
+    }));
+  }
+
+  function updateTranslation(index: number, patch: Partial<TranslationRow>) {
+    setForm((prev) => ({
+      ...prev,
+      extraTranslations: prev.extraTranslations.map((row, i) =>
+        i === index ? { ...row, ...patch } : row
+      ),
+    }));
+  }
+
+  function removeTranslation(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      extraTranslations: prev.extraTranslations.filter((_, i) => i !== index),
+    }));
+  }
+
+  /** Options for a given row: unused languages plus the row's own current code. */
+  function optionsForRow(currentCode: string): AdminLanguage[] {
+    const opts = otherLanguages.filter(
+      (l) => l.code === currentCode || !usedCodes.includes(l.code)
+    );
+    // Preserve a code that isn't in the fetched list (e.g. list still loading)
+    // so the select doesn't silently blank out an existing translation.
+    if (currentCode && !opts.some((l) => l.code === currentCode)) {
+      return [
+        {
+          code: currentCode,
+          name: currentCode.toUpperCase(),
+          flagEmoji: "🌐",
+          displayOrder: 0,
+          isDefault: false,
+          enabled: true,
+          createdAt: "",
+          updatedAt: "",
+        },
+        ...opts,
+      ];
+    }
+    return opts;
+  }
+
   function validate(): string | null {
     const required: [keyof FormState, string][] = [
       ["french", "French word"],
@@ -126,6 +201,14 @@ export function VocabularyFormDialog({
     ];
     for (const [key, label] of required) {
       if (!String(form[key]).trim()) return `${label} is required.`;
+    }
+    // A translation row with a language but no text is almost certainly a
+    // half-filled row — flag it rather than silently dropping it.
+    for (const row of form.extraTranslations) {
+      if (!row.text.trim()) {
+        const lang = otherLanguages.find((l) => l.code === row.languageCode);
+        return `Enter a translation for ${lang?.name ?? row.languageCode}, or remove that row.`;
+      }
     }
     return null;
   }
@@ -140,7 +223,12 @@ export function VocabularyFormDialog({
 
     const payload: VocabularyWordPayload = {
       french: form.french.trim(),
-      english: form.english.trim(),
+      translations: [
+        { languageCode: "en", text: form.english.trim() },
+        ...form.extraTranslations
+          .filter((t) => t.text.trim())
+          .map((t) => ({ languageCode: t.languageCode, text: t.text.trim() })),
+      ],
       gender: form.gender === "none" ? null : form.gender,
       partOfSpeech: form.partOfSpeech,
       pronunciationIpa: form.pronunciationIpa.trim(),
@@ -175,7 +263,7 @@ export function VocabularyFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit word" : "Add word"}</DialogTitle>
           <DialogDescription>
@@ -186,19 +274,21 @@ export function VocabularyFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="vocab-french">French word</Label>
+            <Input
+              id="vocab-french"
+              value={form.french}
+              onChange={(e) => set("french", e.target.value)}
+              placeholder="bonjour"
+              disabled={saving}
+            />
+          </div>
+
+          {/* Translations editor — English is required and pinned first. */}
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/30 p-4">
             <div>
-              <Label htmlFor="vocab-french">French word</Label>
-              <Input
-                id="vocab-french"
-                value={form.french}
-                onChange={(e) => set("french", e.target.value)}
-                placeholder="bonjour"
-                disabled={saving}
-              />
-            </div>
-            <div>
-              <Label htmlFor="vocab-english">English translation</Label>
+              <Label htmlFor="vocab-english">English translation (required)</Label>
               <Input
                 id="vocab-english"
                 value={form.english}
@@ -206,6 +296,66 @@ export function VocabularyFormDialog({
                 placeholder="hello"
                 disabled={saving}
               />
+            </div>
+
+            {form.extraTranslations.map((row, index) => (
+              <div key={index} className="flex items-end gap-2">
+                <div className="w-40 shrink-0">
+                  <Label className="text-xs">Language</Label>
+                  <AdminSelect
+                    aria-label="Translation language"
+                    value={row.languageCode}
+                    onChange={(e) => updateTranslation(index, { languageCode: e.target.value })}
+                    disabled={saving}
+                  >
+                    {optionsForRow(row.languageCode).map((l) => (
+                      <option key={l.code} value={l.code}>
+                        {l.flagEmoji} {l.name}
+                        {l.enabled ? "" : " (disabled)"}
+                      </option>
+                    ))}
+                  </AdminSelect>
+                </div>
+                <div className="flex-1">
+                  <Label className="text-xs">Translation</Label>
+                  <Input
+                    aria-label="Translation text"
+                    value={row.text}
+                    onChange={(e) => updateTranslation(index, { text: e.target.value })}
+                    placeholder="translation"
+                    disabled={saving}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Remove translation"
+                  onClick={() => removeTranslation(index)}
+                  disabled={saving}
+                  className="mb-0.5 text-danger hover:bg-danger/10"
+                >
+                  <X className="size-4" />
+                </Button>
+              </div>
+            ))}
+
+            <div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addTranslation}
+                disabled={saving || !firstUnusedCode}
+              >
+                <Plus className="size-3.5" />
+                Add translation
+              </Button>
+              {otherLanguages.length === 0 && (
+                <p className="mt-1.5 text-xs text-muted-foreground">
+                  Add languages in the Languages section to author more translations.
+                </p>
+              )}
             </div>
           </div>
 

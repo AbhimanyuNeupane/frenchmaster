@@ -34,13 +34,39 @@ export const updateUserSchema = z
   });
 
 /**
+ * A single (languageCode, text) translation entry as authored by the admin.
+ * languageCode must reference an existing Language row (enabled or not —
+ * an admin may pre-author content for a language before enabling it) —
+ * enforced in admin.service.ts via adminRepository.languageCodesExist,
+ * not here, since Zod has no DB access.
+ */
+const translationEntrySchema = z.object({
+  languageCode: z.string().trim().toLowerCase().min(2).max(10),
+  text: z.string().trim().min(1).max(500),
+});
+
+const translationsArraySchema = z
+  .array(translationEntrySchema)
+  .min(1, "At least one translation is required")
+  .refine((entries) => entries.some((e) => e.languageCode === "en"), {
+    message: "An English translation is required",
+  })
+  .refine(
+    (entries) => new Set(entries.map((e) => e.languageCode)).size === entries.length,
+    { message: "Duplicate languageCode in translations" }
+  );
+
+/**
  * Vocabulary content-management schemas — reuses the shape of
  * VocabularyWord from vocabulary.validators.ts, but for admin authoring
- * (full CRUD) rather than read/favorite/review.
+ * (full CRUD) rather than read/favorite/review. `english` is intentionally
+ * NOT a flat field here — see `translations` (must include one entry with
+ * languageCode "en") which maps onto VocabularyTranslation rows, matching
+ * the "no english/nepali/hindi columns" requirement.
  */
 export const createVocabularyWordSchema = z.object({
   french: z.string().trim().min(1).max(200),
-  english: z.string().trim().min(1).max(200),
+  translations: translationsArraySchema,
   gender: z.enum(["masculine", "feminine", "neutral"]).nullable().optional(),
   partOfSpeech: z.enum(["noun", "verb", "adjective", "adverb", "phrase", "expression"]),
   pronunciationIpa: z.string().trim().min(1).max(200),
@@ -63,9 +89,74 @@ export const vocabularyWordIdParamSchema = z.object({
   id: idSchema,
 });
 
+/**
+ * Language management schemas. `code` and `isDefault` are deliberately
+ * absent from the update schema — immutable after creation (see
+ * admin.service.ts updateLanguage for the "default language can never be
+ * disabled" guard rail).
+ */
+export const languageCodeParamSchema = z.object({
+  code: z.string().trim().min(2).max(10),
+});
+
+export const createLanguageSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(2)
+    .max(10)
+    .regex(/^[a-z-]+$/, "Language code must be lowercase letters/hyphens only"),
+  name: z.string().trim().min(1).max(100),
+  flagEmoji: z.string().trim().min(1).max(10),
+  displayOrder: z.number().int().default(0),
+  enabled: z.boolean().default(true),
+});
+
+export const updateLanguageSchema = z
+  .object({
+    name: z.string().trim().min(1).max(100).optional(),
+    flagEmoji: z.string().trim().min(1).max(10).optional(),
+    displayOrder: z.number().int().optional(),
+    enabled: z.boolean().optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided",
+  });
+
+/**
+ * CSV bulk-import commit body — the preview endpoint (multipart upload) has
+ * no body schema of its own (multer + manual buffer parsing), but the
+ * commit endpoint takes plain JSON: the previously-previewed rows plus the
+ * batch-level level/unitTitle the admin picked once for the whole import
+ * (the CSV format itself only carries French/English/native
+ * translations/pronunciation per column, not level/unit).
+ */
+const importTranslationEntrySchema = z.object({
+  languageCode: z.string().trim().toLowerCase().min(2).max(10),
+  text: z.string().trim().min(1).max(500),
+});
+
+const importRowSchema = z.object({
+  french: z.string().trim().max(200).default(""),
+  english: z.string().trim().max(200).default(""),
+  pronunciation: z.string().trim().max(200).default(""),
+  translations: z.array(importTranslationEntrySchema).default([]),
+});
+
+export const commitVocabularyImportSchema = z.object({
+  rows: z.array(importRowSchema).min(1, "At least one row is required"),
+  level: z.enum(["A1", "A2", "B1", "B2"]),
+  unitTitle: z.string().trim().min(1).max(200),
+});
+
 export type ListUsersQuery = z.infer<typeof listUsersSchema>;
 export type UserIdParam = z.infer<typeof userIdParamSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type CreateVocabularyWordInput = z.infer<typeof createVocabularyWordSchema>;
 export type UpdateVocabularyWordInput = z.infer<typeof updateVocabularyWordSchema>;
 export type VocabularyWordIdParam = z.infer<typeof vocabularyWordIdParamSchema>;
+export type LanguageCodeParam = z.infer<typeof languageCodeParamSchema>;
+export type CreateLanguageInput = z.infer<typeof createLanguageSchema>;
+export type UpdateLanguageInput = z.infer<typeof updateLanguageSchema>;
+export type CommitVocabularyImportInput = z.infer<typeof commitVocabularyImportSchema>;
