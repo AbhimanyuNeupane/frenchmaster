@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageError } from "@/components/layout/page-state";
 import { LanguageFormDialog } from "@/components/admin/languages/language-form-dialog";
+import { FlagIcon } from "@/components/ui/flag-icon";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
@@ -103,9 +104,11 @@ export function LanguagesManager() {
                   className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex min-w-0 items-center gap-3">
-                    <span aria-hidden className="text-2xl leading-none">
-                      {language.flagEmoji}
-                    </span>
+                    <FlagIcon
+                      flagEmoji={language.flagEmoji}
+                      label={language.name}
+                      className="text-2xl leading-none"
+                    />
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="text-sm font-bold text-navy">{language.name}</p>

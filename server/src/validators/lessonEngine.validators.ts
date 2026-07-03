@@ -39,6 +39,13 @@ export const lessonIdParamSchema = z.object({
   id: z.string().trim().min(1).max(100),
 });
 
+/**
+ * Content-access gating (see LessonEngineLesson.requiredRole in
+ * schema.prisma / utils/roleRank.ts). `null` = fully public — the default,
+ * matching the feature's original no-auth design.
+ */
+const requiredRoleSchema = z.enum(["USER", "PREMIUM", "MODERATOR", "ADMIN"]).nullable().optional();
+
 export const createLessonEngineLessonSchema = z.object({
   // Admin-chosen slug, immutable after creation — matches the engine's own
   // Lesson.id (e.g. "fr_a1_lesson_002").
@@ -55,6 +62,7 @@ export const createLessonEngineLessonSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   cards: cardsArraySchema,
   published: z.boolean().default(false),
+  requiredRole: requiredRoleSchema,
 });
 
 // id is immutable after creation, so it's excluded from the update shape.
@@ -100,9 +108,81 @@ export const listPublishedLessonsSchema = z.object({
   level: z.string().trim().min(1).max(20).optional(),
 });
 
+// ---------------------------------------------------------------------------
+// Course / Section hierarchy (LessonEngineCourse -> LessonEngineSection ->
+// LessonEngineSectionLesson). Purely organizational — content-access gating
+// lives on the lesson itself (requiredRole above), never here, so a course
+// can freely mix free preview lessons with premium ones.
+// ---------------------------------------------------------------------------
+
+export const courseIdParamSchema = z.object({
+  id: z.string().trim().min(1).max(100),
+});
+
+/**
+ * `id` is present when the admin is editing an existing section, absent for
+ * a brand-new one. Note: the write path (lessonEngine.repository.ts
+ * createCourse/updateCourse) always deletes-and-recreates sections wholesale
+ * rather than diffing by id, so this field is currently accepted but not
+ * actually consumed by persistence — kept for API/client-state parity and
+ * potential future diffing, not because the backend needs it today.
+ */
+const courseSectionSchema = z.object({
+  id: z.string().trim().min(1).max(100).optional(),
+  title: z.string().trim().min(1).max(200),
+  displayOrder: z.number().int().default(0),
+  // Ordered — index in the array is the display order within the section.
+  lessonIds: z.array(z.string().trim().min(1)).default([]),
+});
+
+export const createLessonEngineCourseSchema = z.object({
+  id: z
+    .string()
+    .trim()
+    .min(1)
+    .max(100)
+    .regex(/^[a-z0-9_-]+$/i, "Use letters, numbers, underscore, hyphen only"),
+  language: z.string().trim().min(2).max(10),
+  level: z.string().trim().min(1).max(20),
+  title: z.string().trim().min(1).max(200),
+  description: z.string().trim().max(1000).optional(),
+  published: z.boolean().default(false),
+  displayOrder: z.number().int().default(0),
+  sections: z.array(courseSectionSchema).default([]),
+});
+
+// id is immutable after creation. `sections`, if present in the body at
+// all, REPLACES the entire section/lesson-link structure (see
+// lessonEngine.repository.ts updateCourse); omitting the key entirely means
+// "leave sections untouched" — see the service layer's `!== undefined` check.
+export const updateLessonEngineCourseSchema = createLessonEngineCourseSchema
+  .omit({ id: true })
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided",
+  });
+
+export const listLessonEngineCoursesSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(100).default(20),
+  language: z.string().trim().min(2).max(10).optional(),
+  level: z.string().trim().min(1).max(20).optional(),
+  published: optionalBooleanQueryParam,
+});
+
+export const listPublishedCoursesSchema = z.object({
+  language: z.string().trim().min(2).max(10).optional(),
+  level: z.string().trim().min(1).max(20).optional(),
+});
+
 export type LessonIdParam = z.infer<typeof lessonIdParamSchema>;
 export type CreateLessonEngineLessonInput = z.infer<typeof createLessonEngineLessonSchema>;
 export type UpdateLessonEngineLessonInput = z.infer<typeof updateLessonEngineLessonSchema>;
 export type ValidateLessonDraftInput = z.infer<typeof validateLessonDraftSchema>;
 export type ListLessonEngineLessonsQuery = z.infer<typeof listLessonEngineLessonsSchema>;
 export type ListPublishedLessonsQuery = z.infer<typeof listPublishedLessonsSchema>;
+export type CourseIdParam = z.infer<typeof courseIdParamSchema>;
+export type CreateLessonEngineCourseInput = z.infer<typeof createLessonEngineCourseSchema>;
+export type UpdateLessonEngineCourseInput = z.infer<typeof updateLessonEngineCourseSchema>;
+export type ListLessonEngineCoursesQuery = z.infer<typeof listLessonEngineCoursesSchema>;
+export type ListPublishedCoursesQuery = z.infer<typeof listPublishedCoursesSchema>;

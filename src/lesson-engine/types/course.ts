@@ -17,3 +17,10 @@ export interface Course {
   description?: string;
   sections: Section[];
 }
+
+/**
+ * A Course without its `sections` tree — the shape of a course-list item
+ * (`GET /courses`). Relates to `Course` exactly as `LessonSummary` relates to
+ * `Lesson`: enough to render a picker card, no nested content.
+ */
+export type CourseSummary = Omit<Course, "sections">;

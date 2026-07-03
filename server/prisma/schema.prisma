@@ -834,11 +834,82 @@ model LessonEngineLesson {
   cardCount   Int // denormalized from cardsJson.length, for cheap admin list rendering
   published   Boolean @default(false)
 
+  // Content-access gating: null (the default) means fully public, matching
+  // this feature's original no-auth design — nothing that was open before
+  // this column existed becomes gated by adding it. A non-null value means
+  // the requester must be authenticated AND hold at least this role (rank
+  // ADMIN > MODERATOR > PREMIUM > USER), enforced server-side in
+  // lessonEngine.service.ts, never just hidden client-side.
+  requiredRole Role?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  sectionLinks LessonEngineSectionLesson[]
+
   @@index([language, level])
   @@index([published])
   @@map("lesson_engine_lessons")
+}
+
+// ---------------------------------------------------------------------------
+// Lesson Engine Course/Section hierarchy — the real Course -> Section ->
+// Lesson structure ARCHITECTURE.md originally described, filled in now that
+// admin authoring exists. A course is purely organizational (groups sections,
+// which group ordered lessons); content-access gating lives on the LESSON
+// itself (LessonEngineLesson.requiredRole), not here, so a course can mix
+// free preview lessons with premium ones.
+// ---------------------------------------------------------------------------
+
+model LessonEngineCourse {
+  id           String  @id // admin-chosen slug, e.g. "fr_a1"
+  language     String
+  level        String
+  title        String
+  description  String?
+  published    Boolean @default(false)
+  displayOrder Int     @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  sections LessonEngineSection[]
+
+  @@index([language, level])
+  @@index([published])
+  @@map("lesson_engine_courses")
+}
+
+model LessonEngineSection {
+  id           String @id @default(uuid())
+  courseId     String
+  course       LessonEngineCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title        String
+  displayOrder Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lessonLinks LessonEngineSectionLesson[]
+
+  @@index([courseId])
+  @@map("lesson_engine_sections")
+}
+
+// Ordered join between a section and a lesson. A lesson can appear in more
+// than one section/course (e.g. reused across levels), hence a join table
+// rather than a foreign key directly on LessonEngineLesson.
+model LessonEngineSectionLesson {
+  id           String @id @default(uuid())
+  sectionId    String
+  section      LessonEngineSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  lessonId     String
+  lesson       LessonEngineLesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  displayOrder Int    @default(0)
+
+  @@unique([sectionId, lessonId])
+  @@index([lessonId])
+  @@map("lesson_engine_section_lessons")
 }

@@ -6,6 +6,8 @@ import { requireAuth, requireRole } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { ApiError } from "../utils/ApiError";
 import {
+  aiTranslateBulkSchema,
+  aiTranslateSingleSchema,
   commitVocabularyImportSchema,
   createLanguageSchema,
   createVocabularyWordSchema,
@@ -47,6 +49,20 @@ adminRouter.delete(
   "/vocabulary/:id",
   validate({ params: vocabularyWordIdParamSchema }),
   adminController.deleteVocabularyWord
+);
+
+// --- AI-assisted vocabulary translation ---
+
+adminRouter.get("/vocabulary/ai-translate/status", adminController.getAiTranslateStatus);
+adminRouter.post(
+  "/vocabulary/ai-translate-bulk",
+  validate({ body: aiTranslateBulkSchema }),
+  adminController.bulkFillVocabularyTranslations
+);
+adminRouter.post(
+  "/vocabulary/:id/ai-translate",
+  validate({ params: vocabularyWordIdParamSchema, body: aiTranslateSingleSchema }),
+  adminController.suggestVocabularyTranslations
 );
 
 // --- Vocabulary CSV import/export ---

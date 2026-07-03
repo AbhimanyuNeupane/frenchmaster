@@ -159,3 +159,30 @@ export interface ImportCommitResponse {
   skipped: number;
   errors: { rowNumber: number; errors: string[] }[];
 }
+
+// --- AI-assisted translation ---
+
+/** Response from `GET /api/admin/vocabulary/ai-translate/status`. */
+export interface AiTranslateStatus {
+  /** False when the backend's ANTHROPIC_API_KEY isn't configured. */
+  configured: boolean;
+}
+
+/**
+ * Response from `POST /api/admin/vocabulary/:id/ai-translate` — suggestions
+ * only; nothing is written to the database.
+ */
+export interface AiTranslateSuggestion {
+  languageCode: string;
+  text: string;
+}
+
+/**
+ * Response from `POST /api/admin/vocabulary/ai-translate-bulk` — writes gap
+ * translations directly (never overwrites an existing one).
+ */
+export interface AiTranslateBulkResponse {
+  wordsProcessed: number;
+  translationsAdded: number;
+  errors: { wordId: string; error: string }[];
+}

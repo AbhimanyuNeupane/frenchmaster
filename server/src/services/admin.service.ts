@@ -1,14 +1,18 @@
 import { adminRepository } from "../repositories/admin.repository";
 import { ApiError } from "../utils/ApiError";
 import { addDays, startOfTodayUtc } from "../utils/dateUtils";
+import { mapWithConcurrency } from "../utils/concurrency";
 import {
   parseAndValidateCsv,
   revalidateImportRows,
   buildExampleCsv,
   buildExportCsv,
 } from "./vocabularyImport.service";
+import { translationAiService, type TranslationSuggestion } from "./translationAi.service";
 import type { Prisma, VocabularyTranslation, VocabularyWord } from "@prisma/client";
 import type {
+  AiTranslateBulkInput,
+  AiTranslateSingleInput,
   CommitVocabularyImportInput,
   CreateLanguageInput,
   CreateVocabularyWordInput,
@@ -19,6 +23,14 @@ import type {
 } from "../validators/admin.validators";
 
 type VocabularyWordWithTranslations = VocabularyWord & { translations: VocabularyTranslation[] };
+
+// AI bulk-translate job tuning: how many words to scan per DB page while
+// looking for `limit` qualifying words, how many pages to scan before
+// giving up (bounds worst-case work if almost nothing qualifies), and how
+// many words to translate concurrently against the Anthropic API.
+const TRANSLATION_SCAN_PAGE_SIZE = 50;
+const TRANSLATION_SCAN_MAX_PAGES = 20;
+const TRANSLATION_CONCURRENCY = 4;
 
 /**
  * Admin-facing vocabulary word shape: ALL languages the word has been
@@ -251,5 +263,149 @@ export const adminService = {
       throw ApiError.forbidden("The default language cannot be disabled");
     }
     return adminRepository.updateLanguage(code, input);
+  },
+
+  // --- AI-assisted vocabulary translation ---
+
+  aiTranslateStatus() {
+    return { configured: translationAiService.isConfigured() };
+  },
+
+  /**
+   * Preview-only: returns AI-suggested translations for admin review, never
+   * writes to the DB (the admin's normal Save flow, unchanged, is what
+   * persists). Target languages are the requested `languageCodes` as-is
+   * (explicit request = "translate/regenerate exactly these", regardless of
+   * whether a translation already exists), or — if omitted — every enabled
+   * language this word doesn't already have a translation for.
+   */
+  async suggestVocabularyTranslations(
+    id: string,
+    input: AiTranslateSingleInput
+  ): Promise<TranslationSuggestion[]> {
+    const word = await adminRepository.findVocabularyWordById(id);
+    if (!word || word.deletedAt) {
+      throw ApiError.notFound("Vocabulary word not found");
+    }
+
+    let targetCodes: string[];
+    if (input.languageCodes && input.languageCodes.length > 0) {
+      await assertLanguageCodesExist(input.languageCodes);
+      targetCodes = Array.from(new Set(input.languageCodes));
+    } else {
+      const existingCodes = new Set(word.translations.map((t) => t.languageCode));
+      const enabled = await adminRepository.findEnabledLanguages();
+      targetCodes = enabled.map((l) => l.code).filter((code) => !existingCodes.has(code));
+    }
+
+    if (targetCodes.length === 0) {
+      return [];
+    }
+
+    const allLanguages = await adminRepository.findAllLanguages();
+    const nameByCode = new Map(allLanguages.map((l) => [l.code, l.name]));
+    const targetLanguages = targetCodes.map((code) => ({ code, name: nameByCode.get(code) ?? code }));
+
+    return translationAiService.translateWord({
+      french: word.french,
+      partOfSpeech: word.partOfSpeech,
+      exampleFr: word.exampleFr,
+      level: word.level,
+      targetLanguages,
+    });
+  },
+
+  /**
+   * Scans up to `limit` non-deleted vocabulary words missing at least one
+   * target-language translation, and WRITES only the missing languageCode
+   * entries per word — existing translations are never touched (see
+   * adminRepository.addMissingVocabularyTranslations). A per-word AI/parse
+   * failure is caught and recorded in `errors`, never aborts the batch.
+   * Concurrency is capped (TRANSLATION_CONCURRENCY) to avoid hammering the
+   * Anthropic API with dozens of parallel requests.
+   */
+  async bulkFillVocabularyTranslations(input: AiTranslateBulkInput) {
+    if (!translationAiService.isConfigured()) {
+      throw ApiError.notImplemented("AI translation is not configured yet", {
+        reason: "Missing ANTHROPIC_API_KEY",
+      });
+    }
+
+    let targetLanguages: { code: string; name: string }[];
+    if (input.languageCodes && input.languageCodes.length > 0) {
+      await assertLanguageCodesExist(input.languageCodes);
+      const allLanguages = await adminRepository.findAllLanguages();
+      const nameByCode = new Map(allLanguages.map((l) => [l.code, l.name]));
+      const uniqueCodes = Array.from(new Set(input.languageCodes));
+      targetLanguages = uniqueCodes.map((code) => ({ code, name: nameByCode.get(code) ?? code }));
+    } else {
+      const enabled = await adminRepository.findEnabledLanguages();
+      targetLanguages = enabled.map((l) => ({ code: l.code, name: l.name }));
+    }
+
+    if (targetLanguages.length === 0) {
+      return { wordsProcessed: 0, translationsAdded: 0, errors: [] as { wordId: string; error: string }[] };
+    }
+    const targetCodes = new Set(targetLanguages.map((l) => l.code));
+
+    // Page through the catalog looking for words missing at least one
+    // target language, bounded by TRANSLATION_SCAN_MAX_PAGES so an
+    // unlucky catalog (almost everything already translated) doesn't
+    // trigger a full-table scan.
+    const candidates: VocabularyWordWithTranslations[] = [];
+    for (let page = 0; page < TRANSLATION_SCAN_MAX_PAGES && candidates.length < input.limit; page++) {
+      const batch = await adminRepository.findVocabularyWordsForTranslationScan(
+        page * TRANSLATION_SCAN_PAGE_SIZE,
+        TRANSLATION_SCAN_PAGE_SIZE
+      );
+      if (batch.length === 0) break;
+
+      for (const word of batch) {
+        const existingCodes = new Set(word.translations.map((t) => t.languageCode));
+        const isMissingSomething = targetLanguages.some((l) => !existingCodes.has(l.code));
+        if (isMissingSomething) {
+          candidates.push(word);
+          if (candidates.length >= input.limit) break;
+        }
+      }
+
+      if (batch.length < TRANSLATION_SCAN_PAGE_SIZE) break; // reached end of table
+    }
+
+    const errors: { wordId: string; error: string }[] = [];
+    let translationsAdded = 0;
+
+    await mapWithConcurrency(candidates, TRANSLATION_CONCURRENCY, async (word) => {
+      try {
+        const existingCodes = new Set(word.translations.map((t) => t.languageCode));
+        const missingLanguages = targetLanguages.filter((l) => !existingCodes.has(l.code));
+        if (missingLanguages.length === 0) return;
+
+        const suggestions = await translationAiService.translateWord({
+          french: word.french,
+          partOfSpeech: word.partOfSpeech,
+          exampleFr: word.exampleFr,
+          level: word.level,
+          targetLanguages: missingLanguages,
+        });
+
+        // Extra safety: only ever write languageCodes we actually asked
+        // for and that are still missing — ignore anything else, never
+        // touch a code that already has a translation row.
+        const missingCodeSet = new Set(missingLanguages.map((l) => l.code));
+        const toWrite = suggestions.filter(
+          (s) => missingCodeSet.has(s.languageCode) && targetCodes.has(s.languageCode)
+        );
+
+        if (toWrite.length > 0) {
+          const result = await adminRepository.addMissingVocabularyTranslations(word.id, toWrite);
+          translationsAdded += result.count;
+        }
+      } catch (err) {
+        errors.push({ wordId: word.id, error: err instanceof Error ? err.message : "Unknown error" });
+      }
+    });
+
+    return { wordsProcessed: candidates.length, translationsAdded, errors };
   },
 };

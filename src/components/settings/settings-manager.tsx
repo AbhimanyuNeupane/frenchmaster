@@ -7,6 +7,7 @@ import { Reveal } from "@/components/layout/reveal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { FlagIcon } from "@/components/ui/flag-icon";
 import { useAuth } from "@/contexts/auth-context";
 import { useLanguages } from "@/hooks/use-languages";
 import { ApiRequestError } from "@/lib/api-client";
@@ -73,9 +74,11 @@ export function SettingsManager() {
             <div className="flex items-center gap-2 rounded-xl bg-secondary/60 px-3.5 py-3 text-sm">
               <span className="text-muted-foreground">Currently:</span>
               <span className="flex items-center gap-1.5 font-semibold text-navy">
-                <span aria-hidden className="text-base leading-none">
-                  {activeLanguage?.flagEmoji ?? "🌐"}
-                </span>
+                <FlagIcon
+                  flagEmoji={activeLanguage?.flagEmoji ?? "🌐"}
+                  label={activeLanguage?.name}
+                  className="text-base leading-none"
+                />
                 {activeLanguage?.name ?? currentLanguage.toUpperCase()}
               </span>
             </div>

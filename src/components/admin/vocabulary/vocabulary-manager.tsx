@@ -1,12 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Loader2, Library, Plus, Pencil, Trash2, Upload, Download } from "lucide-react";
+import {
+  Loader2,
+  Library,
+  Plus,
+  Pencil,
+  Trash2,
+  Upload,
+  Download,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 import { Reveal } from "@/components/layout/reveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageError } from "@/components/layout/page-state";
 import { PaginationControls } from "@/components/admin/pagination-controls";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
@@ -16,7 +27,12 @@ import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
 import { downloadAuthedFile } from "@/lib/download";
-import type { AdminVocabularyListResponse, AdminVocabularyWord } from "@/types/admin";
+import type {
+  AdminVocabularyListResponse,
+  AdminVocabularyWord,
+  AiTranslateBulkResponse,
+  AiTranslateStatus,
+} from "@/types/admin";
 
 const PAGE_SIZE = 20;
 
@@ -40,6 +56,21 @@ export function VocabularyManager() {
   const [importOpen, setImportOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [toolbarError, setToolbarError] = useState<string | null>(null);
+
+  const [bulkRunning, setBulkRunning] = useState(false);
+  const [bulkResult, setBulkResult] = useState<AiTranslateBulkResponse | null>(null);
+
+  // Whether AI translation is configured on the backend. When it isn't, the
+  // bulk button is shown disabled with an explanatory tooltip rather than
+  // failing on click.
+  const { data: aiStatus, isLoading: aiStatusLoading } =
+    useApiQuery<AiTranslateStatus>("/api/admin/vocabulary/ai-translate/status");
+  const aiConfigured = aiStatus?.configured === true;
+  const aiDisabledReason: string | null = aiStatusLoading
+    ? "Checking AI availability…"
+    : !aiConfigured
+      ? "AI translation isn't set up yet."
+      : null;
 
   const path = useMemo(
     () => `/api/admin/vocabulary?page=${page}&pageSize=${PAGE_SIZE}`,
@@ -78,6 +109,29 @@ export function VocabularyManager() {
     }
   }
 
+  async function handleBulkFill() {
+    setBulkRunning(true);
+    setToolbarError(null);
+    setBulkResult(null);
+    try {
+      // No body → the server fills every enabled language missing a
+      // translation, up to its default limit of 20 words.
+      const result = await authedFetch<AiTranslateBulkResponse>(
+        "/api/admin/vocabulary/ai-translate-bulk",
+        { method: "POST", body: JSON.stringify({}) }
+      );
+      setBulkResult(result);
+      // Reflect the newly written translations in the visible list.
+      refetch();
+    } catch (err) {
+      setToolbarError(
+        err instanceof ApiRequestError ? err.message : "Failed to fill translations with AI."
+      );
+    } finally {
+      setBulkRunning(false);
+    }
+  }
+
   async function confirmDelete() {
     if (!deleteTarget) return;
     setDeleting(true);
@@ -109,6 +163,33 @@ export function VocabularyManager() {
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            {aiDisabledReason ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={0} className="w-full sm:w-auto">
+                    <Button variant="outline" disabled className="w-full sm:w-auto">
+                      <Sparkles className="size-4" />
+                      Fill missing with AI
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>{aiDisabledReason}</TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={handleBulkFill}
+                disabled={bulkRunning}
+                className="w-full sm:w-auto"
+              >
+                {bulkRunning ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Sparkles className="size-4" />
+                )}
+                Fill missing with AI
+              </Button>
+            )}
             <Button
               variant="outline"
               onClick={handleExport}
@@ -133,6 +214,38 @@ export function VocabularyManager() {
           </div>
         </div>
         {toolbarError && <p className="mt-2 text-sm text-danger">{toolbarError}</p>}
+
+        {bulkResult && (
+          <div className="mt-2 rounded-xl border border-border bg-secondary/40 px-3.5 py-3 text-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-medium text-navy">
+                  Filled {bulkResult.translationsAdded} translation
+                  {bulkResult.translationsAdded === 1 ? "" : "s"} across{" "}
+                  {bulkResult.wordsProcessed} word
+                  {bulkResult.wordsProcessed === 1 ? "" : "s"}.
+                </p>
+                {bulkResult.errors.length > 0 && (
+                  <ul className="mt-1.5 list-disc pl-5 text-xs text-danger">
+                    {bulkResult.errors.map((e) => (
+                      <li key={e.wordId}>
+                        Word {e.wordId}: {e.error}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setBulkResult(null)}
+                aria-label="Dismiss"
+                className="shrink-0 text-muted-foreground transition-colors hover:text-navy"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </Reveal>
 
       {error ? (

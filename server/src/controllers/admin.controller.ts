@@ -4,6 +4,8 @@ import { sendSuccess } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import type {
+  AiTranslateBulkInput,
+  AiTranslateSingleInput,
   CommitVocabularyImportInput,
   CreateLanguageInput,
   CreateVocabularyWordInput,
@@ -101,6 +103,26 @@ export const adminController = {
     res.setHeader("Content-Type", "text/csv");
     res.setHeader("Content-Disposition", 'attachment; filename="vocabulary-export.csv"');
     res.status(200).send(csv);
+  }),
+
+  // --- AI-assisted vocabulary translation ---
+
+  getAiTranslateStatus: asyncHandler(async (_req: Request, res: Response) => {
+    const data = adminService.aiTranslateStatus();
+    sendSuccess(res, data);
+  }),
+
+  suggestVocabularyTranslations: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params as unknown as VocabularyWordIdParam;
+    const input = req.body as AiTranslateSingleInput;
+    const suggestions = await adminService.suggestVocabularyTranslations(id, input);
+    sendSuccess(res, suggestions);
+  }),
+
+  bulkFillVocabularyTranslations: asyncHandler(async (req: Request, res: Response) => {
+    const input = req.body as AiTranslateBulkInput;
+    const result = await adminService.bulkFillVocabularyTranslations(input);
+    sendSuccess(res, result, "AI bulk translation completed");
   }),
 
   // --- Language management ---

@@ -1,5 +1,6 @@
 import type {
   Course,
+  CourseSummary,
   Lesson,
   LessonContentProvider,
   LessonSummary,
@@ -65,5 +66,18 @@ export class LocalJsonContentProvider implements LessonContentProvider {
       throw new LessonLoadError(id, `Course "${id}" was not found.`);
     }
     return course;
+  }
+
+  async listCourses(filter: {
+    language?: string;
+    level?: string;
+  }): Promise<CourseSummary[]> {
+    return Object.values(COURSE_MANIFEST)
+      .filter((c) => {
+        if (filter.language && c.language !== filter.language) return false;
+        if (filter.level && c.level !== filter.level) return false;
+        return true;
+      })
+      .map(({ sections: _sections, ...summary }) => summary);
   }
 }

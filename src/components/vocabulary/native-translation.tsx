@@ -1,5 +1,6 @@
 "use client";
 
+import { FlagIcon } from "@/components/ui/flag-icon";
 import { useLanguageLookup } from "@/hooks/use-languages";
 import { cn } from "@/lib/utils";
 import type { Translation } from "@/types/language";
@@ -28,9 +29,11 @@ export function NativeTranslation({
       className={cn("flex items-center gap-1.5 text-sm text-foreground/80", className)}
       title={language ? language.name : undefined}
     >
-      <span aria-hidden className="text-base leading-none">
-        {language?.flagEmoji ?? "🌐"}
-      </span>
+      <FlagIcon
+        flagEmoji={language?.flagEmoji ?? "🌐"}
+        label={language?.name}
+        className="text-base leading-none"
+      />
       <span>{translation.text}</span>
     </p>
   );

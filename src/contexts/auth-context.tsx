@@ -40,6 +40,15 @@ interface AuthContextValue {
    * optimistically updating local state and rolling back on failure.
    */
   updatePrimaryLanguage: (languageCode: string) => Promise<void>;
+  /**
+   * Returns the current in-memory access token (or `null` when signed out).
+   * A stable function that reads `accessTokenRef` directly, so it's always
+   * fresh with no stale-closure risk — mirrors how `authedFetch` reads the ref
+   * internally. Consumed by the self-contained lesson-engine (via its injected
+   * token provider) so its public read API can be auth-aware without importing
+   * AuthContext.
+   */
+  getAccessToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -195,6 +204,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [user, authedFetch]
   );
 
+  // Stable getter reading the ref synchronously — always fresh, safe to register
+  // once with the lesson-engine's token provider without re-registering on token
+  // changes.
+  const getAccessToken = useCallback(() => accessTokenRef.current, []);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -205,8 +219,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authedFetch,
       authedFetchRaw,
       updatePrimaryLanguage,
+      getAccessToken,
     }),
-    [user, isLoading, login, register, logout, authedFetch, authedFetchRaw, updatePrimaryLanguage]
+    [user, isLoading, login, register, logout, authedFetch, authedFetchRaw, updatePrimaryLanguage, getAccessToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

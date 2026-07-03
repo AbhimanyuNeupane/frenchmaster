@@ -39,7 +39,7 @@ export type {
   RewardCardModel,
 } from "./card";
 export type { Lesson, LessonSummary } from "./lesson";
-export type { Course, Section } from "./course";
+export type { Course, Section, CourseSummary } from "./course";
 export type {
   LessonContentProvider,
   MediaService,

@@ -53,6 +53,39 @@ export const requireAuth = asyncHandler(
 );
 
 /**
+ * Same Bearer-token verification as `requireAuth`, but never throws — on
+ * any failure (no header, malformed header, invalid/expired token, user not
+ * found/deleted, account not ACTIVE) it just calls `next()` with `req.user`
+ * left `undefined`. Used on public routes that need to know the requester's
+ * role WHEN present (e.g. lesson-engine content gating, see
+ * lessonEngine.service.ts / utils/roleRank.ts) without requiring a token —
+ * an anonymous request must stay genuinely accessible.
+ */
+export const optionalAuth = asyncHandler(
+  async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+    const header = req.headers.authorization;
+    if (!header || !header.startsWith("Bearer ")) {
+      next();
+      return;
+    }
+
+    const token = header.slice("Bearer ".length).trim();
+
+    try {
+      const payload = verifyAccessToken(token);
+      const user = await userRepository.findById(payload.sub);
+      if (user && !user.deletedAt && user.status === "ACTIVE") {
+        req.user = payload;
+      }
+    } catch {
+      // Invalid/expired token on a public route — stay anonymous, don't fail the request.
+    }
+
+    next();
+  }
+);
+
+/**
  * Role-based access guard. Use after `requireAuth`. Not used by the
  * dashboard endpoint today, but wired up for future admin-only routes.
  */

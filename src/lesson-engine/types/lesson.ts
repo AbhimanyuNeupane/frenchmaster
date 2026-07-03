@@ -23,4 +23,11 @@ export interface LessonSummary {
   title: string;
   description?: string;
   cardCount?: number;
+  /**
+   * Content-gating flag from the auth-aware public API: `true` means the lesson
+   * exists but the current requester (anonymous, or an under-privileged role)
+   * can't play it yet. Absent/`false` = freely playable. The lesson is still
+   * listed either way — gating blocks playing, never discovery.
+   */
+  locked?: boolean;
 }

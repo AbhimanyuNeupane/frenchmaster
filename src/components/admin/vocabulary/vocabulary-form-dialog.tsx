@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Loader2, Plus, X } from "lucide-react";
+import { Loader2, Plus, Sparkles, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +13,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AdminSelect, AdminTextarea } from "@/components/admin/form-controls";
 import { SynonymsInput } from "@/components/admin/vocabulary/synonyms-input";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
 import type { CEFRLevel, PartOfSpeech, WordGender } from "@/types";
-import type { AdminVocabularyWord, VocabularyWordPayload } from "@/types/admin";
+import type {
+  AdminVocabularyWord,
+  AiTranslateStatus,
+  AiTranslateSuggestion,
+  VocabularyWordPayload,
+} from "@/types/admin";
 import type { AdminLanguage } from "@/types/language";
 
 const PARTS_OF_SPEECH: PartOfSpeech[] = [
@@ -118,8 +124,15 @@ export function VocabularyFormDialog({
     [languages]
   );
 
+  // AI-translate configuration status. The button is only usable when the
+  // backend has an ANTHROPIC_API_KEY set; this query tells us so we can show a
+  // disabled+tooltip state rather than letting the request 501.
+  const { data: aiStatus, isLoading: aiStatusLoading } =
+    useApiQuery<AiTranslateStatus>("/api/admin/vocabulary/ai-translate/status");
+
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [synced, setSynced] = useState(false);
 
@@ -188,6 +201,66 @@ export function VocabularyFormDialog({
       ];
     }
     return opts;
+  }
+
+  // Reason the "Suggest with AI" button is unavailable, or null when it's
+  // ready. Editing is required because the endpoint needs a real word id, and
+  // AI must actually be configured on the backend.
+  const aiConfigured = aiStatus?.configured === true;
+  const aiDisabledReason: string | null = !isEditing
+    ? "Save the word first, then use AI to suggest translations."
+    : aiStatusLoading
+      ? "Checking AI availability…"
+      : !aiConfigured
+        ? "AI translation isn't set up yet."
+        : null;
+
+  /**
+   * Merges AI suggestions into the form without clobbering anything the admin
+   * has already filled in: English is only set when empty, and each suggested
+   * language only fills a missing/empty row. Nothing is saved — the admin can
+   * edit and then hit the existing Save button.
+   */
+  function applySuggestions(suggestions: AiTranslateSuggestion[]) {
+    setForm((prev) => {
+      const en = suggestions.find((s) => s.languageCode === "en");
+      const english = en && !prev.english.trim() ? en.text : prev.english;
+
+      const rows = [...prev.extraTranslations];
+      for (const s of suggestions) {
+        if (s.languageCode === "en") continue;
+        const existingIndex = rows.findIndex((r) => r.languageCode === s.languageCode);
+        if (existingIndex >= 0) {
+          if (!rows[existingIndex].text.trim()) {
+            rows[existingIndex] = { ...rows[existingIndex], text: s.text };
+          }
+        } else {
+          rows.push({ languageCode: s.languageCode, text: s.text });
+        }
+      }
+      return { ...prev, english, extraTranslations: rows };
+    });
+  }
+
+  async function handleSuggest() {
+    if (!word) return;
+    setSuggesting(true);
+    setError(null);
+    try {
+      // No body → the server defaults to "every enabled language missing a
+      // translation on this word".
+      const suggestions = await authedFetch<AiTranslateSuggestion[]>(
+        `/api/admin/vocabulary/${word.id}/ai-translate`,
+        { method: "POST", body: JSON.stringify({}) }
+      );
+      applySuggestions(suggestions);
+    } catch (err) {
+      setError(
+        err instanceof ApiRequestError ? err.message : "Failed to get AI suggestions."
+      );
+    } finally {
+      setSuggesting(false);
+    }
   }
 
   function validate(): string | null {
@@ -341,16 +414,47 @@ export function VocabularyFormDialog({
             ))}
 
             <div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={addTranslation}
-                disabled={saving || !firstUnusedCode}
-              >
-                <Plus className="size-3.5" />
-                Add translation
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addTranslation}
+                  disabled={saving || !firstUnusedCode}
+                >
+                  <Plus className="size-3.5" />
+                  Add translation
+                </Button>
+
+                {aiDisabledReason ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span tabIndex={0}>
+                        <Button type="button" variant="outline" size="sm" disabled>
+                          <Sparkles className="size-3.5" />
+                          Suggest with AI
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>{aiDisabledReason}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSuggest}
+                    disabled={saving || suggesting}
+                  >
+                    {suggesting ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="size-3.5" />
+                    )}
+                    Suggest with AI
+                  </Button>
+                )}
+              </div>
               {otherLanguages.length === 0 && (
                 <p className="mt-1.5 text-xs text-muted-foreground">
                   Add languages in the Languages section to author more translations.

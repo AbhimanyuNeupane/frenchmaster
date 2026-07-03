@@ -150,6 +150,21 @@ export const commitVocabularyImportSchema = z.object({
   unitTitle: z.string().trim().min(1).max(200),
 });
 
+/**
+ * AI-assisted translation schemas (translationAi.service.ts). The single
+ * endpoint is a preview only (never writes to the DB) so `languageCodes`
+ * just narrows which languages to suggest; the bulk endpoint additionally
+ * takes `limit` since it scans the catalog and writes directly.
+ */
+export const aiTranslateSingleSchema = z.object({
+  languageCodes: z.array(z.string().trim().min(2).max(10)).optional(),
+});
+
+export const aiTranslateBulkSchema = z.object({
+  languageCodes: z.array(z.string().trim().min(2).max(10)).optional(),
+  limit: z.coerce.number().int().positive().max(50).default(20),
+});
+
 export type ListUsersQuery = z.infer<typeof listUsersSchema>;
 export type UserIdParam = z.infer<typeof userIdParamSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
@@ -160,3 +175,5 @@ export type LanguageCodeParam = z.infer<typeof languageCodeParamSchema>;
 export type CreateLanguageInput = z.infer<typeof createLanguageSchema>;
 export type UpdateLanguageInput = z.infer<typeof updateLanguageSchema>;
 export type CommitVocabularyImportInput = z.infer<typeof commitVocabularyImportSchema>;
+export type AiTranslateSingleInput = z.infer<typeof aiTranslateSingleSchema>;
+export type AiTranslateBulkInput = z.infer<typeof aiTranslateBulkSchema>;

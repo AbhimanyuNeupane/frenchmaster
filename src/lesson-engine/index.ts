@@ -4,7 +4,7 @@
  */
 export { LessonRenderer } from "./engine";
 export type { LessonRendererProps } from "./engine";
-export { useLesson, useCourse, useLessonList, useMediaService } from "./hooks";
+export { useLesson, useCourse, useLessonList, useCourseList, useMediaService } from "./hooks";
 export { attachPersistence } from "./persistence";
 export { getContentProvider, LessonLoadError } from "./services/content";
 export { getMediaService } from "./services/media";

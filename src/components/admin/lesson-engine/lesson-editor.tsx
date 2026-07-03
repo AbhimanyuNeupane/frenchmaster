@@ -21,7 +21,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AdminTextarea } from "@/components/admin/form-controls";
+import { AdminSelect, AdminTextarea } from "@/components/admin/form-controls";
 import { LessonPreviewPanel } from "@/components/admin/lesson-engine/lesson-preview-panel";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
@@ -31,8 +31,24 @@ import type { ZodError } from "zod";
 import type { Lesson, LessonCard } from "@/lesson-engine/types";
 import type {
   AdminLessonEngineLessonDetail,
+  LessonRequiredRole,
   ValidateLessonDraftResponse,
 } from "@/types/lessonEngineAdmin";
+
+// Select values for the "Required role" field. "none" is the UI stand-in for
+// the API's `null` (fully public — free for everyone).
+const REQUIRED_ROLE_OPTIONS: { value: string; label: string }[] = [
+  { value: "none", label: "None (free for everyone)" },
+  { value: "USER", label: "USER" },
+  { value: "PREMIUM", label: "PREMIUM" },
+  { value: "MODERATOR", label: "MODERATOR" },
+  { value: "ADMIN", label: "ADMIN" },
+];
+
+/** Maps the select's string value to the API's `requiredRole` (null when public). */
+function toRequiredRole(value: string): LessonRequiredRole {
+  return value === "none" ? null : (value as Exclude<LessonRequiredRole, null>);
+}
 
 const STARTER_CARDS = `[
   {
@@ -87,6 +103,9 @@ export function LessonEditor({
   const [title, setTitle] = useState(lesson?.title ?? "");
   const [description, setDescription] = useState(lesson?.description ?? "");
   const [published, setPublished] = useState(lesson?.published ?? false);
+  const [requiredRole, setRequiredRole] = useState<string>(
+    lesson?.requiredRole ?? "none"
+  );
   const [cardsText, setCardsText] = useState(
     lesson ? JSON.stringify(lesson.cards, null, 2) : STARTER_CARDS
   );
@@ -296,6 +315,7 @@ export function LessonEditor({
             description: description.trim() || undefined,
             cards: result.cards,
             published,
+            requiredRole: toRequiredRole(requiredRole),
           }),
         });
       } else {
@@ -309,6 +329,7 @@ export function LessonEditor({
             description: description.trim() || undefined,
             cards: result.cards,
             published,
+            requiredRole: toRequiredRole(requiredRole),
           }),
         });
       }
@@ -438,6 +459,25 @@ export function LessonEditor({
               placeholder="Say hello, goodbye, and be polite in everyday French."
               className="min-h-[64px]"
             />
+          </div>
+
+          <div>
+            <Label htmlFor="lesson-required-role">Required role</Label>
+            <AdminSelect
+              id="lesson-required-role"
+              value={requiredRole}
+              onChange={(e) => setRequiredRole(e.target.value)}
+            >
+              {REQUIRED_ROLE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </AdminSelect>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Gates who can play this lesson. &quot;None&quot; keeps it free for
+              everyone; any other value requires that role (or higher).
+            </p>
           </div>
 
           <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/30 px-4 py-3">

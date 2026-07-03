@@ -1,4 +1,4 @@
-import type { Course } from "./course";
+import type { Course, CourseSummary } from "./course";
 import type { Lesson, LessonSummary } from "./lesson";
 import type { MediaRef } from "./media";
 
@@ -14,6 +14,10 @@ export interface LessonContentProvider {
     level?: string;
   }): Promise<LessonSummary[]>;
   getCourse(id: string): Promise<Course>;
+  listCourses(filter: {
+    language?: string;
+    level?: string;
+  }): Promise<CourseSummary[]>;
 }
 
 /**

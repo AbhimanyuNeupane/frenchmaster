@@ -223,6 +223,44 @@ export const adminRepository = {
     );
   },
 
+  // --- AI-assisted translation (translationAi.service.ts / admin.service.ts) ---
+
+  /**
+   * Pages through non-deleted vocabulary words, oldest-updated first, so
+   * repeated bulk-fill runs naturally rotate through the catalog instead of
+   * always rescanning the same head of the table. `translations` included
+   * so the caller can diff against target language codes without an
+   * extra query per word. Used by the AI bulk-translate job to find words
+   * missing at least one target-language translation (that filtering
+   * happens in admin.service.ts, in JS, since "translation count for a
+   * subset of codes < N" isn't a clean single Prisma where-filter).
+   */
+  findVocabularyWordsForTranslationScan(skip: number, take: number) {
+    return prisma.vocabularyWord.findMany({
+      where: { deletedAt: null },
+      include: { translations: true },
+      orderBy: { updatedAt: "asc" },
+      skip,
+      take,
+    });
+  },
+
+  /**
+   * Inserts translation rows ONLY for languageCodes not already present on
+   * the word — this is the bulk-fill safety guarantee (never overwrite a
+   * human-authored translation). `skipDuplicates` is a second line of
+   * defense at the DB level (the (vocabularyWordId, languageCode) unique
+   * constraint) in case of a race with a concurrent admin edit between the
+   * caller's "missing" computation and this write.
+   */
+  addMissingVocabularyTranslations(vocabularyWordId: string, entries: TranslationEntryInput[]) {
+    if (entries.length === 0) return Promise.resolve({ count: 0 });
+    return prisma.vocabularyTranslation.createMany({
+      data: entries.map((e) => ({ vocabularyWordId, languageCode: e.languageCode, translatedText: e.text })),
+      skipDuplicates: true,
+    });
+  },
+
   // --- Language management ---
   //
   // Adding a new language is a pure data operation (this CRUD surface) —
@@ -230,6 +268,13 @@ export const adminRepository = {
 
   findAllLanguages() {
     return prisma.language.findMany({ orderBy: [{ displayOrder: "asc" }, { code: "asc" }] });
+  },
+
+  findEnabledLanguages() {
+    return prisma.language.findMany({
+      where: { enabled: true },
+      orderBy: [{ displayOrder: "asc" }, { code: "asc" }],
+    });
   },
 
   findLanguageByCode(code: string) {
