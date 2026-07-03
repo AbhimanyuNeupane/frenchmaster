@@ -47,6 +47,7 @@ export function VocabularyCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5">
+          <Badge variant="accent">{word.level}</Badge>
           {word.gender && (
             <Badge variant="outline" className="lowercase">
               {GENDER_LABEL[word.gender]}
@@ -92,8 +93,7 @@ export function VocabularyCard({
         <NativeTranslation translation={word.nativeTranslation} />
       </div>
 
-      <div className="mt-auto flex items-center justify-between pt-1">
-        <span className="text-[11px] font-medium text-muted-foreground">{word.unitTitle}</span>
+      <div className="mt-auto flex items-center justify-end pt-1">
         <Badge variant={MASTERY_VARIANT[word.masteryStatus]}>
           {MASTERY_LABEL[word.masteryStatus]}
         </Badge>

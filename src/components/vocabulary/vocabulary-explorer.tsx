@@ -11,11 +11,44 @@ import { VocabularyDetailDialog } from "@/components/vocabulary/vocabulary-detai
 import { useAuth } from "@/contexts/auth-context";
 import type { CEFRLevel, VocabularyListResponse, VocabularyWord } from "@/types";
 
+/** Preferred display order for well-known categories; anything else is appended
+ *  alphabetically after these — new categories never need this list updated to
+ *  show up, they just sort after the curated ones. */
+const CATEGORY_ORDER = [
+  "Greetings & Politeness",
+  "Greetings",
+  "Question Words",
+  "Pronouns",
+  "Common Verbs",
+  "Numbers",
+  "Days & Months",
+  "Time & Dates",
+  "Colors",
+  "Family",
+  "Food & Dining",
+  "Places",
+  "Adjectives",
+  "Body Parts",
+  "Everyday Objects",
+];
+
+function sortCategories(categories: string[]): string[] {
+  return [...categories].sort((a, b) => {
+    const ai = CATEGORY_ORDER.indexOf(a);
+    const bi = CATEGORY_ORDER.indexOf(b);
+    if (ai !== -1 && bi !== -1) return ai - bi;
+    if (ai !== -1) return -1;
+    if (bi !== -1) return 1;
+    return a.localeCompare(b);
+  });
+}
+
 export function VocabularyExplorer({ initialData }: { initialData: VocabularyListResponse }) {
   const { authedFetch } = useAuth();
   const [words, setWords] = useState<VocabularyWord[]>(initialData.words);
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState<CEFRLevel | "all">("all");
+  const [category, setCategory] = useState<string | "all">("all");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [dueOnly, setDueOnly] = useState(false);
   const [activeWordId, setActiveWordId] = useState<string | null>(null);
@@ -30,10 +63,18 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
     [words]
   );
 
+  // Categories actually present in the catalog — never hardcoded, so a new
+  // category (from an admin CSV import or manual add) shows up automatically.
+  const availableCategories = useMemo(
+    () => sortCategories(Array.from(new Set(words.map((w) => w.unitTitle)))),
+    [words]
+  );
+
   const filteredWords = useMemo(() => {
     const query = search.trim().toLowerCase();
     return words.filter((w) => {
       if (level !== "all" && w.level !== level) return false;
+      if (category !== "all" && w.unitTitle !== category) return false;
       if (favoritesOnly && !w.isFavorite) return false;
       if (dueOnly && w.masteryStatus === "mastered") return false;
       if (
@@ -46,7 +87,24 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
       }
       return true;
     });
-  }, [words, search, level, favoritesOnly, dueOnly]);
+  }, [words, search, level, category, favoritesOnly, dueOnly]);
+
+  // Always organize the results by category — "Greetings" shows its own
+  // section with every greeting word inside it, rather than one flat,
+  // undifferentiated grid. A single selected category naturally renders as
+  // one section.
+  const groupedWords = useMemo(() => {
+    const groups = new Map<string, VocabularyWord[]>();
+    for (const word of filteredWords) {
+      const list = groups.get(word.unitTitle) ?? [];
+      list.push(word);
+      groups.set(word.unitTitle, list);
+    }
+    return sortCategories(Array.from(groups.keys())).map((title) => ({
+      title,
+      words: groups.get(title) ?? [],
+    }));
+  }, [filteredWords]);
 
   const activeWord = words.find((w) => w.id === activeWordId) ?? null;
 
@@ -111,6 +169,9 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
           onSearchChange={setSearch}
           level={level}
           onLevelChange={setLevel}
+          categories={availableCategories}
+          category={category}
+          onCategoryChange={setCategory}
           favoritesOnly={favoritesOnly}
           onFavoritesOnlyChange={setFavoritesOnly}
           dueOnly={dueOnly}
@@ -118,19 +179,31 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
         />
       </Reveal>
 
-      {filteredWords.length > 0 ? (
-        <Reveal delay={0.15}>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredWords.map((word) => (
-              <VocabularyCard
-                key={word.id}
-                word={word}
-                onOpen={() => setActiveWordId(word.id)}
-                onToggleFavorite={() => toggleFavorite(word.id)}
-              />
-            ))}
-          </div>
-        </Reveal>
+      {groupedWords.length > 0 ? (
+        <div className="flex flex-col gap-8">
+          {groupedWords.map((group, i) => (
+            <Reveal key={group.title} delay={0.15 + i * 0.03}>
+              <section className="flex flex-col gap-3">
+                <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  {group.title}
+                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium normal-case tracking-normal text-foreground/70">
+                    {group.words.length}
+                  </span>
+                </h2>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.words.map((word) => (
+                    <VocabularyCard
+                      key={word.id}
+                      word={word}
+                      onOpen={() => setActiveWordId(word.id)}
+                      onToggleFavorite={() => toggleFavorite(word.id)}
+                    />
+                  ))}
+                </div>
+              </section>
+            </Reveal>
+          ))}
+        </div>
       ) : (
         <Reveal delay={0.15}>
           <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">

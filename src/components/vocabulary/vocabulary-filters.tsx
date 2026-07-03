@@ -38,6 +38,9 @@ export function VocabularyFilters({
   onSearchChange,
   level,
   onLevelChange,
+  categories,
+  category,
+  onCategoryChange,
   favoritesOnly,
   onFavoritesOnlyChange,
   dueOnly,
@@ -47,6 +50,10 @@ export function VocabularyFilters({
   onSearchChange: (value: string) => void;
   level: CEFRLevel | "all";
   onLevelChange: (value: CEFRLevel | "all") => void;
+  /** Every category actually present in the catalog — computed from real data, never hardcoded. */
+  categories: string[];
+  category: string | "all";
+  onCategoryChange: (value: string | "all") => void;
   favoritesOnly: boolean;
   onFavoritesOnlyChange: (value: boolean) => void;
   dueOnly: boolean;
@@ -65,6 +72,9 @@ export function VocabularyFilters({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
+        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Level
+        </span>
         <Chip active={level === "all"} onClick={() => onLevelChange("all")}>
           All Levels
         </Chip>
@@ -85,6 +95,22 @@ export function VocabularyFilters({
           Due for Review
         </Chip>
       </div>
+
+      {categories.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Category
+          </span>
+          <Chip active={category === "all"} onClick={() => onCategoryChange("all")}>
+            All Categories
+          </Chip>
+          {categories.map((c) => (
+            <Chip key={c} active={category === c} onClick={() => onCategoryChange(c)}>
+              {c}
+            </Chip>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
