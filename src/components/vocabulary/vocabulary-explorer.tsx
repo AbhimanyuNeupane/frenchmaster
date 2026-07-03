@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Library } from "lucide-react";
+import { ArrowLeft, Library } from "lucide-react";
 
 import { Reveal } from "@/components/layout/reveal";
+import { Button } from "@/components/ui/button";
 import { VocabularyStatsBar } from "@/components/vocabulary/vocabulary-stats-bar";
 import { VocabularyFilters } from "@/components/vocabulary/vocabulary-filters";
 import { VocabularyCard } from "@/components/vocabulary/vocabulary-card";
+import { VocabularyCategoryGrid } from "@/components/vocabulary/vocabulary-category-grid";
 import { VocabularyDetailDialog } from "@/components/vocabulary/vocabulary-detail-dialog";
 import { useAuth } from "@/contexts/auth-context";
 import type { CEFRLevel, VocabularyListResponse, VocabularyWord } from "@/types";
@@ -63,13 +65,6 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
     [words]
   );
 
-  // Categories actually present in the catalog — never hardcoded, so a new
-  // category (from an admin CSV import or manual add) shows up automatically.
-  const availableCategories = useMemo(
-    () => sortCategories(Array.from(new Set(words.map((w) => w.unitTitle)))),
-    [words]
-  );
-
   const filteredWords = useMemo(() => {
     const query = search.trim().toLowerCase();
     return words.filter((w) => {
@@ -89,22 +84,23 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
     });
   }, [words, search, level, category, favoritesOnly, dueOnly]);
 
-  // Always organize the results by category — "Greetings" shows its own
-  // section with every greeting word inside it, rather than one flat,
-  // undifferentiated grid. A single selected category naturally renders as
-  // one section.
-  const groupedWords = useMemo(() => {
-    const groups = new Map<string, VocabularyWord[]>();
-    for (const word of filteredWords) {
-      const list = groups.get(word.unitTitle) ?? [];
-      list.push(word);
-      groups.set(word.unitTitle, list);
-    }
-    return sortCategories(Array.from(groups.keys())).map((title) => ({
+  // The landing view is a grid of category tiles (never all 15 categories'
+  // words stacked on one page) — tiles respect the Level filter but not
+  // category/search/favorites/due, since picking a tile IS how you set
+  // category. The moment any other filter is active (or a category is
+  // already selected), show that filtered result set directly instead.
+  const showCategoryTiles =
+    category === "all" && !favoritesOnly && !dueOnly && search.trim() === "";
+
+  const categoryTiles = useMemo(() => {
+    const inLevel = level === "all" ? words : words.filter((w) => w.level === level);
+    const counts = new Map<string, number>();
+    for (const w of inLevel) counts.set(w.unitTitle, (counts.get(w.unitTitle) ?? 0) + 1);
+    return sortCategories(Array.from(counts.keys())).map((title) => ({
       title,
-      words: groups.get(title) ?? [],
+      count: counts.get(title) ?? 0,
     }));
-  }, [filteredWords]);
+  }, [words, level]);
 
   const activeWord = words.find((w) => w.id === activeWordId) ?? null;
 
@@ -169,9 +165,6 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
           onSearchChange={setSearch}
           level={level}
           onLevelChange={setLevel}
-          categories={availableCategories}
-          category={category}
-          onCategoryChange={setCategory}
           favoritesOnly={favoritesOnly}
           onFavoritesOnlyChange={setFavoritesOnly}
           dueOnly={dueOnly}
@@ -179,41 +172,54 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
         />
       </Reveal>
 
-      {groupedWords.length > 0 ? (
-        <div className="flex flex-col gap-8">
-          {groupedWords.map((group, i) => (
-            <Reveal key={group.title} delay={0.15 + i * 0.03}>
-              <section className="flex flex-col gap-3">
-                <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  {group.title}
-                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium normal-case tracking-normal text-foreground/70">
-                    {group.words.length}
+      {showCategoryTiles ? (
+        <Reveal delay={0.15}>
+          <VocabularyCategoryGrid categories={categoryTiles} onSelect={setCategory} />
+        </Reveal>
+      ) : (
+        <>
+          <Reveal delay={0.12}>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={() => setCategory("all")}>
+                <ArrowLeft className="size-3.5" />
+                All categories
+              </Button>
+              {category !== "all" && (
+                <h2 className="text-sm font-semibold text-navy">
+                  {category}
+                  <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-foreground/70">
+                    {filteredWords.length}
                   </span>
                 </h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {group.words.map((word) => (
-                    <VocabularyCard
-                      key={word.id}
-                      word={word}
-                      onOpen={() => setActiveWordId(word.id)}
-                      onToggleFavorite={() => toggleFavorite(word.id)}
-                    />
-                  ))}
-                </div>
-              </section>
+              )}
+            </div>
+          </Reveal>
+
+          {filteredWords.length > 0 ? (
+            <Reveal delay={0.15}>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredWords.map((word) => (
+                  <VocabularyCard
+                    key={word.id}
+                    word={word}
+                    onOpen={() => setActiveWordId(word.id)}
+                    onToggleFavorite={() => toggleFavorite(word.id)}
+                  />
+                ))}
+              </div>
             </Reveal>
-          ))}
-        </div>
-      ) : (
-        <Reveal delay={0.15}>
-          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
-            <Library className="size-8 text-muted-foreground" />
-            <p className="text-sm font-medium text-navy">No words match your filters</p>
-            <p className="text-xs text-muted-foreground">
-              Try clearing the search or filters above.
-            </p>
-          </div>
-        </Reveal>
+          ) : (
+            <Reveal delay={0.15}>
+              <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+                <Library className="size-8 text-muted-foreground" />
+                <p className="text-sm font-medium text-navy">No words match your filters</p>
+                <p className="text-xs text-muted-foreground">
+                  Try clearing the search or filters above.
+                </p>
+              </div>
+            </Reveal>
+          )}
+        </>
       )}
 
       <VocabularyDetailDialog
