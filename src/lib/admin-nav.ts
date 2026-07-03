@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { LayoutDashboard, Users, Library, Globe, BookOpen, CreditCard } from "lucide-react";
+import { LayoutDashboard, Users, Library, Globe, BookOpen, CreditCard, Layers } from "lucide-react";
 
 export interface AdminNavItem {
   key: string;
@@ -15,6 +15,7 @@ export const adminNav: AdminNavItem[] = [
   { key: "overview", label: "Overview", href: "/admin", icon: LayoutDashboard, exact: true },
   { key: "users", label: "Users", href: "/admin/users", icon: Users },
   { key: "vocabulary", label: "Vocabulary", href: "/admin/vocabulary", icon: Library },
+  { key: "lesson-engine", label: "Lesson Engine", href: "/admin/lesson-engine", icon: Layers },
   { key: "languages", label: "Languages", href: "/admin/languages", icon: Globe },
 ];
 

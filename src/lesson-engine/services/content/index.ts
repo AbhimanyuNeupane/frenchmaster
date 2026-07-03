@@ -1,12 +1,14 @@
 import type { LessonContentProvider } from "../../types";
 import { LocalJsonContentProvider } from "./localJsonProvider";
+import { ApiContentProvider } from "./apiProvider";
 
 export type ContentBackend = "local" | "api";
 
-/** Currently hardcoded to the local JSON backend. This is the ONE place a
- *  future API/S3 content provider gets wired in — no other file references a
- *  concrete provider by name. */
-const ACTIVE_BACKEND: ContentBackend = "local";
+/** The ONE place the active content backend is chosen. `LocalJsonContentProvider`
+ *  is kept fully intact (and still exported) as the bundled-sample fallback; the
+ *  real backend now exists, so the API provider is the default. Flip this to
+ *  `"local"` to run entirely offline against `data/lessons/**`. */
+const ACTIVE_BACKEND: ContentBackend = "api";
 
 let instance: LessonContentProvider | null = null;
 
@@ -18,6 +20,9 @@ let instance: LessonContentProvider | null = null;
 export function getContentProvider(): LessonContentProvider {
   if (instance) return instance;
   switch (ACTIVE_BACKEND) {
+    case "api":
+      instance = new ApiContentProvider();
+      break;
     case "local":
     default:
       instance = new LocalJsonContentProvider();
@@ -25,5 +30,5 @@ export function getContentProvider(): LessonContentProvider {
   return instance;
 }
 
-export { LocalJsonContentProvider };
+export { LocalJsonContentProvider, ApiContentProvider };
 export { LessonLoadError } from "./types";

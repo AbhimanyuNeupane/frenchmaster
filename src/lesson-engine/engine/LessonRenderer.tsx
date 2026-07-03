@@ -15,7 +15,7 @@ import { validateCard, isValidatingCard } from "../validation";
 import { useLesson } from "../hooks/useLesson";
 import { useLessonNavigation } from "../navigation/useLessonNavigation";
 import { useLessonStore } from "../store/useLessonStore";
-import type { LessonCard, ValidationResult } from "../types";
+import type { Lesson, LessonCard, ValidationResult } from "../types";
 import {
   CardShell,
   EmptyLessonState,
@@ -31,7 +31,14 @@ const XP_VIEW = 2;
 const MAX_HEARTS = 5;
 
 export interface LessonRendererProps {
-  lessonId: string;
+  /** Load a saved lesson by id via the content provider. Omit when supplying `previewLesson`. */
+  lessonId?: string;
+  /**
+   * Render an in-memory, not-yet-saved lesson directly (used by the admin
+   * authoring UI to preview a draft). When set, the network fetch is skipped
+   * entirely and this object is the single source of lesson data.
+   */
+  previewLesson?: Lesson;
   courseId?: string;
   sectionId?: string;
   onExit?: () => void;
@@ -45,8 +52,11 @@ export interface LessonRendererProps {
  * logic.
  */
 export function LessonRenderer(props: LessonRendererProps) {
-  const { lessonId, onExit } = props;
-  const query = useLesson(lessonId);
+  const { lessonId, previewLesson, onExit } = props;
+  // Previewing a draft skips the network: pass `undefined` so the hook's
+  // `enabled: Boolean(lessonId)` guard keeps it from firing (and never hits
+  // `/lessons/undefined`).
+  const query = useLesson(previewLesson ? undefined : lessonId);
 
   return (
     <LessonErrorBoundary onExit={onExit} onRetry={() => query.refetch()}>
@@ -57,12 +67,22 @@ export function LessonRenderer(props: LessonRendererProps) {
 
 function RendererInner({
   lessonId,
+  previewLesson,
   courseId,
   sectionId,
   onExit,
 }: LessonRendererProps) {
   const reduce = useReducedMotion();
-  const { data: lesson, isLoading, error } = useLesson(lessonId);
+  const query = useLesson(previewLesson ? undefined : lessonId);
+
+  // A preview draft is its own data source; otherwise read from the query.
+  // NOTE: a preview intentionally shares the same global Zustand lesson store
+  // as real gameplay. This feature only runs inside the authenticated admin
+  // panel (never alongside a live learner session), so an isolated store
+  // instance isn't worth the complexity for this pass.
+  const lesson = previewLesson ?? query.data;
+  const isLoading = previewLesson ? false : query.isLoading;
+  const error = previewLesson ? null : query.error;
 
   // Throw load errors so the surrounding boundary can render the retry screen.
   if (error) throw error;

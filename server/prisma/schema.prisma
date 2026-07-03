@@ -814,3 +814,31 @@ model UserVocabularyProgress {
   @@index([userId, masteryStatus])
   @@map("user_vocabulary_progress")
 }
+
+// ---------------------------------------------------------------------------
+// Universal Lesson Engine content (src/lesson-engine/ — the card-based,
+// language-agnostic lesson player). This is a SEPARATE content model from
+// Lesson/Unit above (which back the existing French-specific /learn player) —
+// the two are unrelated by design. `cardsJson` stores the exact `cards` array
+// the engine's own Zod schema (src/lesson-engine/services/content/schema.ts)
+// validates client-side; the backend only does structural validation (see
+// lessonEngine.validators.ts) rather than duplicating the full per-card-type
+// union here, so the engine's card schema has exactly one source of truth.
+model LessonEngineLesson {
+  id          String  @id // admin-chosen slug, e.g. "fr_a1_lesson_002" — matches the engine's own Lesson.id
+  language    String // opaque ISO-ish code (e.g. "fr", "es") — never an enum, the engine is language-agnostic
+  level       String // opaque level label (e.g. "A1") — never an enum, for the same reason
+  title       String
+  description String?
+  cardsJson   Json // the validated `cards` array, exactly as authored
+  cardCount   Int // denormalized from cardsJson.length, for cheap admin list rendering
+  published   Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([language, level])
+  @@index([published])
+  @@map("lesson_engine_lessons")
+}
