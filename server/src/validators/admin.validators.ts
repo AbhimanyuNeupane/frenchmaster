@@ -141,12 +141,17 @@ const importRowSchema = z.object({
   french: z.string().trim().max(200).default(""),
   english: z.string().trim().max(200).default(""),
   pronunciation: z.string().trim().max(200).default(""),
+  // Per-row category override (from an optional "Category"/"Unit" CSV
+  // column) — empty means "use the batch-level unitTitle below". A single
+  // file mixing topics should never be forced into one category.
+  category: z.string().trim().max(200).default(""),
   translations: z.array(importTranslationEntrySchema).default([]),
 });
 
 export const commitVocabularyImportSchema = z.object({
   rows: z.array(importRowSchema).min(1, "At least one row is required"),
   level: z.enum(["A1", "A2", "B1", "B2"]),
+  // Fallback category applied to any row with no per-row Category value.
   unitTitle: z.string().trim().min(1).max(200),
 });
 

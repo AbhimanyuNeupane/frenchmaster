@@ -12,10 +12,12 @@ import { getContentProvider } from "@/lesson-engine/services/content";
 import type { Course, LessonSummary } from "@/lesson-engine/types";
 
 // Display labels live in the HOST app, never in the engine. The engine treats
-// language purely as an opaque string from the lesson/course JSON.
+// language purely as an opaque string from the lesson/course JSON — this map
+// only reflects the languages actually published today (French only, per
+// CLAUDE.md's "Current Content Scope"); adding a language later is purely a
+// data change plus a label here, no engine change.
 const LANGUAGE_LABEL: Record<string, string> = {
   fr: "French",
-  es: "Spanish",
 };
 
 function languageLabel(code: string): string {
@@ -69,12 +71,10 @@ export default function LessonEnginePickerPage() {
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Choose a lesson
+          Courses
         </h1>
         <p className="max-w-2xl text-muted-foreground">
-          The same engine renders every lesson below. Courses group lessons into
-          sections; every language flows through identical UI and code — the only
-          difference is the content.
+          Structured French courses, organized into sections and lessons.
         </p>
       </div>
 

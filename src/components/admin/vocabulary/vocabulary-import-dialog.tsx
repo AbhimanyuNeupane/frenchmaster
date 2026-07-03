@@ -132,7 +132,9 @@ export function VocabularyImportDialog({
           <DialogTitle>Import vocabulary from CSV</DialogTitle>
           <DialogDescription>
             Upload a CSV of words. French and English are required columns; any column matching a
-            language name becomes that language&apos;s translation.
+            language name becomes that language&apos;s translation. An optional &quot;Category&quot;
+            (or &quot;Unit&quot;) column lets each row pick its own category — a single file doesn&apos;t
+            have to be all one topic.
           </DialogDescription>
         </DialogHeader>
 
@@ -166,7 +168,7 @@ export function VocabularyImportDialog({
 
             <div className="rounded-xl bg-secondary/40 p-4">
               <p className="mb-3 text-sm font-medium text-navy">
-                All words in this file will be added to:
+                All words in this file will be added at this level:
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
@@ -184,13 +186,16 @@ export function VocabularyImportDialog({
                   </AdminSelect>
                 </div>
                 <div>
-                  <Label htmlFor="import-unit">Unit / category</Label>
+                  <Label htmlFor="import-unit">Default category</Label>
                   <Input
                     id="import-unit"
                     value={unitTitle}
                     onChange={(e) => setUnitTitle(e.target.value)}
                     placeholder="Greetings"
                   />
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    Used for any row without its own Category/Unit column value.
+                  </p>
                 </div>
               </div>
             </div>
@@ -257,6 +262,7 @@ export function VocabularyImportDialog({
                         <th className="px-3 py-2 font-semibold">French</th>
                         <th className="px-3 py-2 font-semibold">English</th>
                         <th className="px-3 py-2 font-semibold">Pron.</th>
+                        <th className="px-3 py-2 font-semibold">Category</th>
                         <th className="px-3 py-2 font-semibold">Other</th>
                         <th className="px-3 py-2 font-semibold">Status</th>
                       </tr>
@@ -274,6 +280,11 @@ export function VocabularyImportDialog({
                             <td className="px-3 py-2">{row.data.english}</td>
                             <td className="px-3 py-2 text-muted-foreground">
                               {row.data.pronunciation}
+                            </td>
+                            <td className="px-3 py-2 text-muted-foreground">
+                              {row.data.category || (
+                                <span className="italic">{unitTitle} (default)</span>
+                              )}
                             </td>
                             <td className="px-3 py-2 text-muted-foreground">
                               {row.data.translations.length > 0

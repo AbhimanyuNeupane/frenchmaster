@@ -212,13 +212,15 @@ export const adminService = {
     }
 
     // English translation is always present (validated above) alongside
-    // any native-language translations parsed from the CSV columns.
+    // any native-language translations parsed from the CSV columns. Each
+    // row's own Category (if the CSV had one) wins over the batch-level
+    // unitTitle — a mixed-topic file is no longer forced into one category.
     const created = await adminRepository.createVocabularyWordsBulk(
       validRows.map((r) => ({
         french: r.data.french,
         pronunciationIpa: r.data.pronunciation,
         level: input.level,
-        unitTitle: input.unitTitle,
+        unitTitle: r.data.category || input.unitTitle,
         translations: [{ languageCode: "en", text: r.data.english }, ...r.data.translations],
       }))
     );

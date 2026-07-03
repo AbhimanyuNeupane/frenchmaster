@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard,
   BookOpen,
+  Layers,
   Library,
   SpellCheck2,
   Headphones,
@@ -29,6 +30,7 @@ export interface NavItem {
 export const primaryNav: NavItem[] = [
   { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { key: "learn", label: "Learn", href: "/learn", icon: BookOpen },
+  { key: "courses", label: "Courses", href: "/lesson-engine", icon: Layers },
   { key: "vocabulary", label: "Vocabulary", href: "/vocabulary", icon: Library },
   { key: "grammar", label: "Grammar", href: "/grammar", icon: SpellCheck2 },
   { key: "listening", label: "Listening", href: "/listening", icon: Headphones },

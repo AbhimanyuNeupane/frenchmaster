@@ -1,17 +1,21 @@
 import * as React from "react";
-import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { AppShell } from "@/components/layout/app-shell";
 import { LessonEngineProviders } from "./providers";
 
 export const metadata = {
-  title: "Universal Lesson Engine",
-  description: "A language-agnostic, card-based lesson player.",
+  title: "Courses",
+  description: "Card-based courses, published and managed by admins.",
 };
 
 /**
- * Minimal, auth-free chrome for the demo. Deliberately does NOT reuse the
- * existing app's AppShell/AdminShell — this route is independent of the
- * FrenchMaster app.
+ * Reuses the real app chrome (Sidebar + Topbar) so this route feels like a
+ * genuine part of FrenchMaster, not a disconnected demo — this is what a
+ * learner sees when they click "Courses" in the main sidebar. Deliberately
+ * does NOT wrap in `RequireAuth`: both `Sidebar` and `Topbar` already handle
+ * an anonymous (`user === null`) visitor gracefully (Sidebar doesn't touch
+ * auth at all; Topbar just renders nothing), so this route stays browsable
+ * without logging in — anonymous visitors simply see only unlocked content,
+ * per the role-gating design in `lessonEngine.service.ts`.
  */
 export default function LessonEngineLayout({
   children,
@@ -20,23 +24,7 @@ export default function LessonEngineLayout({
 }) {
   return (
     <LessonEngineProviders>
-      <div className="min-h-screen bg-background">
-        <header className="border-b border-border">
-          <div className="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3">
-            <Link
-              href="/lesson-engine"
-              className="inline-flex items-center gap-2 font-semibold text-foreground"
-            >
-              <GraduationCap className="h-5 w-5 text-accent" />
-              Lesson Engine
-            </Link>
-            <span className="ml-2 rounded-full bg-accent/15 px-2 py-0.5 text-xs font-semibold text-accent">
-              demo
-            </span>
-          </div>
-        </header>
-        <main className="mx-auto max-w-4xl px-4 py-8">{children}</main>
-      </div>
+      <AppShell>{children}</AppShell>
     </LessonEngineProviders>
   );
 }

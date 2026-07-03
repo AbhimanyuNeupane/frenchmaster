@@ -126,8 +126,8 @@ describe("vocabularyImport.service", () => {
       mockFindVocabularyWordsByFrenchTexts.mockResolvedValue([]);
 
       const rows = await revalidateImportRows([
-        { french: "Bonjour", english: "Hello", pronunciation: "/a/", translations: [] },
-        { french: "", english: "Missing french", pronunciation: "/b/", translations: [] },
+        { french: "Bonjour", english: "Hello", pronunciation: "/a/", category: "Greetings", translations: [] },
+        { french: "", english: "Missing french", pronunciation: "/b/", category: "", translations: [] },
       ]);
 
       expect(rows[0].errors).toEqual([]);

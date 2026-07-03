@@ -125,6 +125,10 @@ export interface ImportRowData {
   french: string;
   english: string;
   pronunciation: string;
+  /** Per-row category override from an optional "Category"/"Unit" CSV column.
+   *  Empty string means "no override" — commit falls back to the batch-level
+   *  unitTitle, so a mixed-topic file is never forced into one category. */
+  category: string;
   translations: Translation[];
 }
 

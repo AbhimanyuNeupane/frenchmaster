@@ -144,6 +144,7 @@ export interface VocabularyListResponse {
 export type NavKey =
   | "dashboard"
   | "learn"
+  | "courses"
   | "vocabulary"
   | "grammar"
   | "listening"

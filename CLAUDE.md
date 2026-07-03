@@ -24,6 +24,22 @@ Always think about scalability.
 
 ---
 
+# Current Content Scope (read this before adding any course)
+
+**We only teach French. Full stop.** No other language is offered to
+learners today, and none should be added, seeded, published, or exposed in
+any user-facing picker/nav without an explicit, separate go-ahead.
+
+This does NOT mean ripping out language-agnostic architecture — the
+Universal Lesson Engine (`src/lesson-engine/`) is deliberately built so a
+future language requires zero engine code changes, and that design should
+be preserved. It means: do not publish, seed, or surface non-French course
+content to real users. Demo/sample content in other languages (used only to
+prove the engine's architecture) must stay unpublished/hidden from any
+learner-facing surface, not just excluded from a specific list.
+
+---
+
 # Core Goal
 
 Allow users to learn French from absolute beginner (A1) all the way to upper intermediate (B2).
