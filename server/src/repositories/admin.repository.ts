@@ -93,8 +93,10 @@ export const adminRepository = {
     });
   },
 
-  countVocabularyWords() {
-    return prisma.vocabularyWord.count({ where: { deletedAt: null } });
+  countVocabularyWords(unitTitle?: string) {
+    return prisma.vocabularyWord.count({
+      where: { deletedAt: null, ...(unitTitle ? { unitTitle } : {}) },
+    });
   },
 
   // --- Vocabulary content authoring ---
@@ -104,9 +106,10 @@ export const adminRepository = {
   // French/English/the user's own primary language) — always `include:
   // { translations: true }` here.
 
-  findVocabularyWordsForAdmin(skip: number, take: number) {
+  /** `unitTitle` scopes the list to one category — the admin browsing UI fetches one category's full word list at a time rather than paginating the whole catalog. */
+  findVocabularyWordsForAdmin(skip: number, take: number, unitTitle?: string) {
     return prisma.vocabularyWord.findMany({
-      where: { deletedAt: null },
+      where: { deletedAt: null, ...(unitTitle ? { unitTitle } : {}) },
       include: { translations: true },
       orderBy: { createdAt: "desc" },
       skip,

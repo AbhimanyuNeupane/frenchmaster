@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  ArrowLeft,
   Loader2,
   Library,
   Plus,
@@ -20,23 +21,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageError } from "@/components/layout/page-state";
-import { PaginationControls } from "@/components/admin/pagination-controls";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { VocabularyFormDialog } from "@/components/admin/vocabulary/vocabulary-form-dialog";
 import { VocabularyImportDialog } from "@/components/admin/vocabulary/vocabulary-import-dialog";
 import { VocabularyCategoriesDialog } from "@/components/admin/vocabulary/vocabulary-categories-dialog";
+import { VocabularyCategoryGrid } from "@/components/vocabulary/vocabulary-category-grid";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
 import { downloadAuthedFile } from "@/lib/download";
 import type {
+  AdminVocabularyCategory,
   AdminVocabularyListResponse,
   AdminVocabularyWord,
   AiTranslateBulkResponse,
   AiTranslateStatus,
 } from "@/types/admin";
 
-const PAGE_SIZE = 20;
+// Categories realistically stay in the dozens-to-low-hundreds of words each
+// (a curated CEFR catalog, not user-generated content) — one request per
+// category comfortably covers "see all of it, no pagination clicks" without
+// risking an unbounded payload if the catalog grows.
+const CATEGORY_PAGE_SIZE = 1000;
 
 /** English is guaranteed present on every catalog word; fall back defensively. */
 function englishOf(word: AdminVocabularyWord): string {
@@ -46,7 +52,7 @@ function englishOf(word: AdminVocabularyWord): string {
 export function VocabularyManager() {
   const { authedFetch, authedFetchRaw } = useAuth();
 
-  const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const [formOpen, setFormOpen] = useState(false);
   const [activeWord, setActiveWord] = useState<AdminVocabularyWord | null>(null);
@@ -75,16 +81,52 @@ export function VocabularyManager() {
       ? "AI translation isn't set up yet."
       : null;
 
-  const path = useMemo(
-    () => `/api/admin/vocabulary?page=${page}&pageSize=${PAGE_SIZE}`,
-    [page]
+  // Landing view: one tile per category (icon + order admin-controlled, same
+  // source the learner-facing explorer reads from) — never a flat list of
+  // every word in the catalog at once.
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useApiQuery<AdminVocabularyCategory[]>("/api/admin/vocabulary/categories");
+
+  // Selecting a tile fetches that category's full word list in one shot (no
+  // Prev/Next) — fetched on demand here rather than via useApiQuery, since it
+  // only runs once a category is picked.
+  const [categoryWords, setCategoryWords] = useState<AdminVocabularyWord[]>([]);
+  const [wordsTotal, setWordsTotal] = useState(0);
+  const [wordsLoading, setWordsLoading] = useState(false);
+  const [wordsError, setWordsError] = useState<string | null>(null);
+
+  const loadCategoryWords = useCallback(
+    async (category: string) => {
+      setWordsLoading(true);
+      setWordsError(null);
+      try {
+        const data = await authedFetch<AdminVocabularyListResponse>(
+          `/api/admin/vocabulary?category=${encodeURIComponent(category)}&page=1&pageSize=${CATEGORY_PAGE_SIZE}`
+        );
+        setCategoryWords(data.words);
+        setWordsTotal(data.pagination.total);
+      } catch (err) {
+        setWordsError(err instanceof ApiRequestError ? err.message : "Failed to load words.");
+      } finally {
+        setWordsLoading(false);
+      }
+    },
+    [authedFetch]
   );
 
-  const { data, isLoading, error, refetch } = useApiQuery<AdminVocabularyListResponse>(path, [
-    path,
-  ]);
+  useEffect(() => {
+    if (selectedCategory) loadCategoryWords(selectedCategory);
+  }, [selectedCategory, loadCategoryWords]);
 
-  const words = data?.words ?? [];
+  /** Refreshes whatever's currently on screen after any mutation (add/edit/delete/import). */
+  function refreshAfterMutation() {
+    refetchCategories();
+    if (selectedCategory) loadCategoryWords(selectedCategory);
+  }
 
   function openCreate() {
     setActiveWord(null);
@@ -124,8 +166,7 @@ export function VocabularyManager() {
         { method: "POST", body: JSON.stringify({}) }
       );
       setBulkResult(result);
-      // Reflect the newly written translations in the visible list.
-      refetch();
+      refreshAfterMutation();
     } catch (err) {
       setToolbarError(
         err instanceof ApiRequestError ? err.message : "Failed to fill translations with AI."
@@ -142,18 +183,19 @@ export function VocabularyManager() {
     try {
       await authedFetch(`/api/admin/vocabulary/${deleteTarget.id}`, { method: "DELETE" });
       setDeleteTarget(null);
-      // If we just removed the last item on a page past the first, step back.
-      if (words.length === 1 && page > 1) {
-        setPage((p) => p - 1);
-      } else {
-        refetch();
-      }
+      refreshAfterMutation();
     } catch (err) {
       setDeleteError(err instanceof ApiRequestError ? err.message : "Failed to delete word.");
     } finally {
       setDeleting(false);
     }
   }
+
+  const categoryTiles = (categories ?? []).map((c) => ({
+    title: c.name,
+    count: c.wordCount,
+    icon: c.icon,
+  }));
 
   return (
     <div className="flex flex-col gap-6 pb-10">
@@ -259,92 +301,118 @@ export function VocabularyManager() {
         )}
       </Reveal>
 
-      {error ? (
-        <PageError message={error} onRetry={refetch} />
-      ) : isLoading ? (
-        <div className="flex min-h-[40vh] items-center justify-center">
-          <Loader2 className="size-6 animate-spin text-accent" />
-        </div>
-      ) : words.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
-          <Library className="size-8 text-muted-foreground" />
-          <p className="text-sm font-medium text-navy">No vocabulary words yet</p>
-          <p className="text-xs text-muted-foreground">
-            Add the first word to start building the catalog.
-          </p>
-          <Button variant="accent" size="sm" onClick={openCreate} className="mt-2">
-            <Plus className="size-4" />
-            Add word
-          </Button>
-        </div>
-      ) : (
-        <Reveal delay={0.05}>
-          <div className="flex flex-col gap-3">
-            {words.map((word) => (
-              <Card
-                key={word.id}
-                className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-sm font-bold text-navy">{word.french}</p>
-                    <Badge variant="outline">{word.partOfSpeech}</Badge>
-                    {word.gender && <Badge variant="outline">{word.gender}</Badge>}
-                    <Badge variant="accent">{word.level}</Badge>
-                  </div>
-                  <p className="mt-1 truncate text-sm text-muted-foreground">{englishOf(word)}</p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">{word.unitTitle}</p>
-                </div>
-
-                <div className="flex items-center gap-2 sm:justify-end">
-                  <Button variant="outline" size="sm" onClick={() => openEdit(word)}>
-                    <Pencil className="size-3.5" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setDeleteError(null);
-                      setDeleteTarget(word);
-                    }}
-                    className="text-danger hover:bg-danger/10"
-                  >
-                    <Trash2 className="size-3.5" />
-                    Delete
-                  </Button>
-                </div>
-              </Card>
-            ))}
+      {selectedCategory === null ? (
+        // --- Landing view: category tiles ---
+        categoriesError ? (
+          <PageError message={categoriesError} onRetry={refetchCategories} />
+        ) : categoriesLoading ? (
+          <div className="flex min-h-[40vh] items-center justify-center">
+            <Loader2 className="size-6 animate-spin text-accent" />
           </div>
-        </Reveal>
-      )}
+        ) : categoryTiles.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+            <Library className="size-8 text-muted-foreground" />
+            <p className="text-sm font-medium text-navy">No vocabulary words yet</p>
+            <p className="text-xs text-muted-foreground">
+              Add the first word to start building the catalog.
+            </p>
+            <Button variant="accent" size="sm" onClick={openCreate} className="mt-2">
+              <Plus className="size-4" />
+              Add word
+            </Button>
+          </div>
+        ) : (
+          <Reveal delay={0.05}>
+            <VocabularyCategoryGrid categories={categoryTiles} onSelect={setSelectedCategory} />
+          </Reveal>
+        )
+      ) : (
+        // --- Drill-down view: every word in the selected category ---
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={() => setSelectedCategory(null)}>
+              <ArrowLeft className="size-3.5" />
+              All categories
+            </Button>
+            <h2 className="text-sm font-semibold text-navy">
+              {selectedCategory}
+              <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-foreground/70">
+                {wordsTotal}
+              </span>
+            </h2>
+          </div>
 
-      {data && data.words.length > 0 && (
-        <PaginationControls
-          pagination={data.pagination}
-          onPageChange={setPage}
-          disabled={isLoading}
-        />
+          {wordsError ? (
+            <PageError message={wordsError} onRetry={() => loadCategoryWords(selectedCategory)} />
+          ) : wordsLoading ? (
+            <div className="flex min-h-[40vh] items-center justify-center">
+              <Loader2 className="size-6 animate-spin text-accent" />
+            </div>
+          ) : (
+            <Reveal delay={0.05}>
+              <div className="flex flex-col gap-3">
+                {categoryWords.map((word) => (
+                  <Card
+                    key={word.id}
+                    className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-bold text-navy">{word.french}</p>
+                        <Badge variant="outline">{word.partOfSpeech}</Badge>
+                        {word.gender && <Badge variant="outline">{word.gender}</Badge>}
+                        <Badge variant="accent">{word.level}</Badge>
+                      </div>
+                      <p className="mt-1 truncate text-sm text-muted-foreground">{englishOf(word)}</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">{word.unitTitle}</p>
+                    </div>
+
+                    <div className="flex items-center gap-2 sm:justify-end">
+                      <Button variant="outline" size="sm" onClick={() => openEdit(word)}>
+                        <Pencil className="size-3.5" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setDeleteError(null);
+                          setDeleteTarget(word);
+                        }}
+                        className="text-danger hover:bg-danger/10"
+                      >
+                        <Trash2 className="size-3.5" />
+                        Delete
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </Reveal>
+          )}
+        </div>
       )}
 
       <VocabularyFormDialog
         word={activeWord}
         open={formOpen}
         onOpenChange={setFormOpen}
-        onSaved={() => refetch()}
+        onSaved={refreshAfterMutation}
       />
 
       <VocabularyImportDialog
         open={importOpen}
         onOpenChange={setImportOpen}
-        onImported={() => {
-          setPage(1);
-          refetch();
-        }}
+        onImported={refreshAfterMutation}
       />
 
-      <VocabularyCategoriesDialog open={categoriesOpen} onOpenChange={setCategoriesOpen} />
+      <VocabularyCategoriesDialog
+        open={categoriesOpen}
+        onOpenChange={(next) => {
+          setCategoriesOpen(next);
+          if (!next) refetchCategories();
+        }}
+      />
 
       <ConfirmDialog
         open={deleteTarget !== null}

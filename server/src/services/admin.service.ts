@@ -145,11 +145,11 @@ export const adminService = {
 
   // --- Vocabulary content authoring ---
 
-  async listVocabularyWords(page: number, pageSize: number) {
+  async listVocabularyWords(page: number, pageSize: number, category?: string) {
     const skip = (page - 1) * pageSize;
     const [words, total] = await Promise.all([
-      adminRepository.findVocabularyWordsForAdmin(skip, pageSize),
-      adminRepository.countVocabularyWords(),
+      adminRepository.findVocabularyWordsForAdmin(skip, pageSize, category),
+      adminRepository.countVocabularyWords(category),
     ]);
     return {
       words: words.map(toAdminVocabularyWord),

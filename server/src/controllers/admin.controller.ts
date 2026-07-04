@@ -50,7 +50,11 @@ export const adminController = {
   listVocabularyWords: asyncHandler(async (req: Request, res: Response) => {
     const page = Number(req.query.page ?? 1);
     const pageSize = Number(req.query.pageSize ?? 20);
-    const data = await adminService.listVocabularyWords(page, pageSize);
+    const category =
+      typeof req.query.category === "string" && req.query.category.trim().length > 0
+        ? req.query.category.trim()
+        : undefined;
+    const data = await adminService.listVocabularyWords(page, pageSize, category);
     sendSuccess(res, data);
   }),
 
