@@ -132,9 +132,9 @@ export function VocabularyImportDialog({
           <DialogTitle>Import vocabulary from CSV</DialogTitle>
           <DialogDescription>
             Upload a CSV of words. French and English are required columns; any column matching a
-            language name becomes that language&apos;s translation. An optional &quot;Category&quot;
-            (or &quot;Unit&quot;) column lets each row pick its own category — a single file doesn&apos;t
-            have to be all one topic.
+            language name becomes that language&apos;s translation. Optional columns are also
+            recognized: Category (or Unit), Part of Speech, Gender, Synonyms (separate multiple
+            with &quot;;&quot;), Example (French), Example (English), and Common Mistake.
           </DialogDescription>
         </DialogHeader>
 
@@ -249,7 +249,9 @@ export function VocabularyImportDialog({
                       <span className="font-semibold">
                         {preview.unrecognizedColumns.join(", ")}
                       </span>
-                      . Only French, English, Pronunciation, and known language names are imported.
+                      . Recognized columns: French, English, Pronunciation, Category, Part of
+                      Speech, Gender, Synonyms, Example (French), Example (English), Common
+                      Mistake, and known language names.
                     </span>
                   </div>
                 )}
@@ -287,9 +289,20 @@ export function VocabularyImportDialog({
                               )}
                             </td>
                             <td className="px-3 py-2 text-muted-foreground">
-                              {row.data.translations.length > 0
-                                ? `${row.data.translations.length} lang`
-                                : "—"}
+                              {[
+                                row.data.translations.length > 0
+                                  ? `${row.data.translations.length} lang`
+                                  : null,
+                                row.data.partOfSpeech || null,
+                                row.data.gender || null,
+                                row.data.synonyms.length > 0
+                                  ? `${row.data.synonyms.length} synonym${row.data.synonyms.length === 1 ? "" : "s"}`
+                                  : null,
+                                row.data.exampleFr ? "example" : null,
+                                row.data.commonMistake ? "mistake note" : null,
+                              ]
+                                .filter(Boolean)
+                                .join(", ") || "—"}
                             </td>
                             <td className="px-3 py-2">
                               {hasError ? (

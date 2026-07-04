@@ -146,6 +146,17 @@ const importRowSchema = z.object({
   // column) — empty means "use the batch-level unitTitle below". A single
   // file mixing topics should never be forced into one category.
   category: z.string().trim().max(200).default(""),
+  // Empty string means "not provided in the CSV" — commit defaults to
+  // "noun"/null, matching the pre-existing behavior for files that don't
+  // include these columns at all. A non-empty value here has already been
+  // validated against the real enum by vocabularyImport.service.ts's
+  // revalidateImportRows (re-run server-side, never trusted from the client).
+  partOfSpeech: z.string().trim().max(50).default(""),
+  gender: z.string().trim().max(20).default(""),
+  synonyms: z.array(z.string().trim().min(1)).default([]),
+  exampleFr: z.string().trim().max(500).default(""),
+  exampleEn: z.string().trim().max(500).default(""),
+  commonMistake: z.string().trim().max(500).default(""),
   translations: z.array(importTranslationEntrySchema).default([]),
 });
 

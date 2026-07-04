@@ -192,12 +192,27 @@ export const adminRepository = {
    * "noun" and gender: null as defaults (not present in the CSV format —
    * the admin can refine specifics afterward via the normal edit dialog).
    */
+  /**
+   * `partOfSpeech`/`gender` default to "noun"/null when the CSV didn't
+   * include those columns (or a row's cell was empty) — same behavior as
+   * before these columns were recognized. When provided, the caller
+   * (admin.service.ts) has already validated them against the real enum
+   * values via vocabularyImport.service.ts, so they're trusted here.
+   * `exampleFr`/`exampleEn`/`synonyms`/`commonMistake` default to empty,
+   * same as before, when the CSV didn't provide them.
+   */
   createVocabularyWordsBulk(
     rows: {
       french: string;
       pronunciationIpa: string;
       level: CEFRLevel;
       unitTitle: string;
+      partOfSpeech?: PartOfSpeech;
+      gender?: WordGender | null;
+      synonyms?: string[];
+      exampleFr?: string;
+      exampleEn?: string;
+      commonMistake?: string | null;
       translations: TranslationEntryInput[];
     }[]
   ) {
@@ -206,12 +221,13 @@ export const adminRepository = {
         prisma.vocabularyWord.create({
           data: {
             french: row.french,
-            gender: null,
-            partOfSpeech: "noun",
+            gender: row.gender ?? null,
+            partOfSpeech: row.partOfSpeech ?? "noun",
             pronunciationIpa: row.pronunciationIpa,
-            exampleFr: "",
-            exampleEn: "",
-            synonyms: [],
+            exampleFr: row.exampleFr ?? "",
+            exampleEn: row.exampleEn ?? "",
+            synonyms: row.synonyms ?? [],
+            commonMistake: row.commonMistake ?? null,
             level: row.level,
             unitTitle: row.unitTitle,
             translations: {

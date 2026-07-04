@@ -119,6 +119,37 @@ describe("vocabularyImport.service", () => {
 
       expect(result.fatalError).toBe("Invalid UTF-8 encoding");
     });
+
+    it("parses Part of Speech, Gender, Synonyms, Example, and Common Mistake columns", async () => {
+      const csv =
+        "French,English,Pronunciation,Part of Speech,Gender,Synonyms,Example (French),Example (English),Common Mistake\n" +
+        'Le chat,Cat,/ʃa/,noun,masculine,"Le matou; Le félin",Le chat dort.,The cat sleeps.,Don\'t confuse with "chatte".\n';
+
+      const result = await parseAndValidateCsv(Buffer.from(csv, "utf-8"));
+
+      expect(result.rows[0].errors).toEqual([]);
+      expect(result.rows[0].data.partOfSpeech).toBe("noun");
+      expect(result.rows[0].data.gender).toBe("masculine");
+      expect(result.rows[0].data.synonyms).toEqual(["Le matou", "Le félin"]);
+      expect(result.rows[0].data.exampleFr).toBe("Le chat dort.");
+      expect(result.rows[0].data.exampleEn).toBe("The cat sleeps.");
+      expect(result.rows[0].data.commonMistake).toBe('Don\'t confuse with "chatte".');
+    });
+
+    it("flags an invalid Part of Speech or Gender value instead of importing it silently", async () => {
+      const csv =
+        "French,English,Pronunciation,Part of Speech,Gender\n" +
+        "Le chien,Dog,/ʃjɛ̃/,animal,male\n";
+
+      const result = await parseAndValidateCsv(Buffer.from(csv, "utf-8"));
+
+      expect(result.rows[0].errors).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining("Invalid part of speech"),
+          expect.stringContaining("Invalid gender"),
+        ])
+      );
+    });
   });
 
   describe("revalidateImportRows", () => {
@@ -126,8 +157,32 @@ describe("vocabularyImport.service", () => {
       mockFindVocabularyWordsByFrenchTexts.mockResolvedValue([]);
 
       const rows = await revalidateImportRows([
-        { french: "Bonjour", english: "Hello", pronunciation: "/a/", category: "Greetings", translations: [] },
-        { french: "", english: "Missing french", pronunciation: "/b/", category: "", translations: [] },
+        {
+          french: "Bonjour",
+          english: "Hello",
+          pronunciation: "/a/",
+          category: "Greetings",
+          partOfSpeech: "",
+          gender: "",
+          synonyms: [],
+          exampleFr: "",
+          exampleEn: "",
+          commonMistake: "",
+          translations: [],
+        },
+        {
+          french: "",
+          english: "Missing french",
+          pronunciation: "/b/",
+          category: "",
+          partOfSpeech: "",
+          gender: "",
+          synonyms: [],
+          exampleFr: "",
+          exampleEn: "",
+          commonMistake: "",
+          translations: [],
+        },
       ]);
 
       expect(rows[0].errors).toEqual([]);

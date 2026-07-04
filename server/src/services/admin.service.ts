@@ -223,6 +223,20 @@ export const adminService = {
         pronunciationIpa: r.data.pronunciation,
         level: input.level,
         unitTitle: r.data.category || input.unitTitle,
+        // Already validated against the real enum values by revalidateImportRows
+        // above (case-insensitively) — lowercase here to match the Prisma enum's
+        // exact casing; empty string means "not provided", left undefined so the
+        // repository applies its "noun"/null defaults.
+        partOfSpeech: r.data.partOfSpeech
+          ? (r.data.partOfSpeech.toLowerCase() as Prisma.VocabularyWordCreateInput["partOfSpeech"])
+          : undefined,
+        gender: r.data.gender
+          ? (r.data.gender.toLowerCase() as Prisma.VocabularyWordCreateInput["gender"])
+          : undefined,
+        synonyms: r.data.synonyms,
+        exampleFr: r.data.exampleFr,
+        exampleEn: r.data.exampleEn,
+        commonMistake: r.data.commonMistake || undefined,
         translations: [{ languageCode: "en", text: r.data.english }, ...r.data.translations],
       }))
     );

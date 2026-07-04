@@ -129,6 +129,13 @@ export interface ImportRowData {
    *  Empty string means "no override" — commit falls back to the batch-level
    *  unitTitle, so a mixed-topic file is never forced into one category. */
   category: string;
+  /** Empty string means "not provided in the CSV" — commit defaults to "noun"/null. */
+  partOfSpeech: string;
+  gender: string;
+  synonyms: string[];
+  exampleFr: string;
+  exampleEn: string;
+  commonMistake: string;
   translations: Translation[];
 }
 
