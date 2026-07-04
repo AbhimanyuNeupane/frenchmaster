@@ -913,3 +913,23 @@ model LessonEngineSectionLesson {
   @@index([lessonId])
   @@map("lesson_engine_section_lessons")
 }
+
+// ---------------------------------------------------------------------------
+// Vocabulary category presentation (icon + display order). `VocabularyWord.
+// unitTitle` remains the plain-text category name (unchanged) — this table
+// only holds ADMIN-CONTROLLED display metadata for a category name, so a
+// category's icon/ordering is never hardcoded in frontend source. A category
+// name with no row here just falls back to a generic icon + alphabetical
+// order (never a broken/missing state). `icon` is a curated string key (see
+// server/src/validators/admin.validators.ts and the frontend's matching
+// lookup) — never freeform, so it can never reference a nonexistent icon.
+model VocabularyCategoryMeta {
+  name         String   @id
+  icon         String   @default("tag")
+  displayOrder Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("vocabulary_category_meta")
+}

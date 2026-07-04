@@ -2,6 +2,7 @@ import { vocabularyRepository } from "../repositories/vocabulary.repository";
 import { userRepository } from "../repositories/user.repository";
 import { ApiError } from "../utils/ApiError";
 import { resolveVocabularyTranslation } from "../utils/vocabularyTranslation";
+import { DEFAULT_VOCABULARY_CATEGORY_ICON } from "../constants/vocabularyCategoryIcons";
 import type {
   CEFRLevel,
   MasteryStatus,
@@ -10,6 +11,13 @@ import type {
   VocabularyWord as PrismaVocabularyWord,
 } from "@prisma/client";
 import type { ListVocabularyQuery } from "../validators/vocabulary.validators";
+
+export interface VocabularyCategorySummary {
+  name: string;
+  icon: string;
+  displayOrder: number;
+  wordCount: number;
+}
 
 const MASTERY_PROGRESSION: Record<MasteryStatus, MasteryStatus> = {
   new: "learning",
@@ -158,5 +166,33 @@ export const vocabularyService = {
     });
 
     return toVocabularyWord(word, updated, primaryLanguageCode);
+  },
+
+  /**
+   * Every category present in the catalog, merged with its admin-controlled
+   * icon/displayOrder — a category with no VocabularyCategoryMeta row yet
+   * (never customized) falls back to the default icon and sorts after every
+   * customized one (by displayOrder=0 tie-break to alphabetical). This is
+   * the single source of truth the frontend renders from — no hardcoded
+   * icon/order maps in frontend code.
+   */
+  async getCategories(): Promise<VocabularyCategorySummary[]> {
+    const [counts, metaRows] = await Promise.all([
+      vocabularyRepository.findCategoryWordCounts(),
+      vocabularyRepository.findAllCategoryMeta(),
+    ]);
+    const metaByName = new Map(metaRows.map((m) => [m.name, m]));
+
+    return counts
+      .map(({ name, count }) => {
+        const meta = metaByName.get(name);
+        return {
+          name,
+          icon: meta?.icon ?? DEFAULT_VOCABULARY_CATEGORY_ICON,
+          displayOrder: meta?.displayOrder ?? Number.MAX_SAFE_INTEGER,
+          wordCount: count,
+        };
+      })
+      .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name));
   },
 };

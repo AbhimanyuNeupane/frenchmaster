@@ -1,56 +1,22 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
-import {
-  Hand,
-  HelpCircle,
-  Users,
-  Zap,
-  Hash,
-  CalendarDays,
-  Clock,
-  Palette,
-  Home,
-  UtensilsCrossed,
-  MapPin,
-  Sparkles,
-  PersonStanding,
-  Package,
-  Tag,
-} from "lucide-react";
-
 import { Card } from "@/components/ui/card";
-
-/** Best-effort icon per known category name; anything unrecognized falls back
- *  to a generic tag icon so a brand-new category still renders sensibly. */
-const CATEGORY_ICON: Record<string, LucideIcon> = {
-  "Greetings & Politeness": Hand,
-  Greetings: Hand,
-  "Question Words": HelpCircle,
-  Pronouns: Users,
-  "Common Verbs": Zap,
-  Numbers: Hash,
-  "Days & Months": CalendarDays,
-  "Time & Dates": Clock,
-  Colors: Palette,
-  Family: Home,
-  "Food & Dining": UtensilsCrossed,
-  Places: MapPin,
-  Adjectives: Sparkles,
-  "Body Parts": PersonStanding,
-  "Everyday Objects": Package,
-};
+import { resolveCategoryIcon } from "@/lib/vocabulary-category-icons";
 
 export interface CategoryTileData {
   title: string;
   count: number;
+  /** Admin-controlled icon-name string (see lib/vocabulary-category-icons.ts) — never hardcoded per category name in this component. */
+  icon: string;
 }
 
 /**
  * The default vocabulary landing view: one clickable tile per category
  * (never a flat list of every word at once). Picking a tile drills into that
  * category's words — see `VocabularyExplorer`, which swaps this grid out for
- * the filtered word grid once a category is selected.
+ * the filtered word grid once a category is selected. Icon + ordering are
+ * admin-controlled (fetched from `GET /api/vocabulary/categories`), not
+ * hardcoded here — see the admin Vocabulary Categories manager.
  */
 export function VocabularyCategoryGrid({
   categories,
@@ -62,7 +28,7 @@ export function VocabularyCategoryGrid({
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
       {categories.map((c) => {
-        const Icon = CATEGORY_ICON[c.title] ?? Tag;
+        const Icon = resolveCategoryIcon(c.icon);
         return (
           <Card
             key={c.title}

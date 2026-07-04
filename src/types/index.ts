@@ -136,6 +136,17 @@ export interface VocabularyStats {
   dueForReview: number;
 }
 
+/** From `GET /api/vocabulary/categories` — admin-controlled icon/order per
+ *  category name (see admin's Vocabulary Categories manager). `wordCount`
+ *  here is the full catalog count; the explorer recomputes a level-filtered
+ *  count client-side from already-loaded words rather than refetching. */
+export interface VocabularyCategoryMeta {
+  name: string;
+  icon: string;
+  displayOrder: number;
+  wordCount: number;
+}
+
 export interface VocabularyListResponse {
   words: VocabularyWord[];
   stats: VocabularyStats;

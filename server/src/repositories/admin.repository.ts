@@ -300,4 +300,34 @@ export const adminRepository = {
     const found = new Set(rows.map((r) => r.code));
     return { missing: unique.filter((c) => !found.has(c)) };
   },
+
+  // --- Vocabulary category presentation (icon + display order) ---
+
+  async findCategoryWordCounts(): Promise<{ name: string; count: number }[]> {
+    const rows = await prisma.vocabularyWord.groupBy({
+      by: ["unitTitle"],
+      where: { deletedAt: null },
+      _count: { _all: true },
+    });
+    return rows.map((r) => ({ name: r.unitTitle, count: r._count._all }));
+  },
+
+  findAllCategoryMeta() {
+    return prisma.vocabularyCategoryMeta.findMany();
+  },
+
+  /** True if `name` is an actual category in use (i.e. some non-deleted word has this unitTitle) — admin can only customize a real category, not an arbitrary string. */
+  async categoryExists(name: string): Promise<boolean> {
+    const count = await prisma.vocabularyWord.count({ where: { unitTitle: name, deletedAt: null } });
+    return count > 0;
+  },
+
+  /** Creates or updates a category's presentation metadata — a category with no prior row gets one on its first customization. */
+  upsertCategoryMeta(name: string, data: { icon?: string; displayOrder?: number }) {
+    return prisma.vocabularyCategoryMeta.upsert({
+      where: { name },
+      create: { name, icon: data.icon, displayOrder: data.displayOrder },
+      update: data,
+    });
+  },
 };

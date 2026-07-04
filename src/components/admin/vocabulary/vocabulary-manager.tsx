@@ -10,6 +10,7 @@ import {
   Upload,
   Download,
   Sparkles,
+  Tags,
   X,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ import { PaginationControls } from "@/components/admin/pagination-controls";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { VocabularyFormDialog } from "@/components/admin/vocabulary/vocabulary-form-dialog";
 import { VocabularyImportDialog } from "@/components/admin/vocabulary/vocabulary-import-dialog";
+import { VocabularyCategoriesDialog } from "@/components/admin/vocabulary/vocabulary-categories-dialog";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
 import { ApiRequestError } from "@/lib/api-client";
@@ -54,6 +56,7 @@ export function VocabularyManager() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [importOpen, setImportOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [toolbarError, setToolbarError] = useState<string | null>(null);
 
@@ -207,6 +210,14 @@ export function VocabularyManager() {
               <Upload className="size-4" />
               Import CSV
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setCategoriesOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              <Tags className="size-4" />
+              Manage categories
+            </Button>
             <Button variant="accent" onClick={openCreate} className="w-full sm:w-auto">
               <Plus className="size-4" />
               Add word
@@ -332,6 +343,8 @@ export function VocabularyManager() {
           refetch();
         }}
       />
+
+      <VocabularyCategoriesDialog open={categoriesOpen} onOpenChange={setCategoriesOpen} />
 
       <ConfirmDialog
         open={deleteTarget !== null}

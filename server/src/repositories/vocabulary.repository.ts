@@ -89,6 +89,25 @@ export const vocabularyRepository = {
     });
   },
 
+  /** Distinct category names + word count, straight from the catalog — never
+   *  hardcoded, so a brand-new category (e.g. from a CSV import) shows up
+   *  automatically without any code change. */
+  async findCategoryWordCounts(): Promise<{ name: string; count: number }[]> {
+    const rows = await prisma.vocabularyWord.groupBy({
+      by: ["unitTitle"],
+      where: { deletedAt: null },
+      _count: { _all: true },
+    });
+    return rows.map((r) => ({ name: r.unitTitle, count: r._count._all }));
+  },
+
+  /** Admin-controlled icon/order for every category that's been customized so
+   *  far. A category with no row here just falls back to defaults — never a
+   *  broken/missing state (see vocabulary.service.ts getCategories()). */
+  findAllCategoryMeta() {
+    return prisma.vocabularyCategoryMeta.findMany();
+  },
+
   // --- Admin content management ---
 
   createWord(data: Prisma.VocabularyWordCreateInput) {

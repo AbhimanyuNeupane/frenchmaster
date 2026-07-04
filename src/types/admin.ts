@@ -190,3 +190,22 @@ export interface AiTranslateBulkResponse {
   translationsAdded: number;
   errors: { wordId: string; error: string }[];
 }
+
+// --- Vocabulary category presentation (icon + display order) ---
+
+/** From `GET/PATCH /api/admin/vocabulary/categories` — the admin control
+ *  surface for the learner-facing category tiles' icon and ordering. */
+export interface AdminVocabularyCategory {
+  name: string;
+  icon: string;
+  displayOrder: number;
+  wordCount: number;
+  /** False if this category has never been customized (still on defaults). */
+  managed: boolean;
+}
+
+/** Body for `PATCH /api/admin/vocabulary/categories/:name`. */
+export interface UpdateVocabularyCategoryPayload {
+  icon?: string;
+  displayOrder?: number;
+}

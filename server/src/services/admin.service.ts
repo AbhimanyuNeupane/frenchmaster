@@ -9,6 +9,7 @@ import {
   buildExportCsv,
 } from "./vocabularyImport.service";
 import { translationAiService, type TranslationSuggestion } from "./translationAi.service";
+import { DEFAULT_VOCABULARY_CATEGORY_ICON } from "../constants/vocabularyCategoryIcons";
 import type { Prisma, VocabularyTranslation, VocabularyWord } from "@prisma/client";
 import type {
   AiTranslateBulkInput,
@@ -19,6 +20,7 @@ import type {
   ListUsersQuery,
   UpdateLanguageInput,
   UpdateUserInput,
+  UpdateVocabularyCategoryInput,
   UpdateVocabularyWordInput,
 } from "../validators/admin.validators";
 
@@ -409,5 +411,53 @@ export const adminService = {
     });
 
     return { wordsProcessed: candidates.length, translationsAdded, errors };
+  },
+
+  // --- Vocabulary category presentation ---
+
+  /** Every category in use, merged with its admin-set icon/order (defaults for anything not yet customized). Same merge logic as the learner-facing vocabularyService.getCategories() — this is the admin's editable view over the same data. */
+  async listVocabularyCategories() {
+    const [counts, metaRows] = await Promise.all([
+      adminRepository.findCategoryWordCounts(),
+      adminRepository.findAllCategoryMeta(),
+    ]);
+    const metaByName = new Map(metaRows.map((m) => [m.name, m]));
+
+    return counts
+      .map(({ name, count }) => {
+        const meta = metaByName.get(name);
+        return {
+          name,
+          icon: meta?.icon ?? DEFAULT_VOCABULARY_CATEGORY_ICON,
+          displayOrder: meta?.displayOrder ?? 0,
+          wordCount: count,
+          managed: meta !== undefined,
+        };
+      })
+      .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name));
+  },
+
+  /**
+   * Returns the same merged {name, icon, displayOrder, wordCount, managed}
+   * shape as listVocabularyCategories() — NOT the raw VocabularyCategoryMeta
+   * row (which has no wordCount at all, since that's computed from the
+   * catalog, not stored). Returning the raw row here was a real bug: the
+   * admin UI's optimistic-then-replace-with-server-response pattern wiped
+   * out the word count the moment an admin changed an icon/order.
+   */
+  async updateVocabularyCategory(name: string, input: UpdateVocabularyCategoryInput) {
+    const exists = await adminRepository.categoryExists(name);
+    if (!exists) {
+      throw ApiError.notFound(`Category "${name}" has no words — nothing to customize`);
+    }
+    await adminRepository.upsertCategoryMeta(name, input);
+    const all = await this.listVocabularyCategories();
+    const updated = all.find((c) => c.name === name);
+    if (!updated) {
+      // Shouldn't happen (we just confirmed the category exists), but never
+      // return undefined from an endpoint that promises a category object.
+      throw ApiError.internal("Category was updated but could not be re-read");
+    }
+    return updated;
   },
 };

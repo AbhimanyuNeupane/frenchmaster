@@ -38,4 +38,12 @@ export const vocabularyController = {
     const word = await vocabularyService.markReviewed(req.user.sub, id);
     sendSuccess(res, word, "Marked as reviewed");
   }),
+
+  getCategories: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw ApiError.unauthorized();
+    }
+    const categories = await vocabularyService.getCategories();
+    sendSuccess(res, categories);
+  }),
 };

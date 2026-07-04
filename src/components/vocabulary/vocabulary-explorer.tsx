@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Library } from "lucide-react";
 
 import { Reveal } from "@/components/layout/reveal";
@@ -11,43 +11,23 @@ import { VocabularyCard } from "@/components/vocabulary/vocabulary-card";
 import { VocabularyCategoryGrid } from "@/components/vocabulary/vocabulary-category-grid";
 import { VocabularyDetailDialog } from "@/components/vocabulary/vocabulary-detail-dialog";
 import { useAuth } from "@/contexts/auth-context";
-import type { CEFRLevel, VocabularyListResponse, VocabularyWord } from "@/types";
-
-/** Preferred display order for well-known categories; anything else is appended
- *  alphabetically after these — new categories never need this list updated to
- *  show up, they just sort after the curated ones. */
-const CATEGORY_ORDER = [
-  "Greetings & Politeness",
-  "Greetings",
-  "Question Words",
-  "Pronouns",
-  "Common Verbs",
-  "Numbers",
-  "Days & Months",
-  "Time & Dates",
-  "Colors",
-  "Family",
-  "Food & Dining",
-  "Places",
-  "Adjectives",
-  "Body Parts",
-  "Everyday Objects",
-];
-
-function sortCategories(categories: string[]): string[] {
-  return [...categories].sort((a, b) => {
-    const ai = CATEGORY_ORDER.indexOf(a);
-    const bi = CATEGORY_ORDER.indexOf(b);
-    if (ai !== -1 && bi !== -1) return ai - bi;
-    if (ai !== -1) return -1;
-    if (bi !== -1) return 1;
-    return a.localeCompare(b);
-  });
-}
+import type {
+  CEFRLevel,
+  VocabularyCategoryMeta,
+  VocabularyListResponse,
+  VocabularyWord,
+} from "@/types";
 
 export function VocabularyExplorer({ initialData }: { initialData: VocabularyListResponse }) {
   const { authedFetch } = useAuth();
   const [words, setWords] = useState<VocabularyWord[]>(initialData.words);
+  // Admin-controlled icon/display-order per category — fetched once, not
+  // hardcoded. A category with no entry yet (e.g. brand new) just isn't in
+  // this map; categoryTiles below falls back to a generic icon + trailing
+  // alphabetical order for it, same as the backend's own default behavior.
+  const [categoryMeta, setCategoryMeta] = useState<Map<string, VocabularyCategoryMeta>>(
+    new Map()
+  );
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState<CEFRLevel | "all">("all");
   const [category, setCategory] = useState<string | "all">("all");
@@ -96,11 +76,33 @@ export function VocabularyExplorer({ initialData }: { initialData: VocabularyLis
     const inLevel = level === "all" ? words : words.filter((w) => w.level === level);
     const counts = new Map<string, number>();
     for (const w of inLevel) counts.set(w.unitTitle, (counts.get(w.unitTitle) ?? 0) + 1);
-    return sortCategories(Array.from(counts.keys())).map((title) => ({
-      title,
-      count: counts.get(title) ?? 0,
-    }));
-  }, [words, level]);
+    return Array.from(counts.keys())
+      .map((title) => {
+        const meta = categoryMeta.get(title);
+        return {
+          title,
+          count: counts.get(title) ?? 0,
+          icon: meta?.icon ?? "tag",
+          displayOrder: meta?.displayOrder ?? Number.MAX_SAFE_INTEGER,
+        };
+      })
+      .sort((a, b) => a.displayOrder - b.displayOrder || a.title.localeCompare(b.title));
+  }, [words, level, categoryMeta]);
+
+  useEffect(() => {
+    let active = true;
+    authedFetch<VocabularyCategoryMeta[]>("/api/vocabulary/categories")
+      .then((rows) => {
+        if (active) setCategoryMeta(new Map(rows.map((r) => [r.name, r])));
+      })
+      .catch(() => {
+        // Non-fatal — tiles just fall back to generic icon/alphabetical order.
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const activeWord = words.find((w) => w.id === activeWordId) ?? null;
 

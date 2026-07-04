@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { idSchema } from "./common";
+import { VOCABULARY_CATEGORY_ICONS } from "../constants/vocabularyCategoryIcons";
 
 /**
  * Query params for GET /api/admin/users. Offset-based pagination (page +
@@ -170,6 +171,28 @@ export const aiTranslateBulkSchema = z.object({
   limit: z.coerce.number().int().positive().max(50).default(20),
 });
 
+/**
+ * Vocabulary category presentation (icon + display order) — the admin
+ * control surface for the learner-facing category tiles. `name` is a path
+ * param (the category name, i.e. VocabularyWord.unitTitle), not part of the
+ * body: renaming a category isn't supported here (that would require a bulk
+ * rename across every word with that unitTitle — a separate, riskier
+ * feature, not built in this pass).
+ */
+export const vocabularyCategoryNameParamSchema = z.object({
+  name: z.string().trim().min(1).max(200),
+});
+
+export const updateVocabularyCategorySchema = z
+  .object({
+    icon: z.enum(VOCABULARY_CATEGORY_ICONS),
+    displayOrder: z.number().int(),
+  })
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided",
+  });
+
 export type ListUsersQuery = z.infer<typeof listUsersSchema>;
 export type UserIdParam = z.infer<typeof userIdParamSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
@@ -182,3 +205,5 @@ export type UpdateLanguageInput = z.infer<typeof updateLanguageSchema>;
 export type CommitVocabularyImportInput = z.infer<typeof commitVocabularyImportSchema>;
 export type AiTranslateSingleInput = z.infer<typeof aiTranslateSingleSchema>;
 export type AiTranslateBulkInput = z.infer<typeof aiTranslateBulkSchema>;
+export type VocabularyCategoryNameParam = z.infer<typeof vocabularyCategoryNameParamSchema>;
+export type UpdateVocabularyCategoryInput = z.infer<typeof updateVocabularyCategorySchema>;

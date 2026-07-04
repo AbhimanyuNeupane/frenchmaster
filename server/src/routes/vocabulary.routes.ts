@@ -13,6 +13,8 @@ vocabularyRouter.get(
   vocabularyController.getVocabulary
 );
 
+vocabularyRouter.get("/categories", requireAuth, vocabularyController.getCategories);
+
 vocabularyRouter.post(
   "/:id/favorite",
   requireAuth,

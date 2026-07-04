@@ -13,8 +13,10 @@ import type {
   ListUsersQuery,
   UpdateLanguageInput,
   UpdateUserInput,
+  UpdateVocabularyCategoryInput,
   UpdateVocabularyWordInput,
   UserIdParam,
+  VocabularyCategoryNameParam,
   VocabularyWordIdParam,
 } from "../validators/admin.validators";
 
@@ -143,5 +145,19 @@ export const adminController = {
     const input = req.body as UpdateLanguageInput;
     const language = await adminService.updateLanguage(code, input);
     sendSuccess(res, language, "Language updated");
+  }),
+
+  // --- Vocabulary category presentation ---
+
+  listVocabularyCategories: asyncHandler(async (_req: Request, res: Response) => {
+    const categories = await adminService.listVocabularyCategories();
+    sendSuccess(res, categories);
+  }),
+
+  updateVocabularyCategory: asyncHandler(async (req: Request, res: Response) => {
+    const { name } = req.params as unknown as VocabularyCategoryNameParam;
+    const input = req.body as UpdateVocabularyCategoryInput;
+    const category = await adminService.updateVocabularyCategory(name, input);
+    sendSuccess(res, category, "Category updated");
   }),
 };

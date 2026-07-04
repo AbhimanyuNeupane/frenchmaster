@@ -15,8 +15,10 @@ import {
   listUsersSchema,
   updateLanguageSchema,
   updateUserSchema,
+  updateVocabularyCategorySchema,
   updateVocabularyWordSchema,
   userIdParamSchema,
+  vocabularyCategoryNameParamSchema,
   vocabularyWordIdParamSchema,
 } from "../validators/admin.validators";
 
@@ -111,4 +113,13 @@ adminRouter.patch(
   "/languages/:code",
   validate({ params: languageCodeParamSchema, body: updateLanguageSchema }),
   adminController.updateLanguage
+);
+
+// --- Vocabulary category presentation (icon + display order) ---
+
+adminRouter.get("/vocabulary/categories", adminController.listVocabularyCategories);
+adminRouter.patch(
+  "/vocabulary/categories/:name",
+  validate({ params: vocabularyCategoryNameParamSchema, body: updateVocabularyCategorySchema }),
+  adminController.updateVocabularyCategory
 );
