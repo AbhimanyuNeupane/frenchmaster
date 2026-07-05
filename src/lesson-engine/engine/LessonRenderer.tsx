@@ -19,7 +19,6 @@ import type { Lesson, LessonCard, ValidationResult } from "../types";
 import {
   CardShell,
   EmptyLessonState,
-  HeartsDisplay,
   LessonErrorBoundary,
   ProgressBar,
   UnknownCardFallback,
@@ -28,7 +27,6 @@ import {
 
 const XP_CORRECT = 10;
 const XP_VIEW = 2;
-const MAX_HEARTS = 5;
 
 export interface LessonRendererProps {
   /** Load a saved lesson by id via the content provider. Omit when supplying `previewLesson`. */
@@ -97,7 +95,6 @@ function RendererInner({
   const setQuizScore = useLessonStore((s) => s.setQuizScore);
   const storedLessonId = useLessonStore((s) => s.currentLesson);
   const xp = useLessonStore((s) => s.xp);
-  const hearts = useLessonStore((s) => s.hearts);
 
   // Per-card validation results for the current session (not persisted).
   const [results, setResults] = React.useState<Record<string, ValidationResult>>(
@@ -195,7 +192,7 @@ function RendererInner({
   const canContinue = !mustAnswer || answered;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
       <header className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -213,7 +210,6 @@ function RendererInner({
             )} min left`}
           />
         </div>
-        <HeartsDisplay hearts={hearts} max={MAX_HEARTS} />
         <XpDisplay xp={xp} />
       </header>
 

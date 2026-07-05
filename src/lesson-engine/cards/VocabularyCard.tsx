@@ -25,13 +25,13 @@ function VocabularyCard({ card }: CardComponentProps) {
               )}
             </div>
             {c.pronunciation && (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-base text-muted-foreground">
                 {c.pronunciation}
                 {c.ipa ? ` · /${c.ipa}/` : ""}
               </span>
             )}
             {c.partOfSpeech && (
-              <span className="text-xs uppercase tracking-wide text-muted-foreground">
+              <span className="text-sm uppercase tracking-wide text-muted-foreground">
                 {c.partOfSpeech}
                 {c.plural ? ` · pl. ${c.plural}` : ""}
               </span>
@@ -47,8 +47,8 @@ function VocabularyCard({ card }: CardComponentProps) {
         </div>
 
         <div className="flex flex-col gap-0.5">
-          <p className="font-medium text-foreground">{c.nativeTranslation}</p>
-          <p className="text-sm text-muted-foreground">{c.englishTranslation}</p>
+          <p className="text-lg font-medium text-foreground">{c.nativeTranslation}</p>
+          <p className="text-base text-muted-foreground">{c.englishTranslation}</p>
         </div>
 
         {c.audio && (
@@ -58,10 +58,10 @@ function VocabularyCard({ card }: CardComponentProps) {
         {(c.exampleSentence || c.nativeExample) && (
           <div className="rounded-xl border border-border bg-secondary/50 px-4 py-3">
             {c.exampleSentence && (
-              <p className="font-medium text-foreground">{c.exampleSentence}</p>
+              <p className="text-lg font-medium text-foreground">{c.exampleSentence}</p>
             )}
             {c.nativeExample && (
-              <p className="text-sm text-muted-foreground">{c.nativeExample}</p>
+              <p className="text-base text-muted-foreground">{c.nativeExample}</p>
             )}
           </div>
         )}

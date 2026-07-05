@@ -24,14 +24,14 @@ export function CardFrame({
   return (
     <div className={cn("flex flex-col gap-5", className)}>
       {(title || subtitle) && (
-        <header className="flex flex-col gap-1">
+        <header className="flex flex-col gap-1.5">
           {title && (
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
               {title}
             </h2>
           )}
           {subtitle && (
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
+            <p className="text-base text-muted-foreground">{subtitle}</p>
           )}
         </header>
       )}
@@ -61,7 +61,7 @@ export function FeedbackBanner({ result }: { result: ValidationResult }) {
     <div
       role="status"
       className={cn(
-        "rounded-xl px-4 py-3 text-sm font-semibold",
+        "rounded-xl px-4 py-3 text-base font-semibold",
         result.isCorrect
           ? "bg-success/15 text-success"
           : "bg-danger/15 text-danger"
