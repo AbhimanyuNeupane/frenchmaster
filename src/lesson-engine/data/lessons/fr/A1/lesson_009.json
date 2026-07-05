@@ -1,0 +1,292 @@
+{
+  "id": "fr_a1_lesson_009",
+  "language": "fr",
+  "level": "A1",
+  "title": "Chercher un appartement",
+  "description": "Read a real French classified ad (\"petite annonce\") for an apartment, decode its abbreviations, and handle a phone call inquiring about it.",
+  "metadata": { "estimatedMinutes": 10, "xpReward": 55 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Chercher un appartement",
+      "content": {
+        "subtitle": "Module 4 · Leçon 2",
+        "body": "Real French classified ads (\"petites annonces\") are dense with abbreviations. Learning to decode them quickly is exactly the kind of skimming skill the TEF/TCF reading section rewards."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "TextCard",
+      "title": "Une petite annonce",
+      "content": {
+        "subtitle": "Texte à lire",
+        "body": "À LOUER : appt. 3 pièces, cuis. équipée, 2 ch., salle de bain, pas de balcon. 650€/mois. 5ème étage sans ascenseur. Quartier calme, proche du centre-ville."
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Décoder les abréviations",
+      "content": {
+        "explanation": "Classified ads abbreviate almost every word to save space. Learn these common patterns.",
+        "examples": [
+          { "text": "à louer", "translation": "for rent" },
+          { "text": "appt. → appartement", "translation": "apartment" },
+          { "text": "pièces", "translation": "rooms (total count, including living room)" },
+          { "text": "cuis. équipée → cuisine équipée", "translation": "equipped kitchen" },
+          { "text": "ch. → chambre(s)", "translation": "bedroom(s)" },
+          { "text": "sans ascenseur", "translation": "without an elevator" },
+          { "text": "proche de", "translation": "close to" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "louer / le loyer",
+        "nativeTranslation": "louer / le loyer",
+        "englishTranslation": "to rent / the rent",
+        "pronunciation": "loo-AY / luh lwah-YAY",
+        "ipa": "lwe / lə lwaje",
+        "partOfSpeech": "verb",
+        "difficulty": "medium",
+        "exampleSentence": "Le loyer est de six cent cinquante euros par mois.",
+        "nativeExample": "The rent is six hundred fifty euros a month.",
+        "audio": { "key": "fr/a1/louer-loyer.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "MultipleChoiceCard",
+      "title": "Compréhension : combien de chambres ?",
+      "content": {
+        "prompt": "D'après l'annonce, combien de chambres y a-t-il dans cet appartement ?",
+        "options": [
+          { "id": "a", "text": "Une" },
+          { "id": "b", "text": "Deux" },
+          { "id": "c", "text": "Trois" },
+          { "id": "d", "text": "L'annonce ne le dit pas" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c6",
+      "type": "TrueFalseCard",
+      "title": "Compréhension : l'ascenseur",
+      "content": {
+        "statement": "D'après l'annonce, l'immeuble a un ascenseur."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Compréhension : le loyer",
+      "content": {
+        "prompt": "Quel est le loyer mensuel de cet appartement ?",
+        "options": [
+          { "id": "a", "text": "560€" },
+          { "id": "b", "text": "650€" },
+          { "id": "c", "text": "605€" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c8",
+      "type": "InfoCard",
+      "title": "Stratégie de lecture rapide",
+      "content": {
+        "tone": "tip",
+        "body": "You don't need to understand every word of a dense text like this. Scan for the facts the questions will ask about: price (€), room count, and any \"pas de\" / \"sans\" negations — these are the details TEF/TCF comprehension questions target."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c9",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "sans ascenseur", "back": "without an elevator", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c10",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Cet appartement est ___ louer. (for rent)",
+        "hint": "The preposition used in \"for rent\" ads"
+      },
+      "validation": { "acceptedAnswers": ["à"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez l'appel téléphonique",
+      "content": {
+        "prompt": "Quel est le loyer mentionné au téléphone ?",
+        "audio": { "key": "fr/a1/appel-loyer-650.mp3" },
+        "options": [
+          { "id": "a", "text": "600€" },
+          { "id": "b", "text": "650€" },
+          { "id": "c", "text": "750€" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "MatchingCard",
+      "title": "Associez l'abréviation au mot complet",
+      "content": {
+        "prompt": "Match each classified-ad abbreviation to its full word.",
+        "pairs": [
+          { "id": "p1", "left": "appt.", "right": "appartement" },
+          { "id": "p2", "left": "ch.", "right": "chambre" },
+          { "id": "p3", "left": "cuis.", "right": "cuisine" },
+          { "id": "p4", "left": "étage", "right": "floor (of a building)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"The rent is six hundred fifty euros.\"",
+        "items": [
+          { "id": "w4", "text": "cinquante euros." },
+          { "id": "w1", "text": "Le loyer est de" },
+          { "id": "w3", "text": "cent" },
+          { "id": "w2", "text": "six" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots viennent d'une petite annonce ?",
+      "content": {
+        "prompt": "Select every word or abbreviation you'd expect to see in a rental classified ad.",
+        "options": [
+          { "id": "a", "text": "à louer" },
+          { "id": "b", "text": "toujours" },
+          { "id": "c", "text": "cuis. équipée" },
+          { "id": "d", "text": "sans ascenseur" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Appeler pour l'annonce",
+      "content": {
+        "scenario": "Appel téléphonique",
+        "lines": [
+          { "speaker": "Candidat", "text": "Bonjour, j'appelle pour l'appartement à louer.", "translation": "Hello, I'm calling about the apartment for rent." },
+          { "speaker": "Propriétaire", "text": "Bonjour ! Oui, il est toujours disponible.", "translation": "Hello! Yes, it's still available." },
+          { "speaker": "Candidat", "text": "Il y a un ascenseur dans l'immeuble ?", "translation": "Is there an elevator in the building?" },
+          { "speaker": "Propriétaire", "text": "Non, désolé, il n'y a pas d'ascenseur. C'est au cinquième étage.", "translation": "No, sorry, there's no elevator. It's on the fifth floor." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this phone inquiry out loud.",
+        "targetText": "Bonjour, j'appelle pour l'appartement à louer. Il y a un ascenseur dans l'immeuble ?",
+        "referenceAudio": { "key": "fr/a1/appel-annonce.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "WritingCard",
+      "title": "À vous d'écrire",
+      "content": {
+        "prompt": "Answer in French: \"L'appartement a-t-il un ascenseur ?\" (based on the ad above)",
+        "placeholder": "Non, ..."
+      },
+      "validation": {
+        "acceptedAnswers": [
+          "non, il n'y a pas d'ascenseur",
+          "non il n'y a pas d'ascenseur",
+          "non, il n'y a pas d'ascenseur.",
+          "il n'y a pas d'ascenseur"
+        ],
+        "fuzzyMatch": true
+      },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c18",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Que veut dire \"cuis. équipée\" ?",
+            "options": [
+              { "id": "a", "text": "cuisine équipée (equipped kitchen)" },
+              { "id": "b", "text": "cuisine espagnole" },
+              { "id": "c", "text": "chambre équipée" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"À louer\" veut dire \"for sale\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c19",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Classified-ad abbreviations: appt., ch., cuis. équipée, sans ascenseur",
+          "Reading strategy: scan for price, room count, and negations (\"pas de\", \"sans\")",
+          "Louer (to rent) / le loyer (the rent)",
+          "A full apartment-inquiry phone call, from opening to key questions"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c20",
+      "type": "RewardCard",
+      "content": {
+        "title": "Module 4 terminé !",
+        "message": "Excellent ! You've completed Chez Moi — you can now read real French housing ads.",
+        "xp": 55,
+        "badge": "Logement"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

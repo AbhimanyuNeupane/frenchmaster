@@ -1,0 +1,260 @@
+{
+  "id": "fr_a1_lesson_013",
+  "language": "fr",
+  "level": "A1",
+  "title": "La météo et le futur proche",
+  "description": "Talk about the weather and near-future plans with \"aller + infinitif\" — the exact grammar used in the weather-forecast audio clips TCF listening loves.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "La météo et le futur proche",
+      "content": {
+        "subtitle": "Module 6 · Leçon 1",
+        "body": "Weather talk is small talk everywhere — and weather forecasts are a favorite TCF listening format. They also give us a perfect excuse to learn the near future tense."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Parler de la météo",
+      "content": {
+        "explanation": "Weather expressions almost always use the impersonal \"il\" (like English \"it's raining\").",
+        "examples": [
+          { "text": "Il fait beau.", "translation": "The weather is nice." },
+          { "text": "Il fait chaud / froid.", "translation": "It's hot / cold." },
+          { "text": "Il pleut.", "translation": "It's raining." },
+          { "text": "Il neige.", "translation": "It's snowing." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Le futur proche : aller + infinitif",
+      "content": {
+        "explanation": "To talk about the near future, conjugate \"aller\" (to go) and add an infinitive — exactly like English \"going to\".",
+        "examples": [
+          { "text": "je vais manger", "translation": "I am going to eat" },
+          { "text": "tu vas sortir", "translation": "you are going to go out" },
+          { "text": "il/elle va pleuvoir", "translation": "it is going to rain" },
+          { "text": "nous allons voyager", "translation": "we are going to travel" },
+          { "text": "vous allez arriver", "translation": "you are going to arrive" },
+          { "text": "ils/elles vont partir", "translation": "they are going to leave" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "il va faire beau",
+        "nativeTranslation": "il va faire beau",
+        "englishTranslation": "the weather is going to be nice",
+        "pronunciation": "eel vah fair boh",
+        "ipa": "il va fɛʁ bo",
+        "partOfSpeech": "expression",
+        "difficulty": "medium",
+        "exampleSentence": "Demain, il va faire beau avec vingt degrés.",
+        "nativeExample": "Tomorrow, the weather will be nice, with twenty degrees.",
+        "audio": { "key": "fr/a1/il-va-faire-beau.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "InfoCard",
+      "title": "Le bulletin météo de l'examen",
+      "content": {
+        "tone": "tip",
+        "body": "\"Demain, il va faire beau à Paris avec des températures de vingt degrés. Il va pleuvoir dans le sud.\" — this exact weather-forecast format, using futur proche, is a very common TCF listening clip. Listen for the city and the temperature."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "il va pleuvoir", "back": "it's going to rain", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne forme",
+      "content": {
+        "prompt": "Nous ___ (voyager) en France l'été prochain.",
+        "options": [
+          { "id": "a", "text": "allons voyager" },
+          { "id": "b", "text": "va voyager" },
+          { "id": "c", "text": "vais voyager" },
+          { "id": "d", "text": "allez voyager" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c8",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Demain, il ___ faire froid. (is going to)",
+        "hint": "Third-person singular of \"aller\""
+      },
+      "validation": { "acceptedAnswers": ["va"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "ListeningCard",
+      "title": "Écoutez le bulletin météo",
+      "content": {
+        "prompt": "Quel temps va-t-il faire demain à Paris ?",
+        "audio": { "key": "fr/a1/meteo-beau-paris.mp3" },
+        "options": [
+          { "id": "a", "text": "il va pleuvoir" },
+          { "id": "b", "text": "il va faire beau" },
+          { "id": "c", "text": "il va neiger" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c10",
+      "type": "MatchingCard",
+      "title": "Associez le pronom au verbe \"aller\"",
+      "content": {
+        "prompt": "Match each subject pronoun to its correct form of \"aller\".",
+        "pairs": [
+          { "id": "p1", "left": "je", "right": "vais" },
+          { "id": "p2", "left": "tu", "right": "vas" },
+          { "id": "p3", "left": "nous", "right": "allons" },
+          { "id": "p4", "left": "ils", "right": "vont" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c11",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Le futur proche se forme avec \"avoir\" + infinitif."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c12",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"It's going to rain tomorrow.\"",
+        "items": [
+          { "id": "w3", "text": "demain." },
+          { "id": "w1", "text": "Il va" },
+          { "id": "w2", "text": "pleuvoir" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c13",
+      "type": "MultipleSelectCard",
+      "title": "Quelles phrases utilisent le futur proche ?",
+      "content": {
+        "prompt": "Select every sentence using the near future (aller + infinitive).",
+        "options": [
+          { "id": "a", "text": "Je vais manger." },
+          { "id": "b", "text": "Je mange." },
+          { "id": "c", "text": "Nous allons voyager." },
+          { "id": "d", "text": "Ils vont sortir." }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "ConversationCard",
+      "title": "Parler du week-end",
+      "content": {
+        "scenario": "Entre amis",
+        "lines": [
+          { "speaker": "Sami", "text": "Qu'est-ce que tu vas faire ce week-end ?", "translation": "What are you going to do this weekend?" },
+          { "speaker": "Ana", "text": "Je vais visiter Paris, s'il fait beau.", "translation": "I'm going to visit Paris, if the weather is nice." },
+          { "speaker": "Sami", "text": "La météo annonce du soleil, alors !", "translation": "The forecast says sun, so that's good!" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c15",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this weekend plan out loud.",
+        "targetText": "Ce week-end, je vais visiter Paris, s'il fait beau.",
+        "referenceAudio": { "key": "fr/a1/plan-week-end.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment forme-t-on le futur proche ?",
+            "options": [
+              { "id": "a", "text": "être + infinitif" },
+              { "id": "b", "text": "aller (conjugué) + infinitif" },
+              { "id": "c", "text": "avoir + participe passé" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Il neige\" veut dire \"it's snowing\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c17",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Weather expressions: il fait beau/chaud/froid, il pleut, il neige",
+          "Futur proche: aller (conjugated) + infinitive, for near-future plans",
+          "Weather forecasts are a classic TCF listening format — listen for city + temperature",
+          "\"Qu'est-ce que tu vas faire...?\" is a natural way to ask about plans"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c18",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now talk about weather and near-future plans.",
+        "xp": 50,
+        "badge": "Météo"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "id": "fr_a1_lesson_016",
+  "language": "fr",
+  "level": "A1",
+  "title": "Chez le médecin",
+  "description": "Describe symptoms with \"avoir mal à\" and understand \"il faut\" — everything you need for a health role-play at the doctor's office.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Chez le médecin",
+      "content": {
+        "subtitle": "Module 7 · Leçon 1",
+        "body": "Describing how you feel and understanding basic medical advice is essential travel French — and a realistic TEF/TCF role-play scenario (\"vous êtes malade, décrivez vos symptômes\")."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "\"Avoir mal à\" + partie du corps",
+      "content": {
+        "explanation": "\"Avoir mal à\" (to have pain in) uses the same à + article contractions you already learned for places: au, à la, à l', aux.",
+        "examples": [
+          { "text": "J'ai mal à la tête.", "translation": "I have a headache." },
+          { "text": "J'ai mal au ventre.", "translation": "I have a stomachache." },
+          { "text": "J'ai mal à la gorge.", "translation": "I have a sore throat." },
+          { "text": "J'ai mal aux dents.", "translation": "I have a toothache." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Les parties du corps",
+      "content": {
+        "explanation": "The core body-part vocabulary needed to describe any symptom.",
+        "examples": [
+          { "text": "la tête", "translation": "the head" },
+          { "text": "le ventre", "translation": "the stomach" },
+          { "text": "la gorge", "translation": "the throat" },
+          { "text": "le dos", "translation": "the back" },
+          { "text": "les dents", "translation": "the teeth" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c4",
+      "type": "GrammarCard",
+      "title": "\"Il faut\" + infinitif",
+      "content": {
+        "explanation": "\"Il faut\" (it is necessary to / you must) is an impersonal expression followed directly by an infinitive — extremely common in advice and instructions.",
+        "examples": [
+          { "text": "Il faut prendre ce médicament.", "translation": "You must take this medicine." },
+          { "text": "Il faut se reposer.", "translation": "You need to rest." },
+          { "text": "Il ne faut pas fumer.", "translation": "You must not smoke." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c5",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "une ordonnance",
+        "nativeTranslation": "une ordonnance",
+        "englishTranslation": "a prescription",
+        "pronunciation": "oor-doh-NAHNS",
+        "ipa": "ɔʁdɔnɑ̃s",
+        "partOfSpeech": "noun",
+        "difficulty": "medium",
+        "exampleSentence": "Le médecin me donne une ordonnance pour la pharmacie.",
+        "nativeExample": "The doctor gives me a prescription for the pharmacy.",
+        "audio": { "key": "fr/a1/ordonnance.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Le jeu de rôle médical",
+      "content": {
+        "tone": "tip",
+        "body": "A realistic TEF/TCF speaking prompt: \"Vous êtes malade. Décrivez vos symptômes à un médecin.\" Prepare a short script: greet, say \"j'ai mal à...\", and ask a question like \"Qu'est-ce qu'il faut faire ?\""
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "il faut se reposer", "back": "you need to rest", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne contraction",
+      "content": {
+        "prompt": "J'ai mal ___ dents.",
+        "options": [
+          { "id": "a", "text": "à la" },
+          { "id": "b", "text": "au" },
+          { "id": "c", "text": "aux" },
+          { "id": "d", "text": "à l'" }
+        ]
+      },
+      "validation": { "correctOptionId": "c" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "___ prendre ce médicament trois fois par jour. (It is necessary to)",
+        "hint": "Impersonal expression + infinitive"
+      },
+      "validation": { "acceptedAnswers": ["Il faut", "il faut"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quel symptôme entendez-vous ?",
+        "audio": { "key": "fr/a1/mal-a-la-tete.mp3" },
+        "options": [
+          { "id": "a", "text": "J'ai mal à la tête." },
+          { "id": "b", "text": "J'ai mal au ventre." },
+          { "id": "c", "text": "J'ai mal au dos." }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez le symptôme à la partie du corps",
+      "content": {
+        "prompt": "Match each expression to the body part it refers to.",
+        "pairs": [
+          { "id": "p1", "left": "mal à la tête", "right": "la tête" },
+          { "id": "p2", "left": "mal au ventre", "right": "le ventre" },
+          { "id": "p3", "left": "mal à la gorge", "right": "la gorge" },
+          { "id": "p4", "left": "mal au dos", "right": "le dos" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Il faut\" est suivi directement d'un infinitif."
+      },
+      "validation": { "answer": true },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I have a stomachache.\"",
+        "items": [
+          { "id": "w3", "text": "au ventre." },
+          { "id": "w1", "text": "J'ai" },
+          { "id": "w2", "text": "mal" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quelles parties du corps sont mentionnées ?",
+      "content": {
+        "prompt": "Select every actual body part.",
+        "options": [
+          { "id": "a", "text": "la tête" },
+          { "id": "b", "text": "l'ordonnance" },
+          { "id": "c", "text": "le dos" },
+          { "id": "d", "text": "la gorge" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Consultation médicale",
+      "content": {
+        "scenario": "Cabinet du médecin",
+        "lines": [
+          { "speaker": "Médecin", "text": "Bonjour. Qu'est-ce qui ne va pas ?", "translation": "Hello. What's wrong?" },
+          { "speaker": "Patient", "text": "J'ai mal à la gorge et un peu de fièvre.", "translation": "I have a sore throat and a bit of a fever." },
+          { "speaker": "Médecin", "text": "Il faut vous reposer et prendre ce médicament.", "translation": "You need to rest and take this medicine." },
+          { "speaker": "Patient", "text": "Merci docteur, voici mon ordonnance.", "translation": "Thank you, doctor — here's my prescription." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this doctor's-office exchange out loud.",
+        "targetText": "J'ai mal à la gorge et un peu de fièvre. Qu'est-ce qu'il faut faire ?",
+        "referenceAudio": { "key": "fr/a1/symptomes.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"I have a headache\" ?",
+            "options": [
+              { "id": "a", "text": "J'ai mal au ventre." },
+              { "id": "b", "text": "J'ai mal à la tête." },
+              { "id": "c", "text": "J'ai mal aux dents." }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Une ordonnance\" veut dire \"a prescription\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "\"Avoir mal à\" + body part uses the same au/à la/à l'/aux contractions as places",
+          "Body vocabulary: la tête, le ventre, la gorge, le dos, les dents",
+          "\"Il faut\" + infinitive expresses necessity/advice",
+          "A doctor role-play is a realistic TEF/TCF speaking scenario"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c19",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now describe symptoms and understand medical advice.",
+        "xp": 50,
+        "badge": "Santé"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

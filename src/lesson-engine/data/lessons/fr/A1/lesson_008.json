@@ -1,0 +1,291 @@
+{
+  "id": "fr_a1_lesson_008",
+  "language": "fr",
+  "level": "A1",
+  "title": "Ma maison",
+  "description": "Name the rooms and furniture of a home, and use \"il y a\" to say what's there — the foundation for reading apartment listings.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Ma maison",
+      "content": {
+        "subtitle": "Module 4 · Leçon 1",
+        "body": "Describing your home — the rooms, the furniture, what's where — is essential vocabulary and a frequent TEF/TCF reading topic (apartment listings, classified ads)."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les pièces de la maison",
+      "content": {
+        "explanation": "The essential rooms you'll need to describe any home or apartment.",
+        "examples": [
+          { "text": "le salon", "translation": "the living room" },
+          { "text": "la cuisine", "translation": "the kitchen" },
+          { "text": "la chambre", "translation": "the bedroom" },
+          { "text": "la salle de bain", "translation": "the bathroom" },
+          { "text": "les toilettes / les WC", "translation": "the toilet (separate room, common in France)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "il y a",
+        "nativeTranslation": "il y a",
+        "englishTranslation": "there is / there are",
+        "pronunciation": "eel yah",
+        "ipa": "il ja",
+        "partOfSpeech": "expression",
+        "difficulty": "easy",
+        "exampleSentence": "Dans le salon, il y a un canapé et une table.",
+        "nativeExample": "In the living room, there is a sofa and a table.",
+        "audio": { "key": "fr/a1/il-y-a.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "GrammarCard",
+      "title": "Le meuble de la maison",
+      "content": {
+        "explanation": "Common furniture and fixtures you'll need to describe a room.",
+        "examples": [
+          { "text": "le lit", "translation": "the bed" },
+          { "text": "la table / la chaise", "translation": "the table / the chair" },
+          { "text": "le canapé", "translation": "the sofa" },
+          { "text": "l'armoire", "translation": "the wardrobe / closet" },
+          { "text": "la fenêtre / la porte", "translation": "the window / the door" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "\"Il n'y a pas de...\"",
+      "content": {
+        "explanation": "The negative of \"il y a\" replaces \"un/une/des\" with \"de\" (or \"d'\" before a vowel) — the standard rule for negation with indefinite articles.",
+        "examples": [
+          { "text": "Il y a un jardin.", "translation": "There is a garden." },
+          { "text": "Il n'y a pas de jardin.", "translation": "There is no garden." },
+          { "text": "Il n'y a pas d'ascenseur.", "translation": "There is no elevator." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "GrammarCard",
+      "title": "Les prépositions de lieu",
+      "content": {
+        "explanation": "These prepositions describe where furniture and objects are positioned relative to each other.",
+        "examples": [
+          { "text": "dans", "translation": "in" },
+          { "text": "sur / sous", "translation": "on / under" },
+          { "text": "devant / derrière", "translation": "in front of / behind" },
+          { "text": "à côté de", "translation": "next to" },
+          { "text": "entre", "translation": "between" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c7",
+      "type": "InfoCard",
+      "title": "Les petites annonces",
+      "content": {
+        "tone": "note",
+        "body": "TEF/TCF reading sections often include short apartment classified ads (\"petites annonces\") full of abbreviations: \"appt\" (appartement), \"ch.\" (chambre), \"cuis. équipée\" (cuisine équipée). Recognizing \"il y a\" facts inside a dense ad is a key skill."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c8",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "à côté de", "back": "next to", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne phrase",
+      "content": {
+        "prompt": "Comment dit-on \"There is no elevator\" ?",
+        "options": [
+          { "id": "a", "text": "Il n'y a pas un ascenseur." },
+          { "id": "b", "text": "Il n'y a pas d'ascenseur." },
+          { "id": "c", "text": "Il n'y a pas de ascenseur." },
+          { "id": "d", "text": "Il y a pas ascenseur." }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Le chat est ___ la table. (under)",
+        "hint": "Preposition meaning \"under\""
+      },
+      "validation": { "acceptedAnswers": ["sous"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quelle pièce entendez-vous ?",
+        "audio": { "key": "fr/a1/mot-cuisine.mp3" },
+        "options": [
+          { "id": "a", "text": "la cuisine" },
+          { "id": "b", "text": "la chambre" },
+          { "id": "c", "text": "le salon" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "MatchingCard",
+      "title": "Associez le meuble à sa pièce habituelle",
+      "content": {
+        "prompt": "Match each piece of furniture to the room where it's usually found.",
+        "pairs": [
+          { "id": "p1", "left": "le lit", "right": "la chambre" },
+          { "id": "p2", "left": "le canapé", "right": "le salon" },
+          { "id": "p3", "left": "la douche", "right": "la salle de bain" },
+          { "id": "p4", "left": "le four", "right": "la cuisine" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Il n'y a pas de jardin\" utilise \"un jardin\" après \"pas\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c14",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"In the kitchen, there is a table.\"",
+        "items": [
+          { "id": "w4", "text": "une table." },
+          { "id": "w1", "text": "Dans la cuisine," },
+          { "id": "w2", "text": "il y a" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots sont des prépositions de lieu ?",
+      "content": {
+        "prompt": "Select every preposition of place.",
+        "options": [
+          { "id": "a", "text": "devant" },
+          { "id": "b", "text": "toujours" },
+          { "id": "c", "text": "sous" },
+          { "id": "d", "text": "entre" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "ConversationCard",
+      "title": "Décrire son appartement",
+      "content": {
+        "scenario": "Entre amis",
+        "lines": [
+          { "speaker": "Julie", "text": "Ton appartement est comment ?", "translation": "What's your apartment like?" },
+          { "speaker": "Tom", "text": "Il y a un salon, une cuisine, et deux chambres.", "translation": "There's a living room, a kitchen, and two bedrooms." },
+          { "speaker": "Julie", "text": "Il y a un balcon ?", "translation": "Is there a balcony?" },
+          { "speaker": "Tom", "text": "Non, il n'y a pas de balcon, mais il y a une belle vue.", "translation": "No, there's no balcony, but there's a nice view." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c17",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this description of an apartment out loud.",
+        "targetText": "Il y a un salon, une cuisine, et deux chambres, mais il n'y a pas de balcon.",
+        "referenceAudio": { "key": "fr/a1/description-appartement.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c18",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"the living room\" ?",
+            "options": [
+              { "id": "a", "text": "la chambre" },
+              { "id": "b", "text": "le salon" },
+              { "id": "c", "text": "la cuisine" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"À côté de\" veut dire \"next to\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c19",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Rooms: le salon, la cuisine, la chambre, la salle de bain, les toilettes",
+          "\"Il y a\" (there is/are) and its negative \"il n'y a pas de\"",
+          "Prepositions of place: dans, sur, sous, devant, derrière, à côté de, entre",
+          "Apartment listings (\"petites annonces\") use heavy abbreviation — a classic TEF/TCF reading text"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c20",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now describe any home, room by room.",
+        "xp": 50,
+        "badge": "Ma Maison"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

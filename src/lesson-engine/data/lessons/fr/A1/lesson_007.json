@@ -1,0 +1,298 @@
+{
+  "id": "fr_a1_lesson_007",
+  "language": "fr",
+  "level": "A1",
+  "title": "Les jours, les mois et les saisons",
+  "description": "Name days, months, and seasons; use frequency adverbs to describe habits — and learn to fill in a date of birth correctly, a required field on every TEF/TCF form.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Les jours, les mois et les saisons",
+      "content": {
+        "subtitle": "Module 3 · Leçon 3",
+        "body": "Days, months, dates, and how often you do things — this vocabulary shows up everywhere: forms, calendars, and casual conversation about your week."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les jours de la semaine",
+      "content": {
+        "explanation": "French days of the week are never capitalized (unlike English). The week is considered to start on Monday.",
+        "examples": [
+          { "text": "lundi", "translation": "Monday" },
+          { "text": "mardi", "translation": "Tuesday" },
+          { "text": "mercredi", "translation": "Wednesday" },
+          { "text": "jeudi", "translation": "Thursday" },
+          { "text": "vendredi", "translation": "Friday" },
+          { "text": "samedi", "translation": "Saturday" },
+          { "text": "dimanche", "translation": "Sunday" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Les mois de l'année",
+      "content": {
+        "explanation": "Months are also lowercase in French. You'll need them constantly for dates of birth on official forms.",
+        "examples": [
+          { "text": "janvier, février, mars", "translation": "January, February, March" },
+          { "text": "avril, mai, juin", "translation": "April, May, June" },
+          { "text": "juillet, août, septembre", "translation": "July, August, September" },
+          { "text": "octobre, novembre, décembre", "translation": "October, November, December" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "le printemps / l'été / l'automne / l'hiver",
+        "nativeTranslation": "le printemps / l'été / l'automne / l'hiver",
+        "englishTranslation": "spring / summer / autumn / winter",
+        "pronunciation": "luh pran-TAHN / lay-TAY / lo-TON / lee-VAIR",
+        "ipa": "lə pʁɛ̃tɑ̃ / lete / lotɔn / livɛʁ",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "Ma saison préférée, c'est l'été.",
+        "nativeExample": "My favorite season is summer.",
+        "audio": { "key": "fr/a1/saisons.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "\"Le lundi\" ou juste \"lundi\" ?",
+      "content": {
+        "explanation": "Adding \"le\" before a day means \"every [day]\" (a habit). No article means \"this coming [day]\" (one specific occurrence).",
+        "examples": [
+          { "text": "Le lundi, je vais à la piscine.", "translation": "On Mondays (every Monday), I go to the pool." },
+          { "text": "Lundi, je vais à la piscine.", "translation": "This Monday, I'm going to the pool." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "GrammarCard",
+      "title": "Les adverbes de fréquence",
+      "content": {
+        "explanation": "Frequency adverbs normally go right after the conjugated verb — a common word-order mistake for English speakers, who put them before the verb.",
+        "examples": [
+          { "text": "toujours", "translation": "always" },
+          { "text": "souvent", "translation": "often" },
+          { "text": "parfois / quelquefois", "translation": "sometimes" },
+          { "text": "rarement", "translation": "rarely" },
+          { "text": "ne ... jamais", "translation": "never" },
+          { "text": "Je vais souvent au cinéma.", "translation": "I often go to the movies. (adverb AFTER the verb)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c7",
+      "type": "InfoCard",
+      "title": "La date de naissance sur un formulaire",
+      "content": {
+        "tone": "tip",
+        "body": "Every TEF/TCF registration form asks for your \"date de naissance\" (date of birth), written day/month/year: \"15/03/1995\" is read aloud as \"le quinze mars mille neuf cent quatre-vingt-quinze\". Practice saying your own birth date this way."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c8",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "ne ... jamais", "back": "never", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne phrase",
+      "content": {
+        "prompt": "Comment dit-on \"I always eat breakfast\" avec le bon ordre des mots ?",
+        "options": [
+          { "id": "a", "text": "Je toujours prends le petit-déjeuner." },
+          { "id": "b", "text": "Je prends toujours le petit-déjeuner." },
+          { "id": "c", "text": "Toujours je prends le petit-déjeuner." },
+          { "id": "d", "text": "Je prends le petit-déjeuner toujours." }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "___, je vais à la piscine. (Every Monday)",
+        "hint": "Use the definite article for a habitual day"
+      },
+      "validation": { "acceptedAnswers": ["Le lundi", "le lundi"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez la date",
+      "content": {
+        "prompt": "Quelle date entendez-vous ?",
+        "audio": { "key": "fr/a1/date-15-mars.mp3" },
+        "options": [
+          { "id": "a", "text": "le 5 mars" },
+          { "id": "b", "text": "le 15 mars" },
+          { "id": "c", "text": "le 15 mai" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "MatchingCard",
+      "title": "Associez le mois à sa saison",
+      "content": {
+        "prompt": "Match each month to the season it belongs to (Northern Hemisphere).",
+        "pairs": [
+          { "id": "p1", "left": "janvier", "right": "l'hiver" },
+          { "id": "p2", "left": "avril", "right": "le printemps" },
+          { "id": "p3", "left": "juillet", "right": "l'été" },
+          { "id": "p4", "left": "octobre", "right": "l'automne" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Les jours et les mois s'écrivent avec une majuscule en français, comme en anglais."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c14",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I often go to the movies.\"",
+        "items": [
+          { "id": "w4", "text": "au cinéma." },
+          { "id": "w1", "text": "Je" },
+          { "id": "w2", "text": "vais" },
+          { "id": "w3", "text": "souvent" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots sont des adverbes de fréquence ?",
+      "content": {
+        "prompt": "Select every frequency adverb.",
+        "options": [
+          { "id": "a", "text": "souvent" },
+          { "id": "b", "text": "mardi" },
+          { "id": "c", "text": "rarement" },
+          { "id": "d", "text": "toujours" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "ConversationCard",
+      "title": "Remplir un formulaire",
+      "content": {
+        "scenario": "Inscription à l'examen",
+        "lines": [
+          { "speaker": "Agent", "text": "Quelle est votre date de naissance ?", "translation": "What is your date of birth?" },
+          { "speaker": "Candidat", "text": "Je suis né le quinze mars mille neuf cent quatre-vingt-quinze.", "translation": "I was born on March 15, 1995." },
+          { "speaker": "Agent", "text": "Et vous venez souvent en France ?", "translation": "And do you come to France often?" },
+          { "speaker": "Candidat", "text": "Non, rarement. C'est ma première visite.", "translation": "No, rarely. This is my first visit." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c17",
+      "type": "WritingCard",
+      "title": "À vous d'écrire",
+      "content": {
+        "prompt": "Write out this date of birth in full French words: \"15/03/1995\".",
+        "placeholder": "le ..."
+      },
+      "validation": {
+        "acceptedAnswers": [
+          "le quinze mars mille neuf cent quatre-vingt-quinze",
+          "quinze mars mille neuf cent quatre-vingt-quinze"
+        ],
+        "fuzzyMatch": true
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Où se place l'adverbe de fréquence dans une phrase simple ?",
+            "options": [
+              { "id": "a", "text": "Avant le sujet" },
+              { "id": "b", "text": "Après le verbe conjugué" },
+              { "id": "c", "text": "À la fin, toujours" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Le lundi\" veut dire \"every Monday\", pas seulement \"this Monday\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c19",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Days and months are lowercase in French",
+          "\"Le + day\" = habitual (every Monday); no article = a specific occurrence",
+          "Frequency adverbs (souvent, toujours, rarement...) go after the conjugated verb",
+          "Dates of birth are read as \"le [jour] [mois] [année]\" — a required TEF/TCF form field"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c20",
+      "type": "RewardCard",
+      "content": {
+        "title": "Module 3 terminé !",
+        "message": "Félicitations ! You've completed Le Quotidien — routines, time, and dates are now yours to command.",
+        "xp": 50,
+        "badge": "Le Temps"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

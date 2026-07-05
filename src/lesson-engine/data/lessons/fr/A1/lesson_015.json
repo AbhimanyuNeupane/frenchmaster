@@ -1,0 +1,262 @@
+{
+  "id": "fr_a1_lesson_015",
+  "language": "fr",
+  "level": "A1",
+  "title": "Les loisirs",
+  "description": "Talk about hobbies and free time with aimer/vouloir/pouvoir + infinitive — a guaranteed TEF/TCF speaking topic.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 55 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Les loisirs",
+      "content": {
+        "subtitle": "Module 6 · Leçon 3",
+        "body": "\"What do you like to do in your free time?\" is one of the most reliable TEF/TCF oral questions. Let's build the vocabulary and the three key verbs you need to answer well."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Aimer, vouloir, pouvoir + infinitif",
+      "content": {
+        "explanation": "These three verbs are almost always followed directly by an infinitive — no extra preposition needed, unlike some of their English equivalents.",
+        "examples": [
+          { "text": "j'aime / tu aimes / il aime", "translation": "I like / you like / he likes" },
+          { "text": "je veux / tu veux / il veut", "translation": "I want / you want / he wants" },
+          { "text": "je peux / tu peux / il peut", "translation": "I can / you can / he can" },
+          { "text": "J'aime lire.", "translation": "I like to read." },
+          { "text": "Je veux voyager.", "translation": "I want to travel." },
+          { "text": "Je peux venir samedi.", "translation": "I can come on Saturday." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Le vocabulaire des loisirs",
+      "content": {
+        "explanation": "Common hobby vocabulary — note that \"jouer\" takes \"à\" for games/sports but \"de\" for musical instruments.",
+        "examples": [
+          { "text": "la lecture / lire", "translation": "reading / to read" },
+          { "text": "la musique / le cinéma", "translation": "music / cinema" },
+          { "text": "jouer au foot", "translation": "to play soccer (jouer à + sport)" },
+          { "text": "jouer de la guitare", "translation": "to play guitar (jouer de + instrument)" },
+          { "text": "faire du sport", "translation": "to do/play sports" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "le temps libre",
+        "nativeTranslation": "le temps libre",
+        "englishTranslation": "free time",
+        "pronunciation": "luh tahn LEE-bruh",
+        "ipa": "lə tɑ̃ libʁ",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "Pendant mon temps libre, j'aime lire et faire du sport.",
+        "nativeExample": "In my free time, I like to read and play sports.",
+        "audio": { "key": "fr/a1/temps-libre.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "InfoCard",
+      "title": "Une question d'examen classique",
+      "content": {
+        "tone": "tip",
+        "body": "\"Qu'est-ce que vous aimez faire pendant votre temps libre ?\" is a near-guaranteed TEF/TCF speaking question. Prepare 3–4 sentences about your hobbies using aimer/vouloir/pouvoir in advance."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "faire du sport", "back": "to play/do sports", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne forme",
+      "content": {
+        "prompt": "Elle ___ jouer du piano tous les jours.",
+        "options": [
+          { "id": "a", "text": "aime" },
+          { "id": "b", "text": "aimes" },
+          { "id": "c", "text": "aimons" },
+          { "id": "d", "text": "aiment" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c8",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Je ___ (vouloir) apprendre le piano.",
+        "hint": "1st person singular of \"vouloir\""
+      },
+      "validation": { "acceptedAnswers": ["veux"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quel loisir est mentionné ?",
+        "audio": { "key": "fr/a1/loisir-lecture.mp3" },
+        "options": [
+          { "id": "a", "text": "la lecture" },
+          { "id": "b", "text": "la danse" },
+          { "id": "c", "text": "le cinéma" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c10",
+      "type": "MatchingCard",
+      "title": "Associez l'activité à sa préposition",
+      "content": {
+        "prompt": "Match each activity to the right form of \"jouer\".",
+        "pairs": [
+          { "id": "p1", "left": "le foot", "right": "jouer au foot" },
+          { "id": "p2", "left": "la guitare", "right": "jouer de la guitare" },
+          { "id": "p3", "left": "les cartes", "right": "jouer aux cartes" },
+          { "id": "p4", "left": "le piano", "right": "jouer du piano" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c11",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Jouer\" utilise toujours \"de\", jamais \"à\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c12",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I can come on Saturday.\"",
+        "items": [
+          { "id": "w3", "text": "samedi." },
+          { "id": "w1", "text": "Je peux" },
+          { "id": "w2", "text": "venir" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c13",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots sont des loisirs ?",
+      "content": {
+        "prompt": "Select every word that names a hobby or leisure activity.",
+        "options": [
+          { "id": "a", "text": "la lecture" },
+          { "id": "b", "text": "l'addition" },
+          { "id": "c", "text": "la danse" },
+          { "id": "d", "text": "le cinéma" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "ConversationCard",
+      "title": "Parler de ses loisirs",
+      "content": {
+        "scenario": "Entretien d'examen",
+        "lines": [
+          { "speaker": "Examinateur", "text": "Qu'est-ce que vous aimez faire pendant votre temps libre ?", "translation": "What do you like to do in your free time?" },
+          { "speaker": "Candidat", "text": "J'aime lire et faire du sport.", "translation": "I like reading and playing sports." },
+          { "speaker": "Examinateur", "text": "Vous jouez d'un instrument ?", "translation": "Do you play an instrument?" },
+          { "speaker": "Candidat", "text": "Oui, je joue de la guitare.", "translation": "Yes, I play guitar." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c15",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this answer about hobbies out loud.",
+        "targetText": "J'aime lire et faire du sport. Je joue aussi de la guitare.",
+        "referenceAudio": { "key": "fr/a1/reponse-loisirs.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"I want to travel\" ?",
+            "options": [
+              { "id": "a", "text": "Je peux voyager." },
+              { "id": "b", "text": "Je veux voyager." },
+              { "id": "c", "text": "J'aime voyager." }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Jouer au piano\" est la forme correcte pour un instrument." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c17",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Aimer/vouloir/pouvoir + infinitive — no extra preposition needed",
+          "Hobby vocabulary: la lecture, la musique, le cinéma, la danse",
+          "\"Jouer à\" for games/sports, \"jouer de\" for musical instruments",
+          "\"Qu'est-ce que vous aimez faire pendant votre temps libre ?\" is a guaranteed exam question"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c18",
+      "type": "RewardCard",
+      "content": {
+        "title": "Module 6 terminé !",
+        "message": "Félicitations ! You've completed Sortir et se déplacer — weather, city navigation, and hobbies are now yours to command.",
+        "xp": 55,
+        "badge": "Loisirs"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "id": "fr_a1_lesson_014",
+  "language": "fr",
+  "level": "A1",
+  "title": "En ville et se déplacer",
+  "description": "Name city places and modes of transport, and give or understand directions — a core TEF/TCF reading/listening skill.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "En ville et se déplacer",
+      "content": {
+        "subtitle": "Module 6 · Leçon 2",
+        "body": "Finding your way around a city — asking for and understanding directions — is a practical A1 skill and a classic TEF/TCF reading/listening topic (signs, maps, spoken directions)."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les lieux de la ville",
+      "content": {
+        "explanation": "Essential public places you'll need to name and find in any city.",
+        "examples": [
+          { "text": "la banque / la poste", "translation": "the bank / the post office" },
+          { "text": "la pharmacie", "translation": "the pharmacy" },
+          { "text": "la gare / l'aéroport", "translation": "the train station / the airport" },
+          { "text": "l'hôpital / la mairie", "translation": "the hospital / the town hall" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "\"Aller à\" + article : les contractions",
+      "content": {
+        "explanation": "\"À\" (to/at) contracts with \"le\" and \"les\" — but not with \"la\" or \"l'\". This trips up almost every learner at first.",
+        "examples": [
+          { "text": "à + le → au marché", "translation": "to the market" },
+          { "text": "à + la → à la banque", "translation": "to the bank (no contraction)" },
+          { "text": "à + l' → à l'hôpital", "translation": "to the hospital (no contraction)" },
+          { "text": "à + les → aux toilettes", "translation": "to the restroom" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "GrammarCard",
+      "title": "Les moyens de transport",
+      "content": {
+        "explanation": "How to say you're traveling by a given mode of transport.",
+        "examples": [
+          { "text": "en bus / en métro / en train", "translation": "by bus / by subway / by train" },
+          { "text": "en voiture", "translation": "by car" },
+          { "text": "à pied", "translation": "on foot" },
+          { "text": "à vélo", "translation": "by bike" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c5",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "tournez à gauche / à droite",
+        "nativeTranslation": "tournez à gauche / à droite",
+        "englishTranslation": "turn left / right",
+        "pronunciation": "toor-NAY ah gohsh / ah drwaht",
+        "ipa": "tuʁne a ɡoʃ / a dʁwat",
+        "partOfSpeech": "expression",
+        "difficulty": "medium",
+        "exampleSentence": "Continuez tout droit, puis tournez à gauche.",
+        "nativeExample": "Keep going straight, then turn left.",
+        "audio": { "key": "fr/a1/tournez-gauche-droite.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Lire un plan ou des indications",
+      "content": {
+        "tone": "tip",
+        "body": "A common TCF task gives you a short spoken direction (\"continuez tout droit, c'est en face de la pharmacie\") and a simple map, asking you to identify the right building. Learn: tout droit, à gauche, à droite, en face de, à côté de."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "en face de", "back": "across from / facing", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne contraction",
+      "content": {
+        "prompt": "Je vais ___ marché tous les samedis.",
+        "options": [
+          { "id": "a", "text": "à le" },
+          { "id": "b", "text": "au" },
+          { "id": "c", "text": "à la" },
+          { "id": "d", "text": "aux" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Je vais au travail ___ vélo. (by)",
+        "hint": "Preposition used with \"vélo\" and \"pied\""
+      },
+      "validation": { "acceptedAnswers": ["à"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez les indications",
+      "content": {
+        "prompt": "Dans quelle direction faut-il tourner ?",
+        "audio": { "key": "fr/a1/indications-gauche.mp3" },
+        "options": [
+          { "id": "a", "text": "à droite" },
+          { "id": "b", "text": "à gauche" },
+          { "id": "c", "text": "tout droit" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez le lieu à sa fonction",
+      "content": {
+        "prompt": "Match each place to what you'd do there.",
+        "pairs": [
+          { "id": "p1", "left": "la pharmacie", "right": "acheter des médicaments" },
+          { "id": "p2", "left": "la banque", "right": "retirer de l'argent" },
+          { "id": "p3", "left": "la gare", "right": "prendre le train" },
+          { "id": "p4", "left": "la poste", "right": "envoyer une lettre" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"À\" se contracte avec \"la\" pour donner \"à la\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"Go straight, then turn right.\"",
+        "items": [
+          { "id": "w3", "text": "puis tournez" },
+          { "id": "w1", "text": "Continuez" },
+          { "id": "w2", "text": "tout droit," },
+          { "id": "w4", "text": "à droite." }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots donnent une direction ?",
+      "content": {
+        "prompt": "Select every word or expression used to give directions.",
+        "options": [
+          { "id": "a", "text": "à gauche" },
+          { "id": "b", "text": "le fromage" },
+          { "id": "c", "text": "tout droit" },
+          { "id": "d", "text": "en face de" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Demander son chemin",
+      "content": {
+        "scenario": "Dans la rue",
+        "lines": [
+          { "speaker": "Touriste", "text": "Excusez-moi, où est la gare, s'il vous plaît ?", "translation": "Excuse me, where is the train station, please?" },
+          { "speaker": "Passant", "text": "Continuez tout droit, puis tournez à gauche. C'est en face de la banque.", "translation": "Keep going straight, then turn left. It's across from the bank." },
+          { "speaker": "Touriste", "text": "Merci beaucoup !", "translation": "Thank you very much!" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat these directions out loud.",
+        "targetText": "Continuez tout droit, puis tournez à gauche. C'est en face de la banque.",
+        "referenceAudio": { "key": "fr/a1/indications-completes.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"by bike\" ?",
+            "options": [
+              { "id": "a", "text": "en vélo" },
+              { "id": "b", "text": "à vélo" },
+              { "id": "c", "text": "au vélo" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"L'hôpital\" prend \"à l'\" (pas de contraction), car il commence par une voyelle." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "City places: la banque, la poste, la pharmacie, la gare, l'hôpital",
+          "\"À\" contracts: à + le → au, à + les → aux (but à la / à l' never contract)",
+          "Transport: en bus/métro/train/voiture, but à pied / à vélo",
+          "Direction vocabulary: tout droit, à gauche, à droite, en face de"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c19",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now navigate a French city and understand directions.",
+        "xp": 50,
+        "badge": "En Ville"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

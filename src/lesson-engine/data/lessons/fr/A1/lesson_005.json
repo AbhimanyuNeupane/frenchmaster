@@ -1,0 +1,309 @@
+{
+  "id": "fr_a1_lesson_005",
+  "language": "fr",
+  "level": "A1",
+  "title": "Ma journée",
+  "description": "Describe a daily routine using present-tense -er verbs and reflexive verbs — the backbone of A1 narrative reading passages.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Ma journée",
+      "content": {
+        "subtitle": "Module 3 · Leçon 1",
+        "body": "Describing a typical day is one of the most common A1 reading and writing topics. Let's learn the two verb patterns you need: regular -er verbs and reflexive (\"self\") verbs."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les verbes en -er au présent",
+      "content": {
+        "explanation": "Most French verbs end in \"-er\" in the infinitive and follow one regular pattern. Drop \"-er\" and add these endings — shown here with \"parler\" (to speak).",
+        "examples": [
+          { "text": "je parle", "translation": "I speak" },
+          { "text": "tu parles", "translation": "you speak (informal)" },
+          { "text": "il/elle/on parle", "translation": "he/she/one speaks" },
+          { "text": "nous parlons", "translation": "we speak" },
+          { "text": "vous parlez", "translation": "you speak (formal/plural)" },
+          { "text": "ils/elles parlent", "translation": "they speak" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "se réveiller",
+        "nativeTranslation": "se réveiller",
+        "englishTranslation": "to wake up",
+        "pronunciation": "suh ray-vay-YAY",
+        "ipa": "sə ʁevɛje",
+        "partOfSpeech": "verb",
+        "difficulty": "medium",
+        "exampleSentence": "Je me réveille à sept heures.",
+        "nativeExample": "I wake up at seven o'clock.",
+        "audio": { "key": "fr/a1/se-reveiller.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "se lever / se coucher",
+        "nativeTranslation": "se lever / se coucher",
+        "englishTranslation": "to get up / to go to bed",
+        "pronunciation": "suh luh-VAY / suh koo-SHAY",
+        "ipa": "sə ləve / sə kuʃe",
+        "partOfSpeech": "verb",
+        "difficulty": "medium",
+        "exampleSentence": "Je me lève à sept heures et je me couche à vingt-trois heures.",
+        "nativeExample": "I get up at seven and I go to bed at eleven PM.",
+        "audio": { "key": "fr/a1/lever-coucher.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "Les verbes pronominaux (réfléchis)",
+      "content": {
+        "explanation": "\"Reflexive\" verbs add a small pronoun (me/te/se/nous/vous/se) before the verb because the action reflects back on the subject. This is different from English, which rarely marks this.",
+        "examples": [
+          { "text": "je me réveille", "translation": "I wake (myself) up" },
+          { "text": "tu te lèves", "translation": "you get (yourself) up" },
+          { "text": "il/elle se lave", "translation": "he/she washes (himself/herself)" },
+          { "text": "nous nous couchons", "translation": "we go (ourselves) to bed" },
+          { "text": "vous vous habillez", "translation": "you get (yourself) dressed" },
+          { "text": "ils/elles se reposent", "translation": "they rest (themselves)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Le rythme d'une journée",
+      "content": {
+        "tone": "note",
+        "body": "A typical routine narrative: se réveiller → se lever → se laver → s'habiller → prendre le petit-déjeuner → aller au travail/à l'école → déjeuner → dîner → se coucher. Learn this chain and you can describe almost any day."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "prendre le petit-déjeuner", "back": "to have breakfast", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne forme",
+      "content": {
+        "prompt": "Nous ___ à sept heures. (se lever)",
+        "options": [
+          { "id": "a", "text": "me lève" },
+          { "id": "b", "text": "nous levons" },
+          { "id": "c", "text": "te lèves" },
+          { "id": "d", "text": "se lève" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Je ___ (parler) français tous les jours.",
+        "hint": "1st person singular, -er verb"
+      },
+      "validation": { "acceptedAnswers": ["parle"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quelle activité entendez-vous ?",
+        "audio": { "key": "fr/a1/routine-se-coucher.mp3" },
+        "options": [
+          { "id": "a", "text": "se réveiller" },
+          { "id": "b", "text": "se coucher" },
+          { "id": "c", "text": "se laver" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez l'activité à sa traduction",
+      "content": {
+        "prompt": "Match each routine verb to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "se laver", "right": "to wash (oneself)" },
+          { "id": "p2", "left": "s'habiller", "right": "to get dressed" },
+          { "id": "p3", "left": "déjeuner", "right": "to have lunch" },
+          { "id": "p4", "left": "dîner", "right": "to have dinner" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Les verbes réfléchis n'ont pas besoin d'un pronom comme \"me\", \"te\", \"se\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I wake up at seven o'clock.\"",
+        "items": [
+          { "id": "w3", "text": "à sept heures." },
+          { "id": "w1", "text": "Je me" },
+          { "id": "w2", "text": "réveille" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quels verbes sont réfléchis ?",
+      "content": {
+        "prompt": "Select every verb that is reflexive (takes me/te/se...).",
+        "options": [
+          { "id": "a", "text": "se lever" },
+          { "id": "b", "text": "manger" },
+          { "id": "c", "text": "se coucher" },
+          { "id": "d", "text": "s'habiller" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Une journée typique",
+      "content": {
+        "scenario": "Entre collègues",
+        "lines": [
+          { "speaker": "Nadia", "text": "À quelle heure tu te réveilles ?", "translation": "What time do you wake up?" },
+          { "speaker": "Paul", "text": "Je me réveille à six heures et demie.", "translation": "I wake up at half past six." },
+          { "speaker": "Nadia", "text": "Et après ?", "translation": "And after that?" },
+          { "speaker": "Paul", "text": "Je me lave, je m'habille, et je prends le petit-déjeuner.", "translation": "I wash, get dressed, and have breakfast." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "InfoCard",
+      "title": "Lecture d'examen : le récit du quotidien",
+      "content": {
+        "tone": "note",
+        "body": "A common TEF/TCF reading passage is a short first-person narrative of someone's day. Recognizing the chain of routine verbs quickly is the key skill — practice reading, not just speaking, these sentences."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c17",
+      "type": "WritingCard",
+      "title": "À vous d'écrire",
+      "content": {
+        "prompt": "Complete: \"Je me réveille à sept heures, je me lave, et ensuite je ___.\" (write the next logical routine verb)",
+        "placeholder": "je prends le petit-déjeuner"
+      },
+      "validation": {
+        "acceptedAnswers": [
+          "je prends le petit-déjeuner",
+          "je m'habille",
+          "je pars au travail",
+          "je vais au travail"
+        ],
+        "fuzzyMatch": true
+      },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c18",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this description of a morning routine out loud.",
+        "targetText": "Je me réveille à six heures et demie. Je me lave, je m'habille, et je prends le petit-déjeuner.",
+        "referenceAudio": { "key": "fr/a1/routine-matin.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c19",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"we get up\" ?",
+            "options": [
+              { "id": "a", "text": "nous nous levons" },
+              { "id": "b", "text": "nous se lève" },
+              { "id": "c", "text": "je me lève" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Se coucher\" veut dire \"to go to bed\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c20",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Regular -er verb conjugation pattern (parle, parles, parle, parlons, parlez, parlent)",
+          "Reflexive verbs need a pronoun: me/te/se/nous/vous/se",
+          "The daily routine chain: se réveiller → se lever → se laver → s'habiller → manger → se coucher",
+          "TEF/TCF reading passages frequently narrate someone's typical day"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c21",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now describe a full daily routine in French.",
+        "xp": 50,
+        "badge": "Quotidien"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

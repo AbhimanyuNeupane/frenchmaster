@@ -1,0 +1,305 @@
+{
+  "id": "fr_a1_lesson_004",
+  "language": "fr",
+  "level": "A1",
+  "title": "Comment êtes-vous ?",
+  "description": "Describe physical appearance and personality with correctly agreeing adjectives — and learn the handful of adjectives that break the normal word order rule.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Comment êtes-vous ?",
+      "content": {
+        "subtitle": "Module 2 · Leçon 2",
+        "body": "Describing people — yourself, your family, a friend — is a core A1 skill and a frequent TEF/TCF reading-comprehension topic (matching descriptions to photos). Let's learn the adjectives and the rules for using them."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "grand(e) / petit(e)",
+        "nativeTranslation": "grand(e) / petit(e)",
+        "englishTranslation": "tall / short",
+        "pronunciation": "grahn(d) / puh-TEE(T)",
+        "ipa": "ɡʁɑ̃(d) / pəti(t)",
+        "partOfSpeech": "adjective",
+        "difficulty": "easy",
+        "exampleSentence": "Il est grand et elle est petite.",
+        "nativeExample": "He is tall and she is short.",
+        "audio": { "key": "fr/a1/grand-petit.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "les cheveux / les yeux",
+        "nativeTranslation": "les cheveux / les yeux",
+        "englishTranslation": "hair / eyes",
+        "pronunciation": "lay shuh-VUH / lay zyuh",
+        "ipa": "le ʃəvø / le zjø",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "J'ai les cheveux bruns et les yeux verts.",
+        "nativeExample": "I have brown hair and green eyes.",
+        "audio": { "key": "fr/a1/cheveux-yeux.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "sympathique (sympa)",
+        "nativeTranslation": "sympathique (sympa)",
+        "englishTranslation": "nice, friendly",
+        "pronunciation": "sam-pah-TEEK",
+        "ipa": "sɛ̃patik",
+        "partOfSpeech": "adjective",
+        "difficulty": "easy",
+        "exampleSentence": "Mon collègue est très sympa.",
+        "nativeExample": "My colleague is very nice.",
+        "audio": { "key": "fr/a1/sympathique.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "Autres adjectifs de description",
+      "content": {
+        "explanation": "More adjectives you'll need to describe appearance and personality — each shown in its masculine and feminine forms.",
+        "examples": [
+          { "text": "gros / grosse ↔ mince", "translation": "heavy-set / slim" },
+          { "text": "gentil / gentille", "translation": "kind" },
+          { "text": "timide", "translation": "shy" },
+          { "text": "drôle", "translation": "funny" },
+          { "text": "sérieux / sérieuse", "translation": "serious" },
+          { "text": "intelligent / intelligente", "translation": "intelligent" },
+          { "text": "jeune ↔ vieux / vieille", "translation": "young ↔ old" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "GrammarCard",
+      "title": "L'accord des adjectifs",
+      "content": {
+        "explanation": "Adjectives agree in gender and number with the noun they describe. The most common pattern: add \"-e\" for feminine, \"-s\" for plural, \"-es\" for feminine plural. Adjectives already ending in \"-e\" (like \"timide\") don't change for gender.",
+        "examples": [
+          { "text": "Il est petit. / Elle est petite.", "translation": "He is short. / She is short." },
+          { "text": "Ils sont petits. / Elles sont petites.", "translation": "They (m.) are short. / They (f.) are short." },
+          { "text": "Il est timide. / Elle est timide.", "translation": "He is shy. / She is shy. (no change — already ends in -e)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c7",
+      "type": "InfoCard",
+      "title": "Avant ou après le nom ?",
+      "content": {
+        "tone": "tip",
+        "body": "Most French adjectives go AFTER the noun (\"un homme sympathique\"). But a short list of common ones go BEFORE: beauty, age, goodness, size (remember \"BAGS\") — grand, petit, jeune, vieux, beau, joli, bon, mauvais. Example: \"un grand homme\", not \"un homme grand\"."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c8",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "les cheveux blonds", "back": "blonde hair", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne forme",
+      "content": {
+        "prompt": "Ma sœur est très ___. (talking about a woman)",
+        "options": [
+          { "id": "a", "text": "gentil" },
+          { "id": "b", "text": "gentille" },
+          { "id": "c", "text": "gentils" },
+          { "id": "d", "text": "gentilles" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "C'est un ___ homme. (tall — placed BEFORE the noun)",
+        "hint": "A \"BAGS\" adjective, masculine singular"
+      },
+      "validation": { "acceptedAnswers": ["grand"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quel adjectif entendez-vous ?",
+        "audio": { "key": "fr/a1/mot-timide.mp3" },
+        "options": [
+          { "id": "a", "text": "timide" },
+          { "id": "b", "text": "drôle" },
+          { "id": "c", "text": "sérieuse" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "MatchingCard",
+      "title": "Associez l'adjectif à sa traduction",
+      "content": {
+        "prompt": "Match each adjective to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "drôle", "right": "funny" },
+          { "id": "p2", "left": "sérieux", "right": "serious" },
+          { "id": "p3", "left": "mince", "right": "slim" },
+          { "id": "p4", "left": "vieux", "right": "old" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Tous les adjectifs se placent après le nom en français."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c14",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"She has long, brown hair.\"",
+        "items": [
+          { "id": "w3", "text": "longs et bruns." },
+          { "id": "w1", "text": "Elle a" },
+          { "id": "w2", "text": "les cheveux" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "MultipleSelectCard",
+      "title": "Quels adjectifs décrivent la personnalité ?",
+      "content": {
+        "prompt": "Select every adjective that describes personality, not physical appearance.",
+        "options": [
+          { "id": "a", "text": "timide" },
+          { "id": "b", "text": "petit" },
+          { "id": "c", "text": "drôle" },
+          { "id": "d", "text": "sympathique" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "ConversationCard",
+      "title": "Décrire un ami",
+      "content": {
+        "scenario": "Entre amis",
+        "lines": [
+          { "speaker": "Léa", "text": "Comment est ton nouveau collègue ?", "translation": "What's your new colleague like?" },
+          { "speaker": "Marc", "text": "Il est grand, il a les cheveux bruns, et il est très sympa.", "translation": "He's tall, he has brown hair, and he's very nice." },
+          { "speaker": "Léa", "text": "Il est sérieux ou drôle ?", "translation": "Is he serious or funny?" },
+          { "speaker": "Marc", "text": "Il est plutôt drôle, en fait !", "translation": "He's actually pretty funny!" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c17",
+      "type": "InfoCard",
+      "title": "Lecture d'examen : associez la description",
+      "content": {
+        "tone": "note",
+        "body": "A classic TEF/TCF reading task: you're given 3–4 short descriptions and must match each one to the right photo or name. Practice reading physical/personality descriptions quickly and picking out the key adjectives."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c18",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this description out loud.",
+        "targetText": "Il est grand, il a les cheveux bruns, et il est très sympa.",
+        "referenceAudio": { "key": "fr/a1/description-collegue.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c19",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Où se place l'adjectif \"petit\" ?",
+            "options": [
+              { "id": "a", "text": "Avant le nom" },
+              { "id": "b", "text": "Après le nom" },
+              { "id": "c", "text": "Ça dépend du verbe" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Timide\" ne change pas au féminin singulier." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c20",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Physical vocabulary: grand/petit, cheveux, yeux, gros/mince",
+          "Personality vocabulary: sympathique, gentil, timide, drôle, sérieux",
+          "Adjectives agree in gender and number with the noun",
+          "Most adjectives follow the noun — BAGS adjectives (beauty, age, goodness, size) come before it"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c21",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Excellent ! You can now describe anyone's appearance and personality with correct agreement.",
+        "xp": 50,
+        "badge": "Description"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

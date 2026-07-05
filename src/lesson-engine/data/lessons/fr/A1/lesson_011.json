@@ -1,0 +1,272 @@
+{
+  "id": "fr_a1_lesson_011",
+  "language": "fr",
+  "level": "A1",
+  "title": "Faire les courses",
+  "description": "Shop for food using the partitive articles (du/de la/des) — one of French's trickiest grammar points for English speakers, who have no direct equivalent.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Faire les courses",
+      "content": {
+        "subtitle": "Module 5 · Leçon 2",
+        "body": "Grocery shopping introduces one of French's trickiest grammar points: the partitive article, used for \"some\" of something. English barely marks this at all, which is exactly why it trips learners up."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Le vocabulaire de la nourriture",
+      "content": {
+        "explanation": "Essential food vocabulary for grocery shopping and reading menus.",
+        "examples": [
+          { "text": "le pain / le fromage", "translation": "bread / cheese" },
+          { "text": "la viande / le poisson", "translation": "meat / fish" },
+          { "text": "les légumes / les fruits", "translation": "vegetables / fruit" },
+          { "text": "l'eau / le lait", "translation": "water / milk" },
+          { "text": "les œufs", "translation": "eggs" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Les articles partitifs",
+      "content": {
+        "explanation": "French uses \"du/de la/de l'/des\" for an unspecified quantity of something — where English often uses no article at all (\"I'm eating bread\" = \"Je mange DU pain\").",
+        "examples": [
+          { "text": "du pain (masculine)", "translation": "some bread" },
+          { "text": "de la viande (feminine)", "translation": "some meat" },
+          { "text": "de l'eau (vowel sound)", "translation": "some water" },
+          { "text": "des légumes (plural)", "translation": "some vegetables" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "GrammarCard",
+      "title": "Partitif vs. article défini",
+      "content": {
+        "explanation": "Compare a general statement (definite article \"le/la/les\") with an actual quantity of something (partitive \"du/de la/des\").",
+        "examples": [
+          { "text": "J'aime le fromage.", "translation": "I like cheese. (in general)" },
+          { "text": "Je mange du fromage.", "translation": "I'm eating some cheese. (an actual quantity)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "Les expressions de quantité",
+      "content": {
+        "explanation": "When a specific quantity word is used, the partitive is replaced by simple \"de\" (or \"d'\") — never \"du/de la/des\".",
+        "examples": [
+          { "text": "un kilo de pommes", "translation": "a kilo of apples" },
+          { "text": "beaucoup de fromage", "translation": "a lot of cheese" },
+          { "text": "un peu de lait", "translation": "a little milk" },
+          { "text": "une bouteille d'eau", "translation": "a bottle of water" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Lire une liste de courses",
+      "content": {
+        "tone": "note",
+        "body": "TEF/TCF reading tasks sometimes present a shopping list or receipt and ask what quantity of an item was bought. Watch for the quantity expression (un kilo de, une boîte de, un litre de) right before the food word."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "une bouteille d'eau", "back": "a bottle of water", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez le bon article",
+      "content": {
+        "prompt": "Je voudrais ___ pain, s'il vous plaît.",
+        "options": [
+          { "id": "a", "text": "le" },
+          { "id": "b", "text": "du" },
+          { "id": "c", "text": "des" },
+          { "id": "d", "text": "de la" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Il y a beaucoup ___ fromage dans ce plat. (of)",
+        "hint": "After a quantity expression, use simple \"de\", not the partitive"
+      },
+      "validation": { "acceptedAnswers": ["de"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez la liste de courses",
+      "content": {
+        "prompt": "Quelle quantité de pommes est mentionnée ?",
+        "audio": { "key": "fr/a1/liste-un-kilo-pommes.mp3" },
+        "options": [
+          { "id": "a", "text": "un kilo" },
+          { "id": "b", "text": "un litre" },
+          { "id": "c", "text": "une boîte" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez l'aliment à son article partitif",
+      "content": {
+        "prompt": "Match each food word to the partitive article it takes.",
+        "pairs": [
+          { "id": "p1", "left": "pain (m.)", "right": "du" },
+          { "id": "p2", "left": "viande (f.)", "right": "de la" },
+          { "id": "p3", "left": "eau (vowel)", "right": "de l'" },
+          { "id": "p4", "left": "légumes (pl.)", "right": "des" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Après \"beaucoup de\", on utilise \"du/de la/des\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I would like some cheese and some bread.\"",
+        "items": [
+          { "id": "w4", "text": "et du pain." },
+          { "id": "w1", "text": "Je voudrais" },
+          { "id": "w2", "text": "du" },
+          { "id": "w3", "text": "fromage" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quelles expressions utilisent \"de\" seul (sans du/de la/des) ?",
+      "content": {
+        "prompt": "Select every expression that is followed by plain \"de\", not the full partitive.",
+        "options": [
+          { "id": "a", "text": "beaucoup de" },
+          { "id": "b", "text": "je mange" },
+          { "id": "c", "text": "un peu de" },
+          { "id": "d", "text": "un kilo de" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Au marché",
+      "content": {
+        "scenario": "Marché en plein air",
+        "lines": [
+          { "speaker": "Client", "text": "Je voudrais un kilo de pommes, s'il vous plaît.", "translation": "I'd like a kilo of apples, please." },
+          { "speaker": "Marchand", "text": "Voilà. Autre chose ?", "translation": "Here you go. Anything else?" },
+          { "speaker": "Client", "text": "Oui, un peu de fromage et des légumes.", "translation": "Yes, a little cheese and some vegetables." },
+          { "speaker": "Marchand", "text": "Bien sûr. Ça fait quinze euros.", "translation": "Of course. That'll be fifteen euros." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this market order out loud.",
+        "targetText": "Je voudrais un kilo de pommes, un peu de fromage, et des légumes, s'il vous plaît.",
+        "referenceAudio": { "key": "fr/a1/commande-marche.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Quel article utilise-t-on avant \"eau\" (starts with a vowel sound) ?",
+            "options": [
+              { "id": "a", "text": "du" },
+              { "id": "b", "text": "de la" },
+              { "id": "c", "text": "de l'" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"J'aime le fromage\" et \"Je mange du fromage\" veulent dire exactement la même chose." }
+        ]
+      },
+      "validation": { "answers": { "q1": "c", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Core food vocabulary: pain, fromage, viande, légumes, fruits, eau",
+          "Partitive articles: du (m.), de la (f.), de l' (vowel), des (plural)",
+          "Definite article = general statement; partitive = an actual quantity",
+          "Quantity expressions (beaucoup de, un kilo de) always use plain \"de\""
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c19",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now shop for food and use the partitive articles correctly.",
+        "xp": 50,
+        "badge": "Les Courses"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

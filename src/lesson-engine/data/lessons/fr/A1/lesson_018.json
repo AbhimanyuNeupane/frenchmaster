@@ -1,0 +1,301 @@
+{
+  "id": "fr_a1_lesson_018",
+  "language": "fr",
+  "level": "A1",
+  "title": "Révision générale : simulation d'examen A1",
+  "description": "A full-course review mixing reading, listening, writing, and speaking practice from every module — a rehearsal for the real TEF/TCF A1 exam.",
+  "metadata": { "estimatedMinutes": 14, "xpReward": 80 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Simulation d'examen A1",
+      "content": {
+        "subtitle": "Module 7 · Leçon 3 (Révision finale)",
+        "body": "This final lesson mixes reading, listening, writing, and speaking practice from every module you've completed — self-introduction, family, daily life, housing, shopping, leisure, and health. It's the closest thing to a real TEF/TCF A1 rehearsal in this course."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c2",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : se présenter",
+      "content": {
+        "prompt": "Comment répond-on formellement à \"Comment vous appelez-vous ?\" ?",
+        "options": [
+          { "id": "a", "text": "Je m'appelle Claire." },
+          { "id": "b", "text": "J'ai vingt ans." },
+          { "id": "c", "text": "Je suis française." },
+          { "id": "d", "text": "Ça va bien." }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c3",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : la famille",
+      "content": {
+        "prompt": "Marc parle de sa sœur. Quel adjectif possessif utilise-t-il ?",
+        "options": [
+          { "id": "a", "text": "mon" },
+          { "id": "b", "text": "ma" },
+          { "id": "c", "text": "mes" },
+          { "id": "d", "text": "son" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c4",
+      "type": "FillBlankCard",
+      "title": "Révision : le quotidien",
+      "content": {
+        "textWithBlanks": "Je ___ (se lever) à sept heures tous les matins.",
+        "hint": "Reflexive verb, 1st person singular"
+      },
+      "validation": { "acceptedAnswers": ["me lève"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c5",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : l'heure",
+      "content": {
+        "prompt": "Comment dit-on \"20h45\" en heure officielle ?",
+        "options": [
+          { "id": "a", "text": "vingt heures quarante-cinq" },
+          { "id": "b", "text": "huit heures moins le quart" },
+          { "id": "c", "text": "vingt heures et quart" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c6",
+      "type": "TrueFalseCard",
+      "title": "Révision : le logement",
+      "content": {
+        "statement": "\"Il n'y a pas de balcon\" veut dire \"there is a balcony\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : les nombres",
+      "content": {
+        "prompt": "Comment dit-on \"95\" ?",
+        "options": [
+          { "id": "a", "text": "quatre-vingt-quinze" },
+          { "id": "b", "text": "soixante-quinze" },
+          { "id": "c", "text": "quatre-vingt-cinq" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c8",
+      "type": "FillBlankCard",
+      "title": "Révision : le partitif",
+      "content": {
+        "textWithBlanks": "Je voudrais ___ eau, s'il vous plaît. (partitive, vowel sound)",
+        "hint": "de + l' before a vowel sound"
+      },
+      "validation": { "acceptedAnswers": ["de l'"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "TextCard",
+      "title": "Compréhension écrite",
+      "content": {
+        "subtitle": "Lisez ce texte",
+        "body": "Je m'appelle Fatou, j'ai vingt-six ans, et je suis sénégalaise. J'habite à Lyon avec ma sœur. Le matin, je me réveille à sept heures et je vais au travail en métro. Le week-end, j'aime lire et faire du sport avec mon frère. Nous n'avons pas de voiture, mais il y a un arrêt de bus à côté de chez nous."
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c10",
+      "type": "MultipleChoiceCard",
+      "title": "Question 1 sur le texte",
+      "content": {
+        "prompt": "Comment Fatou va-t-elle au travail ?",
+        "options": [
+          { "id": "a", "text": "en voiture" },
+          { "id": "b", "text": "en métro" },
+          { "id": "c", "text": "à pied" },
+          { "id": "d", "text": "en train" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "TrueFalseCard",
+      "title": "Question 2 sur le texte",
+      "content": {
+        "statement": "D'après le texte, Fatou et sa sœur ont une voiture."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c12",
+      "type": "ListeningCard",
+      "title": "Révision : la météo",
+      "content": {
+        "prompt": "Quel temps va-t-il faire demain ?",
+        "audio": { "key": "fr/a1/meteo-beau-paris.mp3" },
+        "options": [
+          { "id": "a", "text": "il va pleuvoir" },
+          { "id": "b", "text": "il va faire beau" },
+          { "id": "c", "text": "il va neiger" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c13",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : les loisirs",
+      "content": {
+        "prompt": "Comment dit-on \"I want to travel\" ?",
+        "options": [
+          { "id": "a", "text": "Je peux voyager." },
+          { "id": "b", "text": "Je veux voyager." },
+          { "id": "c", "text": "Je vais voyager." }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleChoiceCard",
+      "title": "Révision : la santé",
+      "content": {
+        "prompt": "Comment dit-on \"I have a sore throat\" ?",
+        "options": [
+          { "id": "a", "text": "J'ai mal à la tête." },
+          { "id": "b", "text": "J'ai mal à la gorge." },
+          { "id": "c", "text": "J'ai mal au dos." }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c15",
+      "type": "MatchingCard",
+      "title": "Révision : les services",
+      "content": {
+        "prompt": "Match each formal phrase to its meaning — a mix from every module.",
+        "pairs": [
+          { "id": "p1", "left": "Comment vous appelez-vous ?", "right": "What is your name?" },
+          { "id": "p2", "left": "Qui est à l'appareil ?", "right": "Who's calling?" },
+          { "id": "p3", "left": "Je voudrais...", "right": "I would like..." },
+          { "id": "p4", "left": "Il faut...", "right": "You must / it's necessary to..." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c16",
+      "type": "WritingCard",
+      "title": "Expression écrite : remplir un formulaire",
+      "content": {
+        "prompt": "Complete this exam-registration form field in French: \"Je m'appelle [votre prénom], j'ai [votre âge] ans, et je suis de [votre pays].\" Fill in your own real details.",
+        "placeholder": "Je m'appelle..."
+      },
+      "validation": { "acceptedAnswers": ["je m'appelle"], "fuzzyMatch": true },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c17",
+      "type": "SpeakingCard",
+      "title": "Expression orale : présentation complète",
+      "content": {
+        "prompt": "Repeat this full self-presentation out loud — exactly the kind of opening a real TEF/TCF oral interview expects.",
+        "targetText": "Bonjour, je m'appelle Fatou, j'ai vingt-six ans, et je suis sénégalaise. J'habite à Lyon. Pendant mon temps libre, j'aime lire et faire du sport.",
+        "referenceAudio": { "key": "fr/a1/presentation-complete.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c18",
+      "type": "ConversationCard",
+      "title": "Simulation : jeu de rôle au restaurant",
+      "content": {
+        "scenario": "Révision : restaurant",
+        "lines": [
+          { "speaker": "Serveur", "text": "Bonsoir, vous avez choisi ?", "translation": "Good evening, have you decided?" },
+          { "speaker": "Client", "text": "Je voudrais le plat du jour et de l'eau, s'il vous plaît.", "translation": "I'd like the dish of the day and some water, please." },
+          { "speaker": "Serveur", "text": "Très bien. Et comme dessert ?", "translation": "Very good. And for dessert?" },
+          { "speaker": "Client", "text": "Rien, merci. L'addition, s'il vous plaît.", "translation": "Nothing, thanks. The bill, please." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c19",
+      "type": "QuizCard",
+      "title": "Contrôle final",
+      "content": {
+        "intro": "One last mixed check before you finish the entire A1 course.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Quelle question ouvre presque toujours un entretien TEF/TCF ?",
+            "options": [
+              { "id": "a", "text": "Comment vous appelez-vous ?" },
+              { "id": "b", "text": "Quel temps fait-il ?" },
+              { "id": "c", "text": "Où est la gare ?" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "Le futur proche se forme avec \"aller\" + infinitif." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c20",
+      "type": "SummaryCard",
+      "title": "Récapitulatif du niveau A1",
+      "content": {
+        "heading": "Everything you've mastered",
+        "points": [
+          "Module 1 : se présenter, les nombres 0–20, tu/vous",
+          "Module 2 : la famille, les adjectifs possessifs et descriptifs",
+          "Module 3 : le quotidien, l'heure, les jours/mois, la fréquence",
+          "Module 4 : la maison, il y a / il n'y a pas, les prépositions de lieu",
+          "Module 5 : les nombres 20–100, le partitif, commander au restaurant",
+          "Module 6 : la météo, le futur proche, se déplacer, les loisirs",
+          "Module 7 : la santé, les services, et cette simulation d'examen complète"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c21",
+      "type": "RewardCard",
+      "content": {
+        "title": "Cours A1 terminé !",
+        "message": "Félicitations ! You've completed the entire French A1 course, built specifically to prepare you for the TEF/TCF exam. Vous êtes prêt(e) !",
+        "xp": 80,
+        "badge": "Niveau A1 Complet"
+      },
+      "metadata": { "estimatedSeconds": 15 }
+    }
+  ]
+}

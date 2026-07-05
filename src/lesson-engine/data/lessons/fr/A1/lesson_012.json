@@ -1,0 +1,275 @@
+{
+  "id": "fr_a1_lesson_012",
+  "language": "fr",
+  "level": "A1",
+  "title": "Au restaurant",
+  "description": "Order a meal politely using \"je voudrais\" and demonstrative adjectives — the classic TEF/TCF oral role-play scenario.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 55 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Au restaurant",
+      "content": {
+        "subtitle": "Module 5 · Leçon 3",
+        "body": "Ordering at a restaurant is one of the most common \"jeu de rôle\" (role-play) tasks in the TEF/TCF speaking section. Let's learn the polite formulas you need to sound natural."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "\"Je voudrais...\" — la formule polie",
+      "content": {
+        "explanation": "\"Je voudrais\" (I would like) is the single most useful polite formula in French — always more courteous than \"je veux\" (I want). Memorize it as a fixed phrase.",
+        "examples": [
+          { "text": "Je voudrais une table pour deux.", "translation": "I would like a table for two." },
+          { "text": "Je voudrais le poulet, s'il vous plaît.", "translation": "I would like the chicken, please." },
+          { "text": "Pourriez-vous m'apporter l'addition ?", "translation": "Could you bring me the bill? (very polite)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "Le vocabulaire du restaurant",
+      "content": {
+        "explanation": "The structure of a French meal and the words you'll read on any menu.",
+        "examples": [
+          { "text": "la carte / le menu", "translation": "the menu / a fixed-price set meal" },
+          { "text": "l'entrée", "translation": "the starter" },
+          { "text": "le plat principal", "translation": "the main course" },
+          { "text": "le dessert", "translation": "dessert" },
+          { "text": "l'addition", "translation": "the bill" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c4",
+      "type": "GrammarCard",
+      "title": "Les adjectifs démonstratifs",
+      "content": {
+        "explanation": "\"This/that\" and \"these/those\" — used constantly when pointing at a menu item.",
+        "examples": [
+          { "text": "ce plat (masculine)", "translation": "this/that dish" },
+          { "text": "cette entrée (feminine)", "translation": "this/that starter" },
+          { "text": "cet homme (masculine, vowel sound)", "translation": "this/that man" },
+          { "text": "ces desserts (plural)", "translation": "these/those desserts" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c5",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "l'addition, s'il vous plaît",
+        "nativeTranslation": "l'addition, s'il vous plaît",
+        "englishTranslation": "the bill, please",
+        "pronunciation": "lah-dee-see-OHN seel voo pleh",
+        "ipa": "ladisjɔ̃ sil vu plɛ",
+        "partOfSpeech": "expression",
+        "difficulty": "easy",
+        "exampleSentence": "L'addition, s'il vous plaît, quand vous pouvez.",
+        "nativeExample": "The bill, please, whenever you can.",
+        "audio": { "key": "fr/a1/addition.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Le jeu de rôle de l'examen",
+      "content": {
+        "tone": "tip",
+        "body": "In the real TEF/TCF speaking section, one common role-play is \"vous êtes au restaurant, commandez un repas\" (you're at a restaurant, order a meal). Practice the full chain: greeting → asking for a table → ordering → asking for the bill."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "le plat principal", "back": "the main course", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne phrase",
+      "content": {
+        "prompt": "Quelle phrase est la plus polie pour commander ?",
+        "options": [
+          { "id": "a", "text": "Je veux le poulet." },
+          { "id": "b", "text": "Donne-moi le poulet." },
+          { "id": "c", "text": "Je voudrais le poulet, s'il vous plaît." },
+          { "id": "d", "text": "Le poulet !" }
+        ]
+      },
+      "validation": { "correctOptionId": "c" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "___ dessert a l'air délicieux. (this/that, feminine)",
+        "hint": "Demonstrative adjective, feminine singular"
+      },
+      "validation": { "acceptedAnswers": ["cette"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez la commande",
+      "content": {
+        "prompt": "Qu'est-ce que le client commande ?",
+        "audio": { "key": "fr/a1/commande-poulet.mp3" },
+        "options": [
+          { "id": "a", "text": "le poisson" },
+          { "id": "b", "text": "le poulet" },
+          { "id": "c", "text": "la salade" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez le mot à sa traduction",
+      "content": {
+        "prompt": "Match each restaurant word to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "l'entrée", "right": "the starter" },
+          { "id": "p2", "left": "l'addition", "right": "the bill" },
+          { "id": "p3", "left": "la carte", "right": "the menu" },
+          { "id": "p4", "left": "réserver", "right": "to book/reserve" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Je veux\" est plus poli que \"je voudrais\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I would like a table for two, please.\"",
+        "items": [
+          { "id": "w4", "text": "s'il vous plaît." },
+          { "id": "w1", "text": "Je voudrais" },
+          { "id": "w2", "text": "une table" },
+          { "id": "w3", "text": "pour deux," }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quelles expressions sont polies au restaurant ?",
+      "content": {
+        "prompt": "Select every polite restaurant expression.",
+        "options": [
+          { "id": "a", "text": "Je voudrais..." },
+          { "id": "b", "text": "Donne-moi ça !" },
+          { "id": "c", "text": "Pourriez-vous..." },
+          { "id": "d", "text": "L'addition, s'il vous plaît." }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "Commander un repas",
+      "content": {
+        "scenario": "Restaurant",
+        "lines": [
+          { "speaker": "Serveur", "text": "Bonsoir, vous avez choisi ?", "translation": "Good evening, have you decided?" },
+          { "speaker": "Client", "text": "Oui, je voudrais cette entrée et le plat du jour.", "translation": "Yes, I'd like this starter and the dish of the day." },
+          { "speaker": "Serveur", "text": "Très bien. Et comme boisson ?", "translation": "Very good. And to drink?" },
+          { "speaker": "Client", "text": "De l'eau, s'il vous plaît. Et l'addition à la fin.", "translation": "Water, please. And the bill at the end." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this restaurant order out loud, exactly as in a real role-play exam task.",
+        "targetText": "Bonsoir, je voudrais cette entrée et le plat du jour, s'il vous plaît. De l'eau, et l'addition à la fin.",
+        "referenceAudio": { "key": "fr/a1/commande-complete.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c17",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"the bill, please\" ?",
+            "options": [
+              { "id": "a", "text": "la carte, s'il vous plaît" },
+              { "id": "b", "text": "l'addition, s'il vous plaît" },
+              { "id": "c", "text": "le plat, s'il vous plaît" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Ce\" s'utilise devant un nom féminin." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "\"Je voudrais...\" is the essential polite formula for ordering anything",
+          "Restaurant vocabulary: la carte, l'entrée, le plat principal, le dessert, l'addition",
+          "Demonstrative adjectives: ce (m.), cette (f.), cet (m. + vowel), ces (pl.)",
+          "The full restaurant role-play chain is a near-guaranteed TEF/TCF speaking task"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c19",
+      "type": "RewardCard",
+      "content": {
+        "title": "Module 5 terminé !",
+        "message": "Félicitations ! You've completed Faire les courses, au restaurant — you can shop, order, and pay with confidence.",
+        "xp": 55,
+        "badge": "Bon Appétit"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

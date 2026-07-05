@@ -1,0 +1,290 @@
+{
+  "id": "fr_a1_lesson_006",
+  "language": "fr",
+  "level": "A1",
+  "title": "Quelle heure est-il ?",
+  "description": "Tell time in both everyday and official 24-hour format — essential for the train/flight announcements that TCF listening sections love to test.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Quelle heure est-il ?",
+      "content": {
+        "subtitle": "Module 3 · Leçon 2",
+        "body": "Telling time well is essential for schedules, appointments, and — critically — the short audio announcements about train and flight times that show up constantly in TCF listening sections."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Il est... heure(s)",
+      "content": {
+        "explanation": "French always uses \"Il est\" (it is) to state the time, followed by the number and \"heure(s)\". Note \"heure\" stays singular only for one o'clock.",
+        "examples": [
+          { "text": "Il est une heure.", "translation": "It is one o'clock." },
+          { "text": "Il est trois heures.", "translation": "It is three o'clock." },
+          { "text": "Il est midi.", "translation": "It is noon." },
+          { "text": "Il est minuit.", "translation": "It is midnight." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "et quart / et demie / moins le quart",
+        "nativeTranslation": "et quart / et demie / moins le quart",
+        "englishTranslation": "quarter past / half past / quarter to",
+        "pronunciation": "ay kar / ay duh-MEE / mwan luh kar",
+        "ipa": "e kaʁ / e dəmi / mwɛ̃ lə kaʁ",
+        "partOfSpeech": "expression",
+        "difficulty": "medium",
+        "exampleSentence": "Il est quatre heures et quart.",
+        "nativeExample": "It is a quarter past four.",
+        "audio": { "key": "fr/a1/quart-demie.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "du matin / de l'après-midi / du soir",
+        "nativeTranslation": "du matin / de l'après-midi / du soir",
+        "englishTranslation": "in the morning / in the afternoon / in the evening",
+        "pronunciation": "dew mah-TAN / duh lah-preh-mee-DEE / dew swahr",
+        "ipa": "dy matɛ̃ / də lapʁɛmidi / dy swaʁ",
+        "partOfSpeech": "expression",
+        "difficulty": "medium",
+        "exampleSentence": "Le magasin ouvre à neuf heures du matin.",
+        "nativeExample": "The store opens at nine in the morning.",
+        "audio": { "key": "fr/a1/matin-soir.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "L'heure officielle (24h)",
+      "content": {
+        "explanation": "Timetables, official announcements, and TEF/TCF audio use the 24-hour clock, with minutes stated directly (no \"et quart\"/\"moins le quart\").",
+        "examples": [
+          { "text": "15h30 → quinze heures trente", "translation": "3:30 PM" },
+          { "text": "20h45 → vingt heures quarante-cinq", "translation": "8:45 PM" },
+          { "text": "09h15 → neuf heures quinze", "translation": "9:15 AM" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "L'annonce type de l'examen",
+      "content": {
+        "tone": "tip",
+        "body": "\"Le train pour Lyon part à quinze heures trente, quai numéro deux.\" — this exact sentence pattern (transport + official time + platform/gate) is the single most common TCF listening announcement format. Learn to catch the time and the location."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "Il est midi et demi.", "back": "It is half past noon.", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne heure",
+      "content": {
+        "prompt": "Comment dit-on \"9:15 AM\" en heure officielle ?",
+        "options": [
+          { "id": "a", "text": "neuf heures et quart" },
+          { "id": "b", "text": "neuf heures quinze" },
+          { "id": "c", "text": "dix-neuf heures quinze" },
+          { "id": "d", "text": "neuf heures moins le quart" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "___ est huit heures. (It is...)",
+        "hint": "The fixed phrase used to state time"
+      },
+      "validation": { "acceptedAnswers": ["il"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez l'annonce",
+      "content": {
+        "prompt": "À quelle heure part le train ?",
+        "audio": { "key": "fr/a1/annonce-train-15h30.mp3" },
+        "options": [
+          { "id": "a", "text": "13h30" },
+          { "id": "b", "text": "15h30" },
+          { "id": "c", "text": "15h13" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez l'heure à sa signification",
+      "content": {
+        "prompt": "Match each time expression to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "midi", "right": "noon" },
+          { "id": "p2", "left": "minuit", "right": "midnight" },
+          { "id": "p3", "left": "et demie", "right": "half past" },
+          { "id": "p4", "left": "moins le quart", "right": "quarter to" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "En heure officielle, on dit \"et quart\" et \"moins le quart\"."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"It is a quarter to five.\"",
+        "items": [
+          { "id": "w3", "text": "moins le quart." },
+          { "id": "w1", "text": "Il est" },
+          { "id": "w2", "text": "cinq heures" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quelles expressions parlent de l'heure ?",
+      "content": {
+        "prompt": "Select every expression related to telling time.",
+        "options": [
+          { "id": "a", "text": "et demie" },
+          { "id": "b", "text": "le frère" },
+          { "id": "c", "text": "moins le quart" },
+          { "id": "d", "text": "du matin" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "À la gare",
+      "content": {
+        "scenario": "Gare SNCF",
+        "lines": [
+          { "speaker": "Voyageur", "text": "Excusez-moi, à quelle heure part le train pour Lyon ?", "translation": "Excuse me, what time does the train to Lyon leave?" },
+          { "speaker": "Agent", "text": "Il part à quinze heures trente, quai numéro deux.", "translation": "It leaves at 3:30 PM, platform two." },
+          { "speaker": "Voyageur", "text": "Merci beaucoup !", "translation": "Thank you very much!" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this train announcement out loud.",
+        "targetText": "Le train pour Lyon part à quinze heures trente, quai numéro deux.",
+        "referenceAudio": { "key": "fr/a1/annonce-quai.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "ListeningCard",
+      "title": "Deuxième annonce",
+      "content": {
+        "prompt": "Le magasin ferme à quelle heure ?",
+        "audio": { "key": "fr/a1/annonce-magasin-20h.mp3" },
+        "options": [
+          { "id": "a", "text": "20h00" },
+          { "id": "b", "text": "12h00" },
+          { "id": "c", "text": "20h15" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c18",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"20h45\" en heure officielle ?",
+            "options": [
+              { "id": "a", "text": "vingt heures quarante-cinq" },
+              { "id": "b", "text": "huit heures moins le quart" },
+              { "id": "c", "text": "vingt heures et quart" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Midi\" veut dire \"midnight\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c19",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "\"Il est...\" is always used to state the time",
+          "Everyday time: et quart, et demie, moins le quart",
+          "Official/24h time: minutes stated directly (quinze heures trente = 15h30)",
+          "Transport announcements follow a fixed pattern: mode + destination + official time + platform/gate"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c20",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now tell time in both everyday and official French — and understand transit announcements.",
+        "xp": 50,
+        "badge": "L'Heure"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

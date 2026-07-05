@@ -1,0 +1,332 @@
+{
+  "id": "fr_a1_lesson_002",
+  "language": "fr",
+  "level": "A1",
+  "title": "Se présenter : qui êtes-vous ?",
+  "description": "Say your name, age, and nationality, count from 0 to 20, and handle the exact questions that open a real TEF/TCF oral interview.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Qui êtes-vous ?",
+      "content": {
+        "subtitle": "Lesson 2 · A1",
+        "body": "Now that you can say hello, let's learn how to introduce yourself properly: your name, your age, and where you're from. These are the very first questions asked in a real TEF/TCF interview!"
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Le verbe \"s'appeler\" (to be called)",
+      "content": {
+        "explanation": "\"S'appeler\" is a reflexive verb — the action reflects back on the subject, like saying \"I call myself...\". It's the standard way to give your name in French.",
+        "examples": [
+          { "text": "Je m'appelle", "translation": "My name is (lit. I call myself)" },
+          { "text": "Tu t'appelles", "translation": "Your name is (informal)" },
+          { "text": "Il/Elle s'appelle", "translation": "His/Her name is" },
+          { "text": "Nous nous appelons", "translation": "Our names are / We are called" },
+          { "text": "Vous vous appelez", "translation": "Your name is (formal/plural)" },
+          { "text": "Ils/Elles s'appellent", "translation": "Their names are" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Je m'appelle",
+        "nativeTranslation": "Je m'appelle",
+        "englishTranslation": "My name is...",
+        "pronunciation": "zhuh mah-PELL",
+        "ipa": "ʒə mapɛl",
+        "partOfSpeech": "verb phrase",
+        "difficulty": "easy",
+        "exampleSentence": "Je m'appelle Sophie, et toi ?",
+        "nativeExample": "My name is Sophie, and you?",
+        "audio": { "key": "fr/a1/je-mappelle.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "J'ai ... ans",
+        "nativeTranslation": "J'ai ... ans",
+        "englishTranslation": "I am ... years old",
+        "pronunciation": "zhay ... ahn",
+        "ipa": "ʒe … ɑ̃",
+        "partOfSpeech": "verb phrase",
+        "difficulty": "easy",
+        "exampleSentence": "J'ai vingt ans.",
+        "nativeExample": "I am twenty years old.",
+        "audio": { "key": "fr/a1/jai-ans.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "Je suis français(e)",
+        "nativeTranslation": "Je suis français(e)",
+        "englishTranslation": "I am French",
+        "pronunciation": "zhuh swee frahn-SEZ",
+        "ipa": "ʒə sɥi fʁɑ̃sɛ(z)",
+        "partOfSpeech": "adjective",
+        "difficulty": "easy",
+        "exampleSentence": "Je suis française. Et vous, vous êtes d'où ?",
+        "nativeExample": "I am French. And you, where are you from?",
+        "audio": { "key": "fr/a1/je-suis-francais.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Un vrai début d'entretien TEF/TCF",
+      "content": {
+        "tone": "tip",
+        "body": "The real TEF/TCF oral exam almost always opens with exactly these three questions: \"Comment vous appelez-vous ?\", \"Quel âge avez-vous ?\", and \"D'où venez-vous ?\". Master these answers and you'll walk into the real interview with confidence."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c7",
+      "type": "GrammarCard",
+      "title": "\"Tu\" ou \"vous\" pour se présenter ?",
+      "content": {
+        "explanation": "In an exam, an interview, or with a stranger, always use \"vous\" — it's the safe, respectful default. Save \"tu\" for friends, classmates, and people your own age in casual settings.",
+        "examples": [
+          { "text": "Comment vous appelez-vous ?", "translation": "What is your name? (formal — use in exams/interviews)" },
+          { "text": "Comment tu t'appelles ?", "translation": "What's your name? (informal — use with friends)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c8",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": {
+        "front": "D'où venez-vous ?",
+        "back": "Where are you from? (formal)",
+        "hint": "Tap to reveal the meaning"
+      },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "GrammarCard",
+      "title": "Les nombres de 0 à 20",
+      "content": {
+        "explanation": "Numbers 0–20 are essential for giving your age, phone number, and address — all standard TEF/TCF A1 topics. Notice 17, 18, and 19 are built from \"ten\" + the unit (dix-sept = ten-seven).",
+        "examples": [
+          { "text": "zéro", "translation": "0" },
+          { "text": "un", "translation": "1" },
+          { "text": "deux", "translation": "2" },
+          { "text": "trois", "translation": "3" },
+          { "text": "quatre", "translation": "4" },
+          { "text": "cinq", "translation": "5" },
+          { "text": "six", "translation": "6" },
+          { "text": "sept", "translation": "7" },
+          { "text": "huit", "translation": "8" },
+          { "text": "neuf", "translation": "9" },
+          { "text": "dix", "translation": "10" },
+          { "text": "onze", "translation": "11" },
+          { "text": "douze", "translation": "12" },
+          { "text": "treize", "translation": "13" },
+          { "text": "quatorze", "translation": "14" },
+          { "text": "quinze", "translation": "15" },
+          { "text": "seize", "translation": "16" },
+          { "text": "dix-sept", "translation": "17" },
+          { "text": "dix-huit", "translation": "18" },
+          { "text": "dix-neuf", "translation": "19" },
+          { "text": "vingt", "translation": "20" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c10",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez le bon nombre",
+      "content": {
+        "prompt": "Comment dit-on \"15\" en français ?",
+        "options": [
+          { "id": "a", "text": "cinq" },
+          { "id": "b", "text": "cinquante" },
+          { "id": "c", "text": "quinze" },
+          { "id": "d", "text": "quatorze" }
+        ]
+      },
+      "validation": { "correctOptionId": "c" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quel nombre entendez-vous ?",
+        "audio": { "key": "fr/a1/nombre-dix-sept.mp3" },
+        "options": [
+          { "id": "a", "text": "sept" },
+          { "id": "b", "text": "dix-sept" },
+          { "id": "c", "text": "dix-huit" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "J'___ vingt ans.",
+        "hint": "The verb \"avoir\" (to have), 1st person singular"
+      },
+      "validation": { "acceptedAnswers": ["ai"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c13",
+      "type": "MatchingCard",
+      "title": "Associez la question à la réponse",
+      "content": {
+        "prompt": "Match each question to its natural answer.",
+        "pairs": [
+          { "id": "p1", "left": "Comment vous appelez-vous ?", "right": "Je m'appelle Marc." },
+          { "id": "p2", "left": "Quel âge avez-vous ?", "right": "J'ai vingt-cinq ans." },
+          { "id": "p3", "left": "D'où venez-vous ?", "right": "Je viens du Canada." },
+          { "id": "p4", "left": "Vous êtes français ?", "right": "Non, je suis belge." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c14",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"My name is Claire and I am twenty years old.\"",
+        "items": [
+          { "id": "w4", "text": "vingt ans." },
+          { "id": "w1", "text": "Je m'appelle" },
+          { "id": "w3", "text": "j'ai" },
+          { "id": "w2", "text": "Claire et" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "Pendant un entretien TEF/TCF, il est recommandé d'utiliser \"tu\" avec l'examinateur."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c16",
+      "type": "MultipleSelectCard",
+      "title": "Quelles phrases servent à se présenter ?",
+      "content": {
+        "prompt": "Select every sentence you could use to introduce yourself.",
+        "options": [
+          { "id": "a", "text": "Je m'appelle Antoine." },
+          { "id": "b", "text": "Il fait beau aujourd'hui." },
+          { "id": "c", "text": "J'ai vingt-deux ans." },
+          { "id": "d", "text": "Je suis canadien." }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "ConversationCard",
+      "title": "Un entretien TEF/TCF",
+      "content": {
+        "scenario": "Interview d'examen",
+        "lines": [
+          { "speaker": "Examinateur", "text": "Bonjour. Comment vous appelez-vous ?", "translation": "Hello. What is your name?" },
+          { "speaker": "Candidat", "text": "Bonjour, je m'appelle Karim.", "translation": "Hello, my name is Karim." },
+          { "speaker": "Examinateur", "text": "Quel âge avez-vous, Karim ?", "translation": "How old are you, Karim?" },
+          { "speaker": "Candidat", "text": "J'ai vingt-huit ans.", "translation": "I am twenty-eight years old." },
+          { "speaker": "Examinateur", "text": "Et d'où venez-vous ?", "translation": "And where are you from?" },
+          { "speaker": "Candidat", "text": "Je viens du Maroc.", "translation": "I come from Morocco." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c18",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this self-introduction out loud, exactly as you would in a real interview.",
+        "targetText": "Bonjour, je m'appelle Karim, j'ai vingt-huit ans, et je viens du Maroc.",
+        "referenceAudio": { "key": "fr/a1/self-intro-karim.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c19",
+      "type": "QuizCard",
+      "title": "Mini contrôle TEF/TCF",
+      "content": {
+        "intro": "Two quick questions, exactly in the style of the real exam.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Quelle est la question formelle pour demander le nom de quelqu'un ?",
+            "options": [
+              { "id": "a", "text": "Comment tu t'appelles ?" },
+              { "id": "b", "text": "Comment vous appelez-vous ?" },
+              { "id": "c", "text": "Tu as quel âge ?" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Dix-neuf\" veut dire 19." }
+        ]
+      },
+      "validation": { "answers": { "q1": "b", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c20",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Je m'appelle... / J'ai ... ans / Je suis (nationalité) — the three pillars of self-introduction",
+          "Comment vous appelez-vous ? — always use \"vous\" in exams and with strangers",
+          "Numbers 0–20, including the irregular dix-sept/dix-huit/dix-neuf pattern",
+          "These are the exact opening questions of a real TEF/TCF oral interview"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c21",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Félicitations ! You can now introduce yourself with confidence — exactly like a real TEF/TCF candidate.",
+        "xp": 50,
+        "badge": "Se Présenter"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

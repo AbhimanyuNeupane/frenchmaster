@@ -1,0 +1,279 @@
+{
+  "id": "fr_a1_lesson_010",
+  "language": "fr",
+  "level": "A1",
+  "title": "Les nombres de 20 à 100 et l'argent",
+  "description": "Master French's famously irregular counting system from 20 to 100, and use basic shopping/money vocabulary — vital for reading prices on any public sign.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Les nombres de 20 à 100",
+      "content": {
+        "subtitle": "Module 5 · Leçon 1",
+        "body": "French numbers get famously tricky between 70 and 99, where French switches to base-20 counting. Master this now, and prices, addresses, and phone numbers become effortless."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les dizaines régulières",
+      "content": {
+        "explanation": "From 20 to 60, French numbers follow a simple, regular pattern — no surprises here.",
+        "examples": [
+          { "text": "vingt", "translation": "20" },
+          { "text": "trente", "translation": "30" },
+          { "text": "quarante", "translation": "40" },
+          { "text": "cinquante", "translation": "50" },
+          { "text": "soixante", "translation": "60" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 35 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "70 à 99 : le système base-20",
+      "content": {
+        "explanation": "This is the famous stumbling block: 70 is literally \"sixty-ten\", 80 is \"four-twenties\", and 90 is \"four-twenties-ten\". (Belgium and Switzerland use simpler regional forms, but standard French uses these.)",
+        "examples": [
+          { "text": "soixante-dix (60+10)", "translation": "70" },
+          { "text": "soixante-quinze (60+15)", "translation": "75" },
+          { "text": "quatre-vingts (4×20)", "translation": "80" },
+          { "text": "quatre-vingt-cinq (4×20+5)", "translation": "85" },
+          { "text": "quatre-vingt-dix (4×20+10)", "translation": "90" },
+          { "text": "quatre-vingt-dix-neuf (4×20+19)", "translation": "99" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "cent",
+        "nativeTranslation": "cent",
+        "englishTranslation": "one hundred",
+        "pronunciation": "sahn",
+        "ipa": "sɑ̃",
+        "partOfSpeech": "adjective",
+        "difficulty": "easy",
+        "exampleSentence": "Ça coûte cent euros.",
+        "nativeExample": "That costs one hundred euros.",
+        "audio": { "key": "fr/a1/cent.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "ça coûte / le prix",
+        "nativeTranslation": "ça coûte / le prix",
+        "englishTranslation": "that costs / the price",
+        "pronunciation": "sah koot / luh pree",
+        "ipa": "sa kut / lə pʁi",
+        "partOfSpeech": "expression",
+        "difficulty": "easy",
+        "exampleSentence": "Quel est le prix ? Ça coûte vingt euros.",
+        "nativeExample": "What's the price? That costs twenty euros.",
+        "audio": { "key": "fr/a1/ca-coute.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "InfoCard",
+      "title": "Lire les prix sur un panneau",
+      "content": {
+        "tone": "tip",
+        "body": "TCF reading questions often show a photo of a price tag or public sign (\"Solde : -20%\", \"Ouvert de 9h à 19h\") and ask you to extract the number. Practice reading digits AND their French words together."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c7",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "cher / pas cher", "back": "expensive / cheap (not expensive)", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c8",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez le bon nombre",
+      "content": {
+        "prompt": "Comment dit-on \"95\" en français ?",
+        "options": [
+          { "id": "a", "text": "quatre-vingt-quinze" },
+          { "id": "b", "text": "quatre-vingt-cinq" },
+          { "id": "c", "text": "soixante-quinze" },
+          { "id": "d", "text": "neuf-cinq" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Ça ___ trente euros. (costs)",
+        "hint": "Third-person singular of \"coûter\""
+      },
+      "validation": { "acceptedAnswers": ["coûte"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "ListeningCard",
+      "title": "Écoutez le prix",
+      "content": {
+        "prompt": "Quel est le prix annoncé ?",
+        "audio": { "key": "fr/a1/prix-quatre-vingts.mp3" },
+        "options": [
+          { "id": "a", "text": "18€" },
+          { "id": "b", "text": "80€" },
+          { "id": "c", "text": "88€" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c11",
+      "type": "MatchingCard",
+      "title": "Associez le chiffre au mot",
+      "content": {
+        "prompt": "Match each digit to its French word.",
+        "pairs": [
+          { "id": "p1", "left": "70", "right": "soixante-dix" },
+          { "id": "p2", "left": "80", "right": "quatre-vingts" },
+          { "id": "p3", "left": "90", "right": "quatre-vingt-dix" },
+          { "id": "p4", "left": "100", "right": "cent" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c12",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Quatre-vingt-dix\" veut dire 94."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c13",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"That costs ninety euros.\"",
+        "items": [
+          { "id": "w4", "text": "euros." },
+          { "id": "w1", "text": "Ça coûte" },
+          { "id": "w2", "text": "quatre-vingt-dix" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "MultipleSelectCard",
+      "title": "Quels nombres utilisent le système base-20 ?",
+      "content": {
+        "prompt": "Select every number built on the \"four-twenties\" base-20 pattern.",
+        "options": [
+          { "id": "a", "text": "quatre-vingts (80)" },
+          { "id": "b", "text": "cinquante (50)" },
+          { "id": "c", "text": "quatre-vingt-dix (90)" },
+          { "id": "d", "text": "quatre-vingt-cinq (85)" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "ConversationCard",
+      "title": "À la caisse",
+      "content": {
+        "scenario": "Magasin",
+        "lines": [
+          { "speaker": "Client", "text": "Excusez-moi, quel est le prix de ce pull ?", "translation": "Excuse me, what's the price of this sweater?" },
+          { "speaker": "Vendeuse", "text": "Il coûte quatre-vingt-quinze euros.", "translation": "It costs ninety-five euros." },
+          { "speaker": "Client", "text": "C'est un peu cher... Vous avez une réduction ?", "translation": "That's a bit expensive... Do you have a discount?" },
+          { "speaker": "Vendeuse", "text": "Oui, moins vingt pour cent aujourd'hui.", "translation": "Yes, minus twenty percent today." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c16",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this shopping exchange out loud.",
+        "targetText": "Excusez-moi, quel est le prix de ce pull ? Il coûte quatre-vingt-quinze euros.",
+        "referenceAudio": { "key": "fr/a1/prix-pull.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c17",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"77\" ?",
+            "options": [
+              { "id": "a", "text": "soixante-dix-sept" },
+              { "id": "b", "text": "sept-sept" },
+              { "id": "c", "text": "quatre-vingt-sept" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Pas cher\" veut dire \"expensive\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": false } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c18",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Regular tens: vingt, trente, quarante, cinquante, soixante",
+          "Base-20 numbers: soixante-dix (70), quatre-vingts (80), quatre-vingt-dix (90)",
+          "\"Ça coûte...\" and \"le prix\" for talking about cost",
+          "Public price signs are a common TCF reading-comprehension source"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c19",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You've conquered French's trickiest numbers.",
+        "xp": 50,
+        "badge": "Les Nombres"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

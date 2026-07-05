@@ -1,0 +1,260 @@
+{
+  "id": "fr_a1_lesson_017",
+  "language": "fr",
+  "level": "A1",
+  "title": "Au téléphone et les services",
+  "description": "Handle a phone call and basic post office/bank errands with the right formal phrases — including the automated-announcement style TCF listening tests.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 55 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Au téléphone et les services",
+      "content": {
+        "subtitle": "Module 7 · Leçon 2",
+        "body": "Phone calls have their own fixed formulas in French, and post office/bank errands are classic \"services\" vocabulary. Both show up in TEF/TCF listening and speaking sections."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "GrammarCard",
+      "title": "Les formules du téléphone",
+      "content": {
+        "explanation": "French phone conversations follow a very fixed script — learn these formulas exactly as given.",
+        "examples": [
+          { "text": "Allô ?", "translation": "Hello? (only used answering the phone)" },
+          { "text": "Qui est à l'appareil ?", "translation": "Who's calling? (lit. who is on the device)" },
+          { "text": "Je voudrais parler à Madame Dubois.", "translation": "I would like to speak to Mrs. Dubois." },
+          { "text": "Ne quittez pas.", "translation": "Please hold. (lit. don't leave)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c3",
+      "type": "GrammarCard",
+      "title": "À la banque et à la poste",
+      "content": {
+        "explanation": "Essential vocabulary for two of the most common \"services\" errands.",
+        "examples": [
+          { "text": "ouvrir un compte", "translation": "to open an account" },
+          { "text": "retirer de l'argent", "translation": "to withdraw money" },
+          { "text": "envoyer un colis / une lettre", "translation": "to send a package / a letter" },
+          { "text": "un timbre", "translation": "a stamp" },
+          { "text": "prendre rendez-vous", "translation": "to make an appointment" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "un rendez-vous",
+        "nativeTranslation": "un rendez-vous",
+        "englishTranslation": "an appointment",
+        "pronunciation": "ran-day-VOO",
+        "ipa": "ʁɑ̃devu",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "Je voudrais prendre un rendez-vous pour lundi.",
+        "nativeExample": "I would like to make an appointment for Monday.",
+        "audio": { "key": "fr/a1/rendez-vous.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "InfoCard",
+      "title": "Les messages automatiques",
+      "content": {
+        "tone": "tip",
+        "body": "\"Merci de patienter, un conseiller va vous répondre dans quelques instants.\" — this exact automated-message style is a classic TCF listening clip. Recognize \"patienter\" (to wait) and \"un conseiller\" (an advisor/representative)."
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c6",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "Ne quittez pas.", "back": "Please hold.", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c7",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez la bonne phrase",
+      "content": {
+        "prompt": "Comment répond-on au téléphone en français ?",
+        "options": [
+          { "id": "a", "text": "Bonjour !" },
+          { "id": "b", "text": "Allô ?" },
+          { "id": "c", "text": "Salut !" },
+          { "id": "d", "text": "Comment ça va ?" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c8",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "Je voudrais ___ un compte, s'il vous plaît. (open)",
+        "hint": "Infinitive meaning \"to open\""
+      },
+      "validation": { "acceptedAnswers": ["ouvrir"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c9",
+      "type": "ListeningCard",
+      "title": "Écoutez le message",
+      "content": {
+        "prompt": "Que demande le message automatique ?",
+        "audio": { "key": "fr/a1/message-patienter.mp3" },
+        "options": [
+          { "id": "a", "text": "de patienter" },
+          { "id": "b", "text": "de rappeler demain" },
+          { "id": "c", "text": "de laisser un message" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c10",
+      "type": "MatchingCard",
+      "title": "Associez l'expression à sa traduction",
+      "content": {
+        "prompt": "Match each phone/services expression to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "Qui est à l'appareil ?", "right": "Who's calling?" },
+          { "id": "p2", "left": "retirer de l'argent", "right": "to withdraw money" },
+          { "id": "p3", "left": "envoyer un colis", "right": "to send a package" },
+          { "id": "p4", "left": "un timbre", "right": "a stamp" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c11",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Allô\" s'utilise pour dire bonjour dans la rue."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c12",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"I would like to speak to Mrs. Dubois.\"",
+        "items": [
+          { "id": "w4", "text": "Madame Dubois." },
+          { "id": "w1", "text": "Je voudrais" },
+          { "id": "w2", "text": "parler" },
+          { "id": "w3", "text": "à" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3", "w4"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c13",
+      "type": "MultipleSelectCard",
+      "title": "Quelles expressions viennent d'un appel téléphonique ?",
+      "content": {
+        "prompt": "Select every expression you'd expect to hear during a phone call.",
+        "options": [
+          { "id": "a", "text": "Allô ?" },
+          { "id": "b", "text": "Ne quittez pas." },
+          { "id": "c", "text": "Il fait beau." },
+          { "id": "d", "text": "Qui est à l'appareil ?" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "b", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c14",
+      "type": "ConversationCard",
+      "title": "Prendre rendez-vous par téléphone",
+      "content": {
+        "scenario": "Appel téléphonique",
+        "lines": [
+          { "speaker": "Réceptionniste", "text": "Allô, cabinet du docteur Martin, bonjour.", "translation": "Hello, Dr. Martin's office, hello." },
+          { "speaker": "Patient", "text": "Bonjour, je voudrais prendre un rendez-vous, s'il vous plaît.", "translation": "Hello, I'd like to make an appointment, please." },
+          { "speaker": "Réceptionniste", "text": "Bien sûr. Ne quittez pas, je regarde le planning.", "translation": "Of course. Please hold, I'll check the schedule." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c15",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this phone call opening out loud.",
+        "targetText": "Bonjour, je voudrais prendre un rendez-vous, s'il vous plaît.",
+        "referenceAudio": { "key": "fr/a1/appel-rendez-vous.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before the summary.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Que veut dire \"un conseiller\" dans un message automatique ?",
+            "options": [
+              { "id": "a", "text": "an advisor/representative" },
+              { "id": "b", "text": "a customer" },
+              { "id": "c", "text": "a stamp" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Ne quittez pas\" veut dire \"please hold\"." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c17",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Phone formulas: Allô ?, Qui est à l'appareil ?, Ne quittez pas.",
+          "Bank/post office vocabulary: ouvrir un compte, retirer de l'argent, envoyer un colis, un timbre",
+          "Automated phone announcements are a classic TCF listening format",
+          "\"Prendre rendez-vous\" is essential for any real-world service errand"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c18",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now handle a phone call and basic errands with confidence.",
+        "xp": 55,
+        "badge": "Services"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}

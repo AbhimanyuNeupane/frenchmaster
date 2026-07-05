@@ -1,0 +1,309 @@
+{
+  "id": "fr_a1_lesson_003",
+  "language": "fr",
+  "level": "A1",
+  "title": "Ma famille",
+  "description": "Name your family members and use possessive adjectives correctly — a frequent source of mistakes for English speakers, and a classic TEF/TCF reading topic.",
+  "metadata": { "estimatedMinutes": 9, "xpReward": 50 },
+  "cards": [
+    {
+      "id": "c1",
+      "type": "TextCard",
+      "title": "Ma famille",
+      "content": {
+        "subtitle": "Module 2 · Leçon 1",
+        "body": "Talking about family is one of the most common topics in everyday French conversation — and in the TEF/TCF exam. Let's learn the vocabulary and the tricky possessive adjectives that go with it."
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c2",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "le père / la mère",
+        "nativeTranslation": "le père / la mère",
+        "englishTranslation": "father / mother",
+        "pronunciation": "luh pair / lah mair",
+        "ipa": "lə pɛʁ / la mɛʁ",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "Mon père s'appelle Michel et ma mère s'appelle Anne.",
+        "nativeExample": "My father is called Michel and my mother is called Anne.",
+        "audio": { "key": "fr/a1/pere-mere.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c3",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "le frère / la sœur",
+        "nativeTranslation": "le frère / la sœur",
+        "englishTranslation": "brother / sister",
+        "pronunciation": "luh frair / lah sir",
+        "ipa": "lə fʁɛʁ / la sœʁ",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "J'ai un frère et une sœur.",
+        "nativeExample": "I have one brother and one sister.",
+        "audio": { "key": "fr/a1/frere-soeur.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c4",
+      "type": "VocabularyCard",
+      "content": {
+        "word": "les parents / les enfants",
+        "nativeTranslation": "les parents / les enfants",
+        "englishTranslation": "parents / children",
+        "pronunciation": "lay pah-RAHN / lay zahn-FAHN",
+        "ipa": "le paʁɑ̃ / le zɑ̃fɑ̃",
+        "partOfSpeech": "noun",
+        "difficulty": "easy",
+        "exampleSentence": "Mes parents ont deux enfants.",
+        "nativeExample": "My parents have two children.",
+        "audio": { "key": "fr/a1/parents-enfants.mp3" }
+      },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c5",
+      "type": "GrammarCard",
+      "title": "Le reste de la famille",
+      "content": {
+        "explanation": "A few more essential family words you'll need to describe your whole family tree.",
+        "examples": [
+          { "text": "le grand-père", "translation": "grandfather" },
+          { "text": "la grand-mère", "translation": "grandmother" },
+          { "text": "l'oncle", "translation": "uncle" },
+          { "text": "la tante", "translation": "aunt" },
+          { "text": "le cousin / la cousine", "translation": "cousin (m/f)" },
+          { "text": "le fils / la fille", "translation": "son / daughter" },
+          { "text": "le mari / la femme", "translation": "husband / wife" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c6",
+      "type": "GrammarCard",
+      "title": "Les adjectifs possessifs",
+      "content": {
+        "explanation": "The #1 mistake English speakers make: French possessive adjectives agree with the GENDER OF THE NOUN they describe, not the gender of the owner. \"Son père\" can mean \"his father\" OR \"her father\" — you only know from context.",
+        "examples": [
+          { "text": "mon frère / ma sœur / mes parents", "translation": "my brother / my sister / my parents" },
+          { "text": "ton frère / ta sœur / tes parents", "translation": "your brother / your sister / your parents (informal)" },
+          { "text": "son frère / sa sœur / ses parents", "translation": "his/her brother / his/her sister / his/her parents" },
+          { "text": "notre frère / notre sœur / nos parents", "translation": "our brother / our sister / our parents" },
+          { "text": "votre frère / votre sœur / vos parents", "translation": "your brother / your sister / your parents (formal/plural)" },
+          { "text": "leur frère / leur sœur / leurs parents", "translation": "their brother / their sister / their parents" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c7",
+      "type": "InfoCard",
+      "title": "Une exception utile",
+      "content": {
+        "tone": "tip",
+        "body": "Before a feminine noun starting with a vowel sound, French uses \"mon/ton/son\" instead of \"ma/ta/sa\" — purely for pronunciation. Example: \"mon amie\" (my friend, feminine), not \"ma amie\"."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c8",
+      "type": "FlashCard",
+      "title": "Quick flip",
+      "content": { "front": "mes grands-parents", "back": "my grandparents", "hint": "Tap to reveal the meaning" },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c9",
+      "type": "MultipleChoiceCard",
+      "title": "Choisissez le bon adjectif",
+      "content": {
+        "prompt": "___ sœur est médecin. (Talking about your own sister)",
+        "options": [
+          { "id": "a", "text": "Mon" },
+          { "id": "b", "text": "Ma" },
+          { "id": "c", "text": "Mes" },
+          { "id": "d", "text": "Son" }
+        ]
+      },
+      "validation": { "correctOptionId": "b" },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c10",
+      "type": "FillBlankCard",
+      "title": "Complétez la phrase",
+      "content": {
+        "textWithBlanks": "C'est ___ frère. (my)",
+        "hint": "Masculine singular possessive, 1st person"
+      },
+      "validation": { "acceptedAnswers": ["mon"] },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c11",
+      "type": "ListeningCard",
+      "title": "Écoutez bien",
+      "content": {
+        "prompt": "Quel membre de la famille entendez-vous ?",
+        "audio": { "key": "fr/a1/mot-grand-mere.mp3" },
+        "options": [
+          { "id": "a", "text": "la grand-mère" },
+          { "id": "b", "text": "la mère" },
+          { "id": "c", "text": "la tante" }
+        ]
+      },
+      "validation": { "correctOptionId": "a" },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c12",
+      "type": "MatchingCard",
+      "title": "Associez le mot à sa traduction",
+      "content": {
+        "prompt": "Match each family word to its English meaning.",
+        "pairs": [
+          { "id": "p1", "left": "le fils", "right": "son" },
+          { "id": "p2", "left": "la fille", "right": "daughter" },
+          { "id": "p3", "left": "le mari", "right": "husband" },
+          { "id": "p4", "left": "la femme", "right": "wife" },
+          { "id": "p5", "left": "le cousin", "right": "cousin (male)" }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c13",
+      "type": "TrueFalseCard",
+      "title": "Vrai ou faux ?",
+      "content": {
+        "statement": "\"Son\" veut toujours dire \"his\" (jamais \"her\")."
+      },
+      "validation": { "answer": false },
+      "metadata": { "estimatedSeconds": 15 }
+    },
+    {
+      "id": "c14",
+      "type": "DragOrderCard",
+      "title": "Construisez la phrase",
+      "content": {
+        "prompt": "Arrange the words to say \"My parents have three children.\"",
+        "items": [
+          { "id": "w3", "text": "trois enfants." },
+          { "id": "w1", "text": "Mes parents" },
+          { "id": "w2", "text": "ont" }
+        ]
+      },
+      "validation": { "correctOrder": ["w1", "w2", "w3"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c15",
+      "type": "MultipleSelectCard",
+      "title": "Quels mots décrivent la famille proche ?",
+      "content": {
+        "prompt": "Select every word for immediate family (parents, siblings, children) — not extended family.",
+        "options": [
+          { "id": "a", "text": "le père" },
+          { "id": "b", "text": "l'oncle" },
+          { "id": "c", "text": "la sœur" },
+          { "id": "d", "text": "le fils" }
+        ]
+      },
+      "validation": { "correctOptionIds": ["a", "c", "d"] },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c16",
+      "type": "ConversationCard",
+      "title": "Parlez-moi de votre famille",
+      "content": {
+        "scenario": "Entretien d'examen",
+        "lines": [
+          { "speaker": "Examinateur", "text": "Parlez-moi de votre famille.", "translation": "Tell me about your family." },
+          { "speaker": "Candidat", "text": "J'ai un frère et une sœur.", "translation": "I have one brother and one sister." },
+          { "speaker": "Examinateur", "text": "Et vos parents ?", "translation": "And your parents?" },
+          { "speaker": "Candidat", "text": "Mon père est professeur et ma mère est infirmière.", "translation": "My father is a teacher and my mother is a nurse." }
+        ]
+      },
+      "metadata": { "estimatedSeconds": 45 }
+    },
+    {
+      "id": "c17",
+      "type": "InfoCard",
+      "title": "Une question d'examen classique",
+      "content": {
+        "tone": "note",
+        "body": "\"Parlez-moi de votre famille\" is one of the most common TEF/TCF oral prompts. Prepare 3–4 sentences about your family in advance — it almost always comes up."
+      },
+      "metadata": { "estimatedSeconds": 25 }
+    },
+    {
+      "id": "c18",
+      "type": "SpeakingCard",
+      "title": "À vous de parler",
+      "content": {
+        "prompt": "Repeat this short family description out loud.",
+        "targetText": "J'ai un frère et une sœur. Mon père est professeur et ma mère est infirmière.",
+        "referenceAudio": { "key": "fr/a1/famille-description.mp3" }
+      },
+      "validation": { "placeholderScore": true },
+      "metadata": { "estimatedSeconds": 30 }
+    },
+    {
+      "id": "c19",
+      "type": "QuizCard",
+      "title": "Mini contrôle",
+      "content": {
+        "intro": "Two quick questions before we move on.",
+        "questions": [
+          {
+            "id": "q1",
+            "kind": "mc",
+            "prompt": "Comment dit-on \"grandmother\" en français ?",
+            "options": [
+              { "id": "a", "text": "la grand-mère" },
+              { "id": "b", "text": "la tante" },
+              { "id": "c", "text": "la cousine" }
+            ]
+          },
+          { "id": "q2", "kind": "tf", "prompt": "\"Mon\" s'utilise devant \"amie\" (féminin, commence par une voyelle)." }
+        ]
+      },
+      "validation": { "answers": { "q1": "a", "q2": true } },
+      "metadata": { "estimatedSeconds": 40 }
+    },
+    {
+      "id": "c20",
+      "type": "SummaryCard",
+      "title": "Ce que vous avez appris",
+      "content": {
+        "heading": "Key takeaways",
+        "points": [
+          "Core family vocabulary: père, mère, frère, sœur, parents, enfants, and extended family",
+          "Possessive adjectives (mon/ma/mes...) agree with the noun's gender, not the owner's",
+          "\"Mon/ton/son\" replace \"ma/ta/sa\" before a feminine noun starting with a vowel sound",
+          "\"Parlez-moi de votre famille\" is a near-guaranteed TEF/TCF oral prompt"
+        ]
+      },
+      "metadata": { "estimatedSeconds": 20 }
+    },
+    {
+      "id": "c21",
+      "type": "RewardCard",
+      "content": {
+        "title": "Leçon terminée !",
+        "message": "Bravo ! You can now talk about your entire family with the right possessive adjectives.",
+        "xp": 50,
+        "badge": "Famille"
+      },
+      "metadata": { "estimatedSeconds": 10 }
+    }
+  ]
+}
