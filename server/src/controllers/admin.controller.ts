@@ -8,10 +8,13 @@ import type {
   AiTranslateSingleInput,
   CommitVocabularyImportInput,
   CreateLanguageInput,
+  CreateRoleInput,
   CreateVocabularyWordInput,
   LanguageCodeParam,
   ListUsersQuery,
+  RoleIdParam,
   UpdateLanguageInput,
+  UpdateRoleInput,
   UpdateUserInput,
   UpdateVocabularyCategoryInput,
   UpdateVocabularyWordInput,
@@ -163,5 +166,36 @@ export const adminController = {
     const input = req.body as UpdateVocabularyCategoryInput;
     const category = await adminService.updateVocabularyCategory(name, input);
     sendSuccess(res, category, "Category updated");
+  }),
+
+  // --- RBAC: roles & permissions ---
+
+  listRoles: asyncHandler(async (_req: Request, res: Response) => {
+    const roles = await adminService.listRoles();
+    sendSuccess(res, roles);
+  }),
+
+  listPermissions: asyncHandler(async (_req: Request, res: Response) => {
+    const permissions = await adminService.listPermissions();
+    sendSuccess(res, permissions);
+  }),
+
+  createRole: asyncHandler(async (req: Request, res: Response) => {
+    const input = req.body as CreateRoleInput;
+    const role = await adminService.createRole(input);
+    sendSuccess(res, role, "Role created", 201);
+  }),
+
+  updateRole: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params as unknown as RoleIdParam;
+    const input = req.body as UpdateRoleInput;
+    const role = await adminService.updateRole(id, input);
+    sendSuccess(res, role, "Role updated");
+  }),
+
+  deleteRole: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params as unknown as RoleIdParam;
+    await adminService.deleteRole(id);
+    sendSuccess(res, null, "Role deleted");
   }),
 };

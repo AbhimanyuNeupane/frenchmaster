@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { lessonEngineController } from "../controllers/lessonEngine.controller";
-import { requireAuth, requireRole } from "../middleware/auth";
+import { requireAuth, requirePermission } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import {
   courseIdParamSchema,
@@ -15,8 +15,8 @@ import {
 
 export const lessonEngineAdminRouter = Router();
 
-// Every route in this file is admin-only.
-lessonEngineAdminRouter.use(requireAuth, requireRole("ADMIN"));
+// Every route in this file requires admin panel access.
+lessonEngineAdminRouter.use(requireAuth, requirePermission("admin.access"));
 
 lessonEngineAdminRouter.get(
   "/lessons",

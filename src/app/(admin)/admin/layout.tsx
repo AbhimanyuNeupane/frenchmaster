@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
-import { RequireRole } from "@/components/auth/require-role";
+import { RequirePermission } from "@/components/auth/require-permission";
 
 export default function AdminGroupLayout({ children }: { children: ReactNode }) {
   return (
-    <RequireRole roles={["ADMIN"]}>
+    <RequirePermission permissions={["admin.access"]}>
       <AdminShell>{children}</AdminShell>
-    </RequireRole>
+    </RequirePermission>
   );
 }

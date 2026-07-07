@@ -1,7 +1,7 @@
 import { lessonEngineRepository } from "../repositories/lessonEngine.repository";
 import { ApiError } from "../utils/ApiError";
-import { hasRequiredRole } from "../utils/roleRank";
-import { Prisma as PrismaRuntime, type LessonEngineLesson, type Prisma, type Role } from "@prisma/client";
+import { hasPermission } from "../utils/permissions";
+import { Prisma as PrismaRuntime, type LessonEngineLesson, type Prisma } from "@prisma/client";
 import {
   validateLessonDraftSchema,
   type CreateLessonEngineCourseInput,
@@ -40,9 +40,9 @@ function toPublicLessonSummary(
     title: string;
     description: string | null;
     cardCount: number;
-    requiredRole: Role | null;
+    requiredPermissionKey: string | null;
   },
-  requesterRole: Role | undefined
+  requesterPermissions: string[] | undefined
 ) {
   return {
     id: lesson.id,
@@ -51,7 +51,7 @@ function toPublicLessonSummary(
     title: lesson.title,
     description: lesson.description,
     cardCount: lesson.cardCount,
-    locked: !hasRequiredRole(requesterRole, lesson.requiredRole),
+    locked: !hasPermission(requesterPermissions, lesson.requiredPermissionKey),
   };
 }
 
@@ -91,7 +91,7 @@ type AdminCourseDetailRow = NonNullable<
 /**
  * Admin course detail — full section -> lesson tree, each lesson embedded
  * with enough fields for the admin UI to render/edit (title, cardCount,
- * published, requiredRole) without a second round-trip. Contrast with the
+ * published, requiredPermissionKey) without a second round-trip. Contrast with the
  * write path (create/update), which takes `lessonIds` (ids only, ordered) —
  * this is the read shape, not the write shape.
  */
@@ -117,7 +117,7 @@ function toAdminCourseDetail(course: AdminCourseDetailRow) {
         level: link.lesson.level,
         cardCount: link.lesson.cardCount,
         published: link.lesson.published,
-        requiredRole: link.lesson.requiredRole,
+        requiredPermissionKey: link.lesson.requiredPermissionKey,
         displayOrder: link.displayOrder,
       })),
     })),
@@ -158,7 +158,7 @@ type PublicCourseDetailRow = NonNullable<
  * stable and predictable for the frontend rather than having sections
  * silently appear/disappear as their last visible lesson is unpublished.
  */
-function toPublicCourseDetail(course: PublicCourseDetailRow, requesterRole: Role | undefined) {
+function toPublicCourseDetail(course: PublicCourseDetailRow, requesterPermissions: string[] | undefined) {
   return {
     id: course.id,
     language: course.language,
@@ -170,7 +170,7 @@ function toPublicCourseDetail(course: PublicCourseDetailRow, requesterRole: Role
       id: section.id,
       title: section.title,
       displayOrder: section.displayOrder,
-      lessons: section.lessonLinks.map((link) => toPublicLessonSummary(link.lesson, requesterRole)),
+      lessons: section.lessonLinks.map((link) => toPublicLessonSummary(link.lesson, requesterPermissions)),
     })),
   };
 }
@@ -235,7 +235,7 @@ export const lessonEngineService = {
         cardsJson: input.cards as unknown as Prisma.InputJsonValue,
         cardCount: input.cards.length,
         published: input.published,
-        requiredRole: input.requiredRole ?? null,
+        requiredPermissionKey: input.requiredPermissionKey ?? null,
       });
       return toAdminLesson(lesson);
     } catch (err) {
@@ -261,7 +261,7 @@ export const lessonEngineService = {
         ? { cardsJson: input.cards as unknown as Prisma.InputJsonValue, cardCount: input.cards.length }
         : {}),
       ...(input.published !== undefined ? { published: input.published } : {}),
-      ...(input.requiredRole !== undefined ? { requiredRole: input.requiredRole } : {}),
+      ...(input.requiredPermissionKey !== undefined ? { requiredPermissionKey: input.requiredPermissionKey } : {}),
     });
     return toAdminLesson(lesson);
   },
@@ -296,7 +296,7 @@ export const lessonEngineService = {
 
   // --- Public: Lessons ---
 
-  async listPublishedLessons(filter: ListPublishedLessonsQuery, requesterRole: Role | undefined) {
+  async listPublishedLessons(filter: ListPublishedLessonsQuery, requesterPermissions: string[] | undefined) {
     const where: Prisma.LessonEngineLessonWhereInput = {
       published: true,
       deletedAt: null,
@@ -304,25 +304,26 @@ export const lessonEngineService = {
       ...(filter.level ? { level: filter.level } : {}),
     };
     const lessons = await lessonEngineRepository.findPublishedLessons(where);
-    return lessons.map((lesson) => toPublicLessonSummary(lesson, requesterRole));
+    return lessons.map((lesson) => toPublicLessonSummary(lesson, requesterPermissions));
   },
 
   /**
-   * Role-gate enforcement (Feature C): a lesson with a non-null
-   * `requiredRole` the requester doesn't satisfy 403s here — gating blocks
-   * *playing* the lesson, never just hides it (see listPublishedLessons's
-   * `locked` flag for the discovery side). `requiredRole` is included in
-   * the error's `details` so the frontend can render a specific "upgrade to
-   * X" message instead of a generic error.
+   * Permission-gate enforcement (Feature C): a lesson with a non-null
+   * `requiredPermissionKey` the requester doesn't hold 403s here — gating
+   * blocks *playing* the lesson, never just hides it (see
+   * listPublishedLessons's `locked` flag for the discovery side).
+   * `requiredPermissionKey` is included in the error's `details` so the
+   * frontend can render a specific "upgrade to X" message instead of a
+   * generic error.
    */
-  async getPublishedLesson(id: string, requesterRole: Role | undefined) {
+  async getPublishedLesson(id: string, requesterPermissions: string[] | undefined) {
     const lesson = await lessonEngineRepository.findPublishedLessonById(id);
     if (!lesson) {
       throw ApiError.notFound("Lesson not found");
     }
-    if (!hasRequiredRole(requesterRole, lesson.requiredRole)) {
-      throw ApiError.forbidden(`This lesson requires a ${lesson.requiredRole} account.`, {
-        requiredRole: lesson.requiredRole,
+    if (!hasPermission(requesterPermissions, lesson.requiredPermissionKey)) {
+      throw ApiError.forbidden(`This lesson requires the "${lesson.requiredPermissionKey}" permission.`, {
+        requiredPermissionKey: lesson.requiredPermissionKey,
       });
     }
     return toPublicDetail(lesson);
@@ -434,14 +435,15 @@ export const lessonEngineService = {
 
   /**
    * Integration point between Feature B (courses) and Feature C (gating):
-   * needs the requester's role to compute `locked` per embedded lesson, so
-   * it's a required parameter rather than being resolved internally.
+   * needs the requester's live permissions to compute `locked` per embedded
+   * lesson, so it's a required parameter rather than being resolved
+   * internally.
    */
-  async getPublishedCourse(id: string, requesterRole: Role | undefined) {
+  async getPublishedCourse(id: string, requesterPermissions: string[] | undefined) {
     const course = await lessonEngineRepository.findPublishedCourseById(id);
     if (!course) {
       throw ApiError.notFound("Course not found");
     }
-    return toPublicCourseDetail(course, requesterRole);
+    return toPublicCourseDetail(course, requesterPermissions);
   },
 };

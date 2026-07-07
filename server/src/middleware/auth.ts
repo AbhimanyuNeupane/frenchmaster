@@ -1,21 +1,24 @@
 import type { NextFunction, Request, Response } from "express";
-import type { Role } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { verifyAccessToken } from "../services/token.service";
 import { userRepository } from "../repositories/user.repository";
+import { permissionKeysOf } from "../utils/permissions";
 import { asyncHandler } from "../utils/asyncHandler";
 
 /**
  * Requires a valid `Authorization: Bearer <token>` header. On success,
- * attaches the decoded payload to `req.user` for downstream handlers.
+ * attaches the decoded payload PLUS a freshly-read permission set to
+ * `req.user` for downstream handlers.
  *
- * Also enforces LIVE account status on every request (not just signature
- * validity): a SUSPENDED/BANNED user's still-valid access token (<=15m TTL)
- * must stop working the moment an admin acts, not once the token expires.
- * This means one extra indexed primary-key lookup per authenticated
- * request — acceptable at current scale; if this becomes a hot path, cache
- * the (userId -> status) lookup in Redis with a short TTL and invalidate it
- * from the admin PATCH endpoint.
+ * Also enforces LIVE account status AND live permissions on every request
+ * (not just signature validity): a SUSPENDED/BANNED user's still-valid
+ * access token (<=15m TTL) must stop working the moment an admin acts, and
+ * a role/permission change an admin makes must take effect immediately too
+ * — never wait for the access token to expire or be refreshed. This means
+ * one extra indexed primary-key lookup (with its role+permissions join) per
+ * authenticated request — acceptable at current scale; if this becomes a
+ * hot path, cache the (userId -> permissions) lookup in Redis with a short
+ * TTL and invalidate it from the admin role-assignment endpoints.
  */
 export const requireAuth = asyncHandler(
   async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
@@ -47,7 +50,7 @@ export const requireAuth = asyncHandler(
       );
     }
 
-    req.user = payload;
+    req.user = { ...payload, permissions: permissionKeysOf(user) };
     next();
   }
 );
@@ -57,9 +60,9 @@ export const requireAuth = asyncHandler(
  * any failure (no header, malformed header, invalid/expired token, user not
  * found/deleted, account not ACTIVE) it just calls `next()` with `req.user`
  * left `undefined`. Used on public routes that need to know the requester's
- * role WHEN present (e.g. lesson-engine content gating, see
- * lessonEngine.service.ts / utils/roleRank.ts) without requiring a token —
- * an anonymous request must stay genuinely accessible.
+ * permissions WHEN present (e.g. lesson-engine content gating, see
+ * lessonEngine.service.ts / utils/permissions.ts) without requiring a
+ * token — an anonymous request must stay genuinely accessible.
  */
 export const optionalAuth = asyncHandler(
   async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
@@ -75,7 +78,7 @@ export const optionalAuth = asyncHandler(
       const payload = verifyAccessToken(token);
       const user = await userRepository.findById(payload.sub);
       if (user && !user.deletedAt && user.status === "ACTIVE") {
-        req.user = payload;
+        req.user = { ...payload, permissions: permissionKeysOf(user) };
       }
     } catch {
       // Invalid/expired token on a public route — stay anonymous, don't fail the request.
@@ -86,15 +89,17 @@ export const optionalAuth = asyncHandler(
 );
 
 /**
- * Role-based access guard. Use after `requireAuth`. Not used by the
- * dashboard endpoint today, but wired up for future admin-only routes.
+ * Permission-based access guard. Use after `requireAuth`. Grants access if
+ * the requester's live permission set (see `requireAuth`) contains ANY of
+ * the given keys — replaces the old flat-role `requireRole`.
  */
-export function requireRole(...allowed: Role[]) {
+export function requirePermission(...anyOf: string[]) {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       throw ApiError.unauthorized();
     }
-    if (!allowed.includes(req.user.role)) {
+    const granted = new Set(req.user.permissions);
+    if (!anyOf.some((key) => granted.has(key))) {
       throw ApiError.forbidden("Insufficient permissions");
     }
     next();

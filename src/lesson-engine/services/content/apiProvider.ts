@@ -61,11 +61,11 @@ function normalizeLessonPayload(raw: unknown): unknown {
   return raw;
 }
 
-/** Reads `details.requiredRole` off an HttpError's failure envelope, if present. */
-function extractRequiredRole(err: unknown): string | undefined {
+/** Reads `details.requiredPermissionKey` off an HttpError's failure envelope, if present. */
+function extractRequiredPermissionKey(err: unknown): string | undefined {
   if (err instanceof HttpError && err.details && typeof err.details === "object") {
-    const role = (err.details as Record<string, unknown>).requiredRole;
-    if (typeof role === "string") return role;
+    const key = (err.details as Record<string, unknown>).requiredPermissionKey;
+    if (typeof key === "string") return key;
   }
   return undefined;
 }
@@ -97,14 +97,14 @@ export class ApiContentProvider implements LessonContentProvider {
       );
     } catch (err) {
       // A 403 means the lesson is gated (Feature C), not broken/missing. Surface
-      // the requiredRole so the error boundary can show a specific message.
-      const requiredRole = extractRequiredRole(err);
-      if (requiredRole) {
+      // the requiredPermissionKey so the error boundary can show a specific message.
+      const requiredPermissionKey = extractRequiredPermissionKey(err);
+      if (requiredPermissionKey) {
         throw new LessonLoadError(
           id,
-          `This lesson requires a ${requiredRole} account.`,
+          `This lesson requires the "${requiredPermissionKey}" permission.`,
           err,
-          requiredRole
+          requiredPermissionKey
         );
       }
       throw new LessonLoadError(id, `Failed to load lesson "${id}".`, err);

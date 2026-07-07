@@ -15,11 +15,9 @@ import { RoleBadge, StatusBadge } from "@/components/admin/users/user-badges";
 import { UserEditDialog } from "@/components/admin/users/user-edit-dialog";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { useAuth } from "@/contexts/auth-context";
-import type { UserRole } from "@/types/auth";
-import type { AdminUser, AdminUserListResponse, UserStatus } from "@/types/admin";
+import type { AdminRole, AdminUser, AdminUserListResponse, UserStatus } from "@/types/admin";
 
 const PAGE_SIZE = 20;
-const ROLE_OPTIONS: UserRole[] = ["ADMIN", "MODERATOR", "PREMIUM", "USER"];
 const STATUS_OPTIONS: UserStatus[] = ["ACTIVE", "SUSPENDED", "BANNED"];
 
 function initialsOf(name: string) {
@@ -44,7 +42,7 @@ export function UsersManager() {
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [role, setRole] = useState<UserRole | "all">("all");
+  const [roleId, setRoleId] = useState<string | "all">("all");
   const [status, setStatus] = useState<UserStatus | "all">("all");
   const [page, setPage] = useState(1);
 
@@ -62,12 +60,14 @@ export function UsersManager() {
     params.set("page", String(page));
     params.set("pageSize", String(PAGE_SIZE));
     if (search) params.set("search", search);
-    if (role !== "all") params.set("role", role);
+    if (roleId !== "all") params.set("roleId", roleId);
     if (status !== "all") params.set("status", status);
     return `/api/admin/users?${params.toString()}`;
-  }, [page, search, role, status]);
+  }, [page, search, roleId, status]);
 
   const { data, isLoading, error, refetch } = useApiQuery<AdminUserListResponse>(path, [path]);
+  const { data: roles } = useApiQuery<AdminRole[]>("/api/admin/roles");
+  const rolesById = useMemo(() => new Map((roles ?? []).map((r) => [r.id, r])), [roles]);
 
   function openEdit(u: AdminUser) {
     setActiveUser(u);
@@ -104,17 +104,17 @@ export function UsersManager() {
           <div className="flex gap-2">
             <AdminSelect
               aria-label="Filter by role"
-              value={role}
+              value={roleId}
               onChange={(e) => {
-                setRole(e.target.value as UserRole | "all");
+                setRoleId(e.target.value);
                 setPage(1);
               }}
               className="w-full sm:w-40"
             >
               <option value="all">All roles</option>
-              {ROLE_OPTIONS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
+              {(roles ?? []).map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
                 </option>
               ))}
             </AdminSelect>
@@ -181,7 +181,7 @@ export function UsersManager() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                    <RoleBadge role={u.role} />
+                    <RoleBadge roleId={u.roleId} role={rolesById.get(u.roleId)} />
                     <StatusBadge status={u.status} />
                     <span className="rounded-full border border-border px-2.5 py-1 text-xs font-semibold text-muted-foreground">
                       {u.currentLevel}

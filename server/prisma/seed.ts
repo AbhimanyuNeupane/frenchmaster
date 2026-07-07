@@ -26,8 +26,109 @@ function daysAgo(n: number): Date {
   return d;
 }
 
+// --- RBAC: roles + permission catalog ---
+//
+// The permission catalog is deliberately broader than what any route checks
+// today (see requirePermission call sites) — categories mirror the Admin CMS
+// sections in the project charter, so specialized roles (Translator,
+// Proofreader, Support, Marketing) already have a sensible permission to
+// hold even before the routes that would check those specific keys exist.
+// Granting more routes to more keys is a future, additive pass.
+const PERMISSIONS: { key: string; category: string; description: string }[] = [
+  { key: "admin.access", category: "Admin", description: "Full access to the admin panel" },
+  { key: "roles.manage", category: "Admin", description: "Manage roles and permission assignments" },
+  { key: "users.manage", category: "Users", description: "Manage user accounts, suspend/ban, assign roles" },
+  { key: "content.vocabulary.manage", category: "Content", description: "Create/edit/delete vocabulary" },
+  { key: "content.lessons.manage", category: "Content", description: "Create/edit/delete Lesson Engine lessons" },
+  { key: "content.courses.manage", category: "Content", description: "Create/edit/delete Lesson Engine courses" },
+  { key: "content.translate", category: "Content", description: "Author/edit translations" },
+  { key: "content.proofread", category: "Content", description: "Review and approve content changes" },
+  { key: "content.premium.access", category: "Content", description: "Access premium-gated lesson content" },
+  { key: "support.manage", category: "Support", description: "Access support tickets/tools" },
+  { key: "marketing.manage", category: "Marketing", description: "Manage announcements, homepage content, campaigns" },
+  { key: "billing.manage", category: "Billing", description: "Manage pricing plans, subscriptions, coupons" },
+  { key: "settings.manage", category: "System", description: "Manage application/system settings, feature flags" },
+];
+
+const ROLES: {
+  id: string;
+  name: string;
+  description: string;
+  rank: number;
+  isSystem: boolean;
+  permissions: string[];
+}[] = [
+  { id: "owner", name: "Owner", description: "Unrestricted access to everything.", rank: 100, isSystem: true, permissions: PERMISSIONS.map((p) => p.key) },
+  { id: "super_admin", name: "Super Admin", description: "Unrestricted access to everything.", rank: 90, isSystem: true, permissions: PERMISSIONS.map((p) => p.key) },
+  { id: "administrator", name: "Administrator", description: "Full admin panel access.", rank: 80, isSystem: true, permissions: ["admin.access", "content.premium.access", "users.manage", "content.vocabulary.manage", "content.lessons.manage", "content.courses.manage", "roles.manage"] },
+  { id: "content_manager", name: "Content Manager", description: "Manages all learning content.", rank: 60, isSystem: true, permissions: ["admin.access", "content.vocabulary.manage", "content.lessons.manage", "content.courses.manage"] },
+  { id: "course_creator", name: "Course Creator", description: "Authors lessons and courses.", rank: 55, isSystem: false, permissions: ["content.lessons.manage", "content.courses.manage"] },
+  { id: "moderator", name: "Moderator", description: "Moderates users and premium content access.", rank: 50, isSystem: true, permissions: ["content.premium.access", "users.manage"] },
+  { id: "translator", name: "Translator", description: "Authors translations.", rank: 40, isSystem: false, permissions: ["content.translate"] },
+  { id: "proofreader", name: "Proofreader", description: "Reviews and approves content.", rank: 40, isSystem: false, permissions: ["content.proofread"] },
+  { id: "support", name: "Support", description: "Handles support requests.", rank: 40, isSystem: false, permissions: ["support.manage"] },
+  { id: "marketing", name: "Marketing", description: "Manages marketing content.", rank: 40, isSystem: false, permissions: ["marketing.manage"] },
+  { id: "student", name: "Student", description: "A learner. Default role for new signups.", rank: 10, isSystem: true, permissions: [] },
+  { id: "guest", name: "Guest", description: "Unauthenticated/anonymous visitor.", rank: 0, isSystem: true, permissions: [] },
+];
+
+/** Old LegacyRole enum value -> new Role.id, used to backfill User.roleId. */
+const LEGACY_ROLE_MAP: Record<string, string> = {
+  ADMIN: "administrator",
+  MODERATOR: "moderator",
+  PREMIUM: "student",
+  USER: "student",
+};
+
+async function seedRbac() {
+  for (const p of PERMISSIONS) {
+    await prisma.permission.upsert({
+      where: { key: p.key },
+      update: { category: p.category, description: p.description },
+      create: p,
+    });
+  }
+
+  for (const r of ROLES) {
+    await prisma.role.upsert({
+      where: { id: r.id },
+      update: { name: r.name, description: r.description, rank: r.rank, isSystem: r.isSystem },
+      create: { id: r.id, name: r.name, description: r.description, rank: r.rank, isSystem: r.isSystem },
+    });
+  }
+
+  const allPermissions = await prisma.permission.findMany();
+  const permissionIdByKey = new Map(allPermissions.map((p) => [p.key, p.id]));
+
+  for (const r of ROLES) {
+    for (const key of r.permissions) {
+      const permissionId = permissionIdByKey.get(key);
+      if (!permissionId) throw new Error(`Unknown permission key in ROLES seed: ${key}`);
+      await prisma.rolePermission.upsert({
+        where: { roleId_permissionId: { roleId: r.id, permissionId } },
+        update: {},
+        create: { roleId: r.id, permissionId },
+      });
+    }
+  }
+
+  // Backfill every existing user's roleId from their legacy enum value —
+  // idempotent (safe to re-run), and a no-op once Phase 6 drops legacyRole.
+  const usersToBackfill = await prisma.user.findMany({ select: { id: true, legacyRole: true, roleId: true } });
+  for (const u of usersToBackfill) {
+    const mappedRoleId = LEGACY_ROLE_MAP[u.legacyRole] ?? "student";
+    if (u.roleId !== mappedRoleId) {
+      await prisma.user.update({ where: { id: u.id }, data: { roleId: mappedRoleId } });
+    }
+  }
+
+  console.log(`Seeded ${ROLES.length} roles, ${PERMISSIONS.length} permissions, backfilled ${usersToBackfill.length} users' roleId.`);
+}
+
 async function main() {
   console.log("Seeding database...");
+
+  await seedRbac();
 
   // --- Demo user ("Camille" from mock-data.ts) ---
   const passwordHash = await bcrypt.hash("Password123", 12);

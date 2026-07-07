@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma";
-import type { Prisma, Role } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 /** Scalar fields an admin can author, minus id/timestamps/cardCount (cardCount is always server-derived). */
 export interface LessonEngineLessonCreateData {
@@ -11,7 +11,7 @@ export interface LessonEngineLessonCreateData {
   cardsJson: Prisma.InputJsonValue;
   cardCount: number;
   published: boolean;
-  requiredRole: Role | null;
+  requiredPermissionKey: string | null;
 }
 
 export type LessonEngineLessonUpdateData = Partial<Omit<LessonEngineLessonCreateData, "id">>;
@@ -39,7 +39,7 @@ export const lessonEngineRepository = {
         description: true,
         cardCount: true,
         published: true,
-        requiredRole: true,
+        requiredPermissionKey: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -84,7 +84,7 @@ export const lessonEngineRepository = {
         title: true,
         description: true,
         cardCount: true,
-        requiredRole: true,
+        requiredPermissionKey: true,
       },
       orderBy: { updatedAt: "desc" },
     });

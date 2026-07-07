@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer, { type FileFilterCallback } from "multer";
 import type { Request } from "express";
 import { adminController } from "../controllers/admin.controller";
-import { requireAuth, requireRole } from "../middleware/auth";
+import { requireAuth, requirePermission } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { ApiError } from "../utils/ApiError";
 import {
@@ -10,10 +10,13 @@ import {
   aiTranslateSingleSchema,
   commitVocabularyImportSchema,
   createLanguageSchema,
+  createRoleSchema,
   createVocabularyWordSchema,
   languageCodeParamSchema,
   listUsersSchema,
+  roleIdParamSchema,
   updateLanguageSchema,
+  updateRoleSchema,
   updateUserSchema,
   updateVocabularyCategorySchema,
   updateVocabularyWordSchema,
@@ -24,8 +27,8 @@ import {
 
 export const adminRouter = Router();
 
-// Every route in this file is admin-only.
-adminRouter.use(requireAuth, requireRole("ADMIN"));
+// Every route in this file requires admin panel access.
+adminRouter.use(requireAuth, requirePermission("admin.access"));
 
 adminRouter.get("/users", validate({ query: listUsersSchema }), adminController.listUsers);
 adminRouter.patch(
@@ -123,3 +126,16 @@ adminRouter.patch(
   validate({ params: vocabularyCategoryNameParamSchema, body: updateVocabularyCategorySchema }),
   adminController.updateVocabularyCategory
 );
+
+// --- RBAC: roles & permissions ---
+
+adminRouter.get("/roles", adminController.listRoles);
+adminRouter.post("/roles", validate({ body: createRoleSchema }), adminController.createRole);
+adminRouter.patch(
+  "/roles/:id",
+  validate({ params: roleIdParamSchema, body: updateRoleSchema }),
+  adminController.updateRole
+);
+adminRouter.delete("/roles/:id", validate({ params: roleIdParamSchema }), adminController.deleteRole);
+
+adminRouter.get("/permissions", adminController.listPermissions);

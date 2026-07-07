@@ -40,7 +40,10 @@ enum SkillKey {
   vocabulary
 }
 
-enum Role {
+// Deprecated — being replaced by the Role/Permission/RolePermission models
+// below (see User.roleId). Kept temporarily, unused by any new code, so the
+// RBAC migration can be rolled back safely until Phase 6 cleanup drops it.
+enum LegacyRole {
   ADMIN
   MODERATOR
   PREMIUM
@@ -143,8 +146,13 @@ model User {
   passwordHash String? // nullable: OAuth-only users have no password
   name         String
   avatarUrl    String?
-  role         Role      @default(USER)
+  legacyRole   LegacyRole @default(USER) // deprecated, see LegacyRole — superseded by roleId/role below
   status       AccountStatus @default(ACTIVE)
+
+  // Dynamic RBAC — replaces legacyRole. Defaults to the seeded "student" role,
+  // which must always exist as an invariant (see prisma/seed.ts).
+  roleId String @default("student")
+  role   Role   @relation(fields: [roleId], references: [id])
 
   authProvider   AuthProvider @default(EMAIL)
   googleId       String?      @unique
@@ -179,7 +187,8 @@ model User {
   pronunciationAttempts PronunciationAttempt[]
 
   @@index([currentLevel])
-  @@index([role])
+  @@index([legacyRole])
+  @@index([roleId])
   @@index([status])
   @@index([primaryLanguageCode])
   @@map("users")
@@ -203,6 +212,62 @@ model RefreshToken {
 
   @@index([userId])
   @@map("refresh_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// RBAC — dynamic, admin-editable roles and permissions. Replaces LegacyRole.
+// A role's permission set is entirely data (RolePermission rows), never a
+// hardcoded switch, so adding a role or changing what it can do never
+// requires a code change — only an admin action.
+// ---------------------------------------------------------------------------
+
+// `id` is a stable slug (not a uuid) — same "human-readable PK for
+// admin-managed reference data" convention as Language.code/Achievement.code/
+// VocabularyCategoryMeta.name elsewhere in this schema. Seeded system roles
+// (isSystem: true) can't be deleted, guaranteeing User.roleId's default
+// ("student") and the admin-gating role(s) always resolve to something.
+model Role {
+  id          String   @id
+  name        String
+  description String?
+  rank        Int      @default(0) // display/sort ordering only — NOT used for permission checks (12 roles aren't a strict hierarchy)
+  isSystem    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  permissions RolePermission[]
+  users       User[]
+
+  @@map("roles")
+}
+
+// A single grantable capability. `key` is what code checks against
+// (requirePermission/hasPermission) — dot-namespaced by convention
+// (e.g. "admin.access", "content.vocabulary.manage") so the admin UI can
+// group the catalog by `category` without a separate taxonomy table.
+model Permission {
+  id          String  @id @default(uuid())
+  key         String  @unique
+  description String?
+  category    String
+
+  createdAt DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@index([category])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
 }
 
 // ---------------------------------------------------------------------------
@@ -837,10 +902,14 @@ model LessonEngineLesson {
   // Content-access gating: null (the default) means fully public, matching
   // this feature's original no-auth design — nothing that was open before
   // this column existed becomes gated by adding it. A non-null value means
-  // the requester must be authenticated AND hold at least this role (rank
-  // ADMIN > MODERATOR > PREMIUM > USER), enforced server-side in
+  // the requester must be authenticated AND their role must hold this
+  // permission key (see Permission model), enforced server-side in
   // lessonEngine.service.ts, never just hidden client-side.
-  requiredRole Role?
+  requiredPermissionKey String?
+
+  // Deprecated — superseded by requiredPermissionKey above. Kept temporarily
+  // for rollback safety until Phase 6 RBAC cleanup drops it.
+  requiredRole LegacyRole?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

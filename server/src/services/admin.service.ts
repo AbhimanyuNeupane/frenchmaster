@@ -16,9 +16,11 @@ import type {
   AiTranslateSingleInput,
   CommitVocabularyImportInput,
   CreateLanguageInput,
+  CreateRoleInput,
   CreateVocabularyWordInput,
   ListUsersQuery,
   UpdateLanguageInput,
+  UpdateRoleInput,
   UpdateUserInput,
   UpdateVocabularyCategoryInput,
   UpdateVocabularyWordInput,
@@ -57,6 +59,29 @@ async function assertLanguageCodesExist(codes: string[]): Promise<void> {
   }
 }
 
+/** Throws ApiError.badRequest listing any permission key not present in the Permission table. */
+async function assertPermissionKeysExist(keys: string[]): Promise<void> {
+  const { missing } = await adminRepository.permissionKeysExist(keys);
+  if (missing.length > 0) {
+    throw ApiError.badRequest(`Unknown permission key: ${missing.join(", ")}`);
+  }
+}
+
+/** Flattens a role's RolePermission join rows into a plain permissionKeys array for the API surface. */
+function toAdminRole(role: {
+  id: string;
+  name: string;
+  description: string | null;
+  rank: number;
+  isSystem: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  permissions: { permission: { key: string } }[];
+}) {
+  const { permissions, ...rest } = role;
+  return { ...rest, permissionKeys: permissions.map((rp) => rp.permission.key) };
+}
+
 export const adminService = {
   /**
    * Admin user list — search matches email or name (case-insensitive),
@@ -65,7 +90,7 @@ export const adminService = {
   async listUsers(query: ListUsersQuery) {
     const where: Prisma.UserWhereInput = {
       deletedAt: null,
-      ...(query.role ? { role: query.role } : {}),
+      ...(query.roleId ? { roleId: query.roleId } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
         ? {
@@ -102,7 +127,7 @@ export const adminService = {
   async updateUser(actingAdminId: string, targetUserId: string, input: UpdateUserInput) {
     if (
       targetUserId === actingAdminId &&
-      (input.role !== undefined || input.status !== undefined)
+      (input.roleId !== undefined || input.status !== undefined)
     ) {
       throw ApiError.forbidden("Admins cannot change their own role or status");
     }
@@ -110,6 +135,10 @@ export const adminService = {
     const existing = await adminRepository.findUserById(targetUserId);
     if (!existing || existing.deletedAt) {
       throw ApiError.notFound("User not found");
+    }
+
+    if (input.roleId !== undefined && !(await adminRepository.roleExists(input.roleId))) {
+      throw ApiError.badRequest(`Unknown role: ${input.roleId}`);
     }
 
     return adminRepository.updateUser(targetUserId, input);
@@ -473,5 +502,61 @@ export const adminService = {
       throw ApiError.internal("Category was updated but could not be re-read");
     }
     return updated;
+  },
+
+  // --- RBAC: roles & permissions ---
+
+  async listRoles() {
+    const roles = await adminRepository.findAllRoles();
+    return roles.map(toAdminRole);
+  },
+
+  async listPermissions() {
+    return adminRepository.findAllPermissions();
+  },
+
+  async createRole(input: CreateRoleInput) {
+    if (await adminRepository.roleExists(input.id)) {
+      throw ApiError.conflict(`Role id "${input.id}" already exists`);
+    }
+    await assertPermissionKeysExist(input.permissionKeys);
+    const role = await adminRepository.createRole(input);
+    return toAdminRole(role);
+  },
+
+  async updateRole(id: string, input: UpdateRoleInput) {
+    const existing = await adminRepository.findRoleById(id);
+    if (!existing) {
+      throw ApiError.notFound("Role not found");
+    }
+    if (input.permissionKeys !== undefined) {
+      await assertPermissionKeysExist(input.permissionKeys);
+    }
+    const role = await adminRepository.updateRole(id, input);
+    return toAdminRole(role);
+  },
+
+  /**
+   * A system role (seeded — Owner, Student, etc., see prisma/seed.ts) can
+   * never be deleted, and any role still held by at least one user can't be
+   * deleted either — both would either break an invariant (User.roleId
+   * always resolving to something) or silently strand users with no valid
+   * role. The admin must reassign those users to a different role first.
+   */
+  async deleteRole(id: string) {
+    const existing = await adminRepository.findRoleById(id);
+    if (!existing) {
+      throw ApiError.notFound("Role not found");
+    }
+    if (existing.isSystem) {
+      throw ApiError.forbidden("System roles cannot be deleted");
+    }
+    const holderCount = await adminRepository.countUsersWithRole(id);
+    if (holderCount > 0) {
+      throw ApiError.badRequest(
+        `${holderCount} user(s) still hold this role — reassign them before deleting it`
+      );
+    }
+    await adminRepository.deleteRole(id);
   },
 };

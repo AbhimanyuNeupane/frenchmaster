@@ -39,8 +39,9 @@ interface ApiFailure {
 /**
  * Transport/HTTP-level failure carrying the response `status` and the failure
  * envelope's `details` so callers can distinguish, e.g., a 403 gated-content
- * response (details include `requiredRole`) from a 404/500. Kept local to the
- * engine — the ApiContentProvider translates it into a typed `LessonLoadError`.
+ * response (details include `requiredPermissionKey`) from a 404/500. Kept
+ * local to the engine — the ApiContentProvider translates it into a typed
+ * `LessonLoadError`.
  */
 export class HttpError extends Error {
   readonly status: number;

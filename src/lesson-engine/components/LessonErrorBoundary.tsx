@@ -19,12 +19,12 @@ interface State {
  * Catches render-time errors from the renderer subtree and shows a recovery
  * screen instead of an unhandled crash. Distinguishes two failure modes:
  *
- * - A gated lesson (`LessonLoadError` with `requiredRole` — a 403 from the
- *   backend): being locked isn't a broken-data failure, so we show a friendly
- *   "requires an X account" message with only a way back, no retry framing. We
- *   deliberately do NOT show an "Upgrade" button — there's no payments/upgrade
- *   flow in this app, so we state the requirement honestly rather than promise
- *   functionality that doesn't exist.
+ * - A gated lesson (`LessonLoadError` with `requiredPermissionKey` — a 403
+ *   from the backend): being locked isn't a broken-data failure, so we show a
+ *   friendly "requires the X permission" message with only a way back, no
+ *   retry framing. We deliberately do NOT show an "Upgrade" button — there's
+ *   no payments/upgrade flow in this app, so we state the requirement
+ *   honestly rather than promise functionality that doesn't exist.
  * - Anything else (missing/corrupt lesson JSON, network error): the generic
  *   retry/exit screen.
  */
@@ -49,10 +49,10 @@ export class LessonErrorBoundary extends React.Component<Props, State> {
     const { error } = this.state;
     if (!error) return this.props.children;
 
-    const gatedRole =
-      error instanceof LessonLoadError ? error.requiredRole : undefined;
+    const gatedPermission =
+      error instanceof LessonLoadError ? error.requiredPermissionKey : undefined;
 
-    if (gatedRole) {
+    if (gatedPermission) {
       return (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-secondary/20 p-10 text-center">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/15 text-accent">
@@ -62,8 +62,8 @@ export class LessonErrorBoundary extends React.Component<Props, State> {
             This lesson is locked
           </h2>
           <p className="max-w-md text-sm text-muted-foreground">
-            It requires a {gatedRole} account. Your current access level
-            doesn&apos;t include it yet.
+            It requires the &quot;{gatedPermission}&quot; permission. Your current
+            access level doesn&apos;t include it yet.
           </p>
           {this.props.onExit && (
             <Button variant="accent" onClick={this.props.onExit}>

@@ -15,12 +15,11 @@ import {
 import { AdminSelect } from "@/components/admin/form-controls";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { useAuth } from "@/contexts/auth-context";
+import { useApiQuery } from "@/hooks/use-api-query";
 import { ApiRequestError } from "@/lib/api-client";
 import type { CEFRLevel } from "@/types";
-import type { UserRole } from "@/types/auth";
-import type { AdminUser, UpdateUserPayload, UserStatus } from "@/types/admin";
+import type { AdminRole, AdminUser, UpdateUserPayload, UserStatus } from "@/types/admin";
 
-const ROLES: UserRole[] = ["ADMIN", "MODERATOR", "PREMIUM", "USER"];
 const STATUSES: UserStatus[] = ["ACTIVE", "SUSPENDED", "BANNED"];
 const LEVELS: CEFRLevel[] = ["A1", "A2", "B1", "B2"];
 
@@ -38,8 +37,11 @@ export function UserEditDialog({
   onSaved: (updated: AdminUser) => void;
 }) {
   const { authedFetch } = useAuth();
+  // Roles are dynamic, admin-managed data (see /admin/roles) — never a
+  // hardcoded list, so an admin adding a role never needs a frontend change.
+  const { data: roles } = useApiQuery<AdminRole[]>("/api/admin/roles");
 
-  const [role, setRole] = useState<UserRole>("USER");
+  const [roleId, setRoleId] = useState("");
   const [status, setStatus] = useState<UserStatus>("ACTIVE");
   const [level, setLevel] = useState<CEFRLevel>("A1");
   const [saving, setSaving] = useState(false);
@@ -52,7 +54,7 @@ export function UserEditDialog({
   // for resetting state when a prop changes, and avoids a cascading render.
   if (open && !synced && user) {
     setSynced(true);
-    setRole(user.role);
+    setRoleId(user.roleId);
     setStatus(user.status);
     setLevel(user.currentLevel);
     setError(null);
@@ -67,7 +69,7 @@ export function UserEditDialog({
     // Server forbids an admin changing their own role/status, and the UI
     // disables those controls on the self row — so never include them here.
     if (!isSelf) {
-      if (role !== user!.role) patch.role = role;
+      if (roleId !== user!.roleId) patch.roleId = roleId;
       if (status !== user!.status) patch.status = status;
     }
     if (level !== user!.currentLevel) patch.currentLevel = level;
@@ -128,13 +130,13 @@ export function UserEditDialog({
               <Label htmlFor="user-role">Role</Label>
               <AdminSelect
                 id="user-role"
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                disabled={isSelf || saving}
+                value={roleId}
+                onChange={(e) => setRoleId(e.target.value)}
+                disabled={isSelf || saving || !roles}
               >
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
+                {(roles ?? []).map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
                   </option>
                 ))}
               </AdminSelect>

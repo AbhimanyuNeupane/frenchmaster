@@ -12,7 +12,10 @@ export const listUsersSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   pageSize: z.coerce.number().int().positive().max(100).default(20),
   search: z.string().trim().min(1).max(200).optional(),
-  role: z.enum(["ADMIN", "MODERATOR", "PREMIUM", "USER"]).optional(),
+  // References Role.id (a dynamic, admin-managed catalog — see GET
+  // /api/admin/roles) — not a fixed enum, so no Zod enum here. Validated
+  // against the DB in admin.service.ts, same pattern as languageCode.
+  roleId: z.string().trim().min(1).max(50).optional(),
   status: z.enum(["ACTIVE", "SUSPENDED", "BANNED"]).optional(),
 });
 
@@ -26,12 +29,14 @@ export const userIdParamSchema = z.object({
  */
 export const updateUserSchema = z
   .object({
-    role: z.enum(["ADMIN", "MODERATOR", "PREMIUM", "USER"]).optional(),
+    // References Role.id — validated against the DB in admin.service.ts
+    // (assertRoleExists), not a fixed enum. See listUsersSchema.roleId.
+    roleId: z.string().trim().min(1).max(50).optional(),
     status: z.enum(["ACTIVE", "SUSPENDED", "BANNED"]).optional(),
     currentLevel: z.enum(["A1", "A2", "B1", "B2"]).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: "At least one of role, status, currentLevel must be provided",
+    message: "At least one of roleId, status, currentLevel must be provided",
   });
 
 /**
@@ -204,6 +209,43 @@ export const updateVocabularyCategorySchema = z
     message: "At least one field must be provided",
   });
 
+/**
+ * RBAC: roles & permissions. Roles are dynamic, admin-managed data (see
+ * schema.prisma Role/Permission/RolePermission) — never a fixed enum, so
+ * `id` is a free-form slug, validated only for shape here (uniqueness and
+ * "is this a real permission key" are DB-backed checks in admin.service.ts).
+ */
+export const roleIdParamSchema = z.object({
+  id: z.string().trim().min(1).max(50),
+});
+
+export const createRoleSchema = z.object({
+  id: z
+    .string()
+    .trim()
+    .min(1)
+    .max(50)
+    .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, underscore only"),
+  name: z.string().trim().min(1).max(100),
+  description: z.string().trim().max(500).optional(),
+  rank: z.number().int().default(0),
+  permissionKeys: z.array(z.string().trim().min(1)).default([]),
+});
+
+// id is immutable after creation. isSystem is never client-settable — it's
+// only ever true for the seeded roles (see prisma/seed.ts), never for an
+// admin-created role, and can't be flipped after the fact.
+export const updateRoleSchema = z
+  .object({
+    name: z.string().trim().min(1).max(100).optional(),
+    description: z.string().trim().max(500).optional(),
+    rank: z.number().int().optional(),
+    permissionKeys: z.array(z.string().trim().min(1)).optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided",
+  });
+
 export type ListUsersQuery = z.infer<typeof listUsersSchema>;
 export type UserIdParam = z.infer<typeof userIdParamSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
@@ -217,4 +259,7 @@ export type CommitVocabularyImportInput = z.infer<typeof commitVocabularyImportS
 export type AiTranslateSingleInput = z.infer<typeof aiTranslateSingleSchema>;
 export type AiTranslateBulkInput = z.infer<typeof aiTranslateBulkSchema>;
 export type VocabularyCategoryNameParam = z.infer<typeof vocabularyCategoryNameParamSchema>;
+export type RoleIdParam = z.infer<typeof roleIdParamSchema>;
+export type CreateRoleInput = z.infer<typeof createRoleSchema>;
+export type UpdateRoleInput = z.infer<typeof updateRoleSchema>;
 export type UpdateVocabularyCategoryInput = z.infer<typeof updateVocabularyCategorySchema>;

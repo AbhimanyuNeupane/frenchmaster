@@ -1,5 +1,4 @@
 import type { CEFRLevel, PartOfSpeech, WordGender } from "@/types";
-import type { UserRole } from "@/types/auth";
 import type { Translation } from "@/types/language";
 
 /** Account moderation state — mirrors the backend `status` enum. */
@@ -18,7 +17,7 @@ export interface AdminUser {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
+  roleId: string;
   status: UserStatus;
   currentLevel: CEFRLevel;
   createdAt: string;
@@ -33,7 +32,7 @@ export interface AdminUserListResponse {
 
 /** Shape accepted by `PATCH /api/admin/users/:id` — at least one field required by the server. */
 export interface UpdateUserPayload {
-  role?: UserRole;
+  roleId?: string;
   status?: UserStatus;
   currentLevel?: CEFRLevel;
 }
@@ -215,4 +214,43 @@ export interface AdminVocabularyCategory {
 export interface UpdateVocabularyCategoryPayload {
   icon?: string;
   displayOrder?: number;
+}
+
+// --- RBAC: roles & permissions ---
+
+/** From `GET /api/admin/roles` — a role and the permission keys it grants. */
+export interface AdminRole {
+  id: string;
+  name: string;
+  description: string | null;
+  rank: number;
+  isSystem: boolean;
+  permissionKeys: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** From `GET /api/admin/permissions` — the full grantable-permission catalog. */
+export interface AdminPermission {
+  id: string;
+  key: string;
+  description: string | null;
+  category: string;
+}
+
+/** Body for `POST /api/admin/roles`. */
+export interface CreateRolePayload {
+  id: string;
+  name: string;
+  description?: string;
+  rank: number;
+  permissionKeys: string[];
+}
+
+/** Body for `PATCH /api/admin/roles/:id`. */
+export interface UpdateRolePayload {
+  name?: string;
+  description?: string;
+  rank?: number;
+  permissionKeys?: string[];
 }

@@ -24,30 +24,22 @@ import { Label } from "@/components/ui/label";
 import { AdminSelect, AdminTextarea } from "@/components/admin/form-controls";
 import { LessonPreviewPanel } from "@/components/admin/lesson-engine/lesson-preview-panel";
 import { useAuth } from "@/contexts/auth-context";
+import { useApiQuery } from "@/hooks/use-api-query";
 import { ApiRequestError } from "@/lib/api-client";
 import { triggerBlobDownload } from "@/lib/download";
 import { lessonSchema } from "@/lesson-engine/services/content/schema";
 import type { ZodError } from "zod";
 import type { Lesson, LessonCard } from "@/lesson-engine/types";
+import type { AdminPermission } from "@/types/admin";
 import type {
   AdminLessonEngineLessonDetail,
-  LessonRequiredRole,
+  LessonRequiredPermission,
   ValidateLessonDraftResponse,
 } from "@/types/lessonEngineAdmin";
 
-// Select values for the "Required role" field. "none" is the UI stand-in for
-// the API's `null` (fully public — free for everyone).
-const REQUIRED_ROLE_OPTIONS: { value: string; label: string }[] = [
-  { value: "none", label: "None (free for everyone)" },
-  { value: "USER", label: "USER" },
-  { value: "PREMIUM", label: "PREMIUM" },
-  { value: "MODERATOR", label: "MODERATOR" },
-  { value: "ADMIN", label: "ADMIN" },
-];
-
-/** Maps the select's string value to the API's `requiredRole` (null when public). */
-function toRequiredRole(value: string): LessonRequiredRole {
-  return value === "none" ? null : (value as Exclude<LessonRequiredRole, null>);
+/** Maps the select's string value to the API's `requiredPermissionKey` (null when public). */
+function toRequiredPermissionKey(value: string): LessonRequiredPermission {
+  return value === "none" ? null : value;
 }
 
 const STARTER_CARDS = `[
@@ -103,9 +95,11 @@ export function LessonEditor({
   const [title, setTitle] = useState(lesson?.title ?? "");
   const [description, setDescription] = useState(lesson?.description ?? "");
   const [published, setPublished] = useState(lesson?.published ?? false);
-  const [requiredRole, setRequiredRole] = useState<string>(
-    lesson?.requiredRole ?? "none"
+  const [requiredPermissionKey, setRequiredPermissionKey] = useState<string>(
+    lesson?.requiredPermissionKey ?? "none"
   );
+  // The gating catalog is dynamic, admin-managed data (see /admin/permissions) — never hardcoded.
+  const { data: permissions } = useApiQuery<AdminPermission[]>("/api/admin/permissions");
   const [cardsText, setCardsText] = useState(
     lesson ? JSON.stringify(lesson.cards, null, 2) : STARTER_CARDS
   );
@@ -315,7 +309,7 @@ export function LessonEditor({
             description: description.trim() || undefined,
             cards: result.cards,
             published,
-            requiredRole: toRequiredRole(requiredRole),
+            requiredPermissionKey: toRequiredPermissionKey(requiredPermissionKey),
           }),
         });
       } else {
@@ -329,7 +323,7 @@ export function LessonEditor({
             description: description.trim() || undefined,
             cards: result.cards,
             published,
-            requiredRole: toRequiredRole(requiredRole),
+            requiredPermissionKey: toRequiredPermissionKey(requiredPermissionKey),
           }),
         });
       }
@@ -462,21 +456,23 @@ export function LessonEditor({
           </div>
 
           <div>
-            <Label htmlFor="lesson-required-role">Required role</Label>
+            <Label htmlFor="lesson-required-permission">Required permission</Label>
             <AdminSelect
-              id="lesson-required-role"
-              value={requiredRole}
-              onChange={(e) => setRequiredRole(e.target.value)}
+              id="lesson-required-permission"
+              value={requiredPermissionKey}
+              onChange={(e) => setRequiredPermissionKey(e.target.value)}
+              disabled={!permissions}
             >
-              {REQUIRED_ROLE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              <option value="none">None (free for everyone)</option>
+              {(permissions ?? []).map((p) => (
+                <option key={p.key} value={p.key}>
+                  {p.key}
                 </option>
               ))}
             </AdminSelect>
             <p className="mt-1 text-[11px] text-muted-foreground">
               Gates who can play this lesson. &quot;None&quot; keeps it free for
-              everyone; any other value requires that role (or higher).
+              everyone; any other value requires a role that holds this permission.
             </p>
           </div>
 

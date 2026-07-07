@@ -13,12 +13,13 @@ export const lessonEnginePublicRouter = Router();
 
 // Deliberately NO requireAuth — this surface intentionally has no
 // mandatory auth, matching the pattern in language.routes.ts. `optionalAuth`
-// still resolves `req.user` WHEN a valid Bearer token is present, so
-// content-access gating (Feature C — LessonEngineLesson.requiredRole) can
-// compute `locked`/403 correctly, without ever requiring a token. Only
-// published, non-deleted lessons/courses are ever returned (enforced in
-// lessonEngine.service.ts / lessonEngine.repository.ts); requiredRole
-// gating is enforced separately, on top of that.
+// still resolves `req.user` (with live permissions) WHEN a valid Bearer
+// token is present, so content-access gating (Feature C —
+// LessonEngineLesson.requiredPermissionKey) can compute `locked`/403
+// correctly, without ever requiring a token. Only published, non-deleted
+// lessons/courses are ever returned (enforced in lessonEngine.service.ts /
+// lessonEngine.repository.ts); requiredPermissionKey gating is enforced
+// separately, on top of that.
 lessonEnginePublicRouter.use(optionalAuth);
 
 lessonEnginePublicRouter.get(

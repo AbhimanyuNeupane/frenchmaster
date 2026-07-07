@@ -1,16 +1,12 @@
 import type { Pagination } from "@/types/admin";
 
 /**
- * Content-gating role for a lesson. `null` = fully public (the default) — free
- * for everyone. A non-null value means the learner must have that role (or
- * higher) to play the lesson. Mirrors the backend's `requiredRole` enum.
+ * Content-gating permission for a lesson. `null` = fully public (the
+ * default) — free for everyone. A non-null value is a Permission.key (see
+ * GET /api/admin/permissions — dynamic, admin-managed catalog, never a
+ * fixed set) the learner's role must hold to play the lesson.
  */
-export type LessonRequiredRole =
-  | "USER"
-  | "PREMIUM"
-  | "MODERATOR"
-  | "ADMIN"
-  | null;
+export type LessonRequiredPermission = string | null;
 
 /**
  * Admin-facing types for the lesson-engine CRUD API
@@ -33,7 +29,7 @@ export interface AdminLessonEngineLessonSummary {
   description: string | null;
   cardCount: number;
   published: boolean;
-  requiredRole: LessonRequiredRole;
+  requiredPermissionKey: LessonRequiredPermission;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,7 +57,7 @@ export interface LessonEngineLessonPayload {
   description?: string;
   cards: unknown[];
   published: boolean;
-  requiredRole: LessonRequiredRole;
+  requiredPermissionKey: LessonRequiredPermission;
 }
 
 /** Response from `POST /api/admin/lesson-engine/lessons/validate` (dry-run, writes nothing). */
@@ -96,7 +92,7 @@ export interface AdminLessonEngineCourseSectionLesson {
   level: string;
   cardCount: number;
   published: boolean;
-  requiredRole: LessonRequiredRole;
+  requiredPermissionKey: LessonRequiredPermission;
   displayOrder: number;
 }
 

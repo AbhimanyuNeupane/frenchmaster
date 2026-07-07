@@ -63,7 +63,7 @@ export function Topbar() {
             <DropdownMenuItem asChild>
               <Link href="/settings">Settings</Link>
             </DropdownMenuItem>
-            {user.role === "ADMIN" && (
+            {user.permissions.includes("admin.access") && (
               <DropdownMenuItem asChild>
                 <Link href="/admin">Admin Dashboard</Link>
               </DropdownMenuItem>

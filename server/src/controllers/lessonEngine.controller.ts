@@ -62,18 +62,18 @@ export const lessonEngineController = {
 
   // --- Public: Lessons ---
   //
-  // `req.user?.role` is populated only when `optionalAuth` found a valid,
-  // ACTIVE-account session — undefined for a genuinely anonymous request.
+  // `req.user?.permissions` is populated only when `optionalAuth` found a
+  // valid, ACTIVE-account session — undefined for a genuinely anonymous request.
 
   listPublishedLessons: asyncHandler(async (req: Request, res: Response) => {
     const query = req.query as unknown as ListPublishedLessonsQuery;
-    const lessons = await lessonEngineService.listPublishedLessons(query, req.user?.role);
+    const lessons = await lessonEngineService.listPublishedLessons(query, req.user?.permissions);
     sendSuccess(res, lessons);
   }),
 
   getPublishedLesson: asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params as unknown as LessonIdParam;
-    const lesson = await lessonEngineService.getPublishedLesson(id, req.user?.role);
+    const lesson = await lessonEngineService.getPublishedLesson(id, req.user?.permissions);
     sendSuccess(res, lesson);
   }),
 
@@ -120,7 +120,7 @@ export const lessonEngineController = {
 
   getPublishedCourse: asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params as unknown as CourseIdParam;
-    const course = await lessonEngineService.getPublishedCourse(id, req.user?.role);
+    const course = await lessonEngineService.getPublishedCourse(id, req.user?.permissions);
     sendSuccess(res, course);
   }),
 };

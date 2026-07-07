@@ -40,11 +40,15 @@ export const lessonIdParamSchema = z.object({
 });
 
 /**
- * Content-access gating (see LessonEngineLesson.requiredRole in
- * schema.prisma / utils/roleRank.ts). `null` = fully public — the default,
- * matching the feature's original no-auth design.
+ * Content-access gating (see LessonEngineLesson.requiredPermissionKey in
+ * schema.prisma / utils/permissions.ts). `null` = fully public — the
+ * default, matching the feature's original no-auth design. References
+ * Permission.key — a dynamic, admin-managed catalog (see GET
+ * /api/admin/permissions) — so this is a free-form string, not a fixed
+ * enum; existence isn't validated here (Zod has no DB access), same
+ * convention as translations' languageCode elsewhere in this codebase.
  */
-const requiredRoleSchema = z.enum(["USER", "PREMIUM", "MODERATOR", "ADMIN"]).nullable().optional();
+const requiredPermissionKeySchema = z.string().trim().min(1).max(100).nullable().optional();
 
 export const createLessonEngineLessonSchema = z.object({
   // Admin-chosen slug, immutable after creation — matches the engine's own
@@ -62,7 +66,7 @@ export const createLessonEngineLessonSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   cards: cardsArraySchema,
   published: z.boolean().default(false),
-  requiredRole: requiredRoleSchema,
+  requiredPermissionKey: requiredPermissionKeySchema,
 });
 
 // id is immutable after creation, so it's excluded from the update shape.
@@ -111,8 +115,8 @@ export const listPublishedLessonsSchema = z.object({
 // ---------------------------------------------------------------------------
 // Course / Section hierarchy (LessonEngineCourse -> LessonEngineSection ->
 // LessonEngineSectionLesson). Purely organizational — content-access gating
-// lives on the lesson itself (requiredRole above), never here, so a course
-// can freely mix free preview lessons with premium ones.
+// lives on the lesson itself (requiredPermissionKey above), never here, so a
+// course can freely mix free preview lessons with premium ones.
 // ---------------------------------------------------------------------------
 
 export const courseIdParamSchema = z.object({

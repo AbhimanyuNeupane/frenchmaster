@@ -38,7 +38,7 @@ export const adminRepository = {
         id: true,
         email: true,
         name: true,
-        role: true,
+        roleId: true,
         status: true,
         currentLevel: true,
         createdAt: true,
@@ -65,13 +65,17 @@ export const adminRepository = {
         id: true,
         email: true,
         name: true,
-        role: true,
+        roleId: true,
         status: true,
         currentLevel: true,
         createdAt: true,
         updatedAt: true,
       },
     });
+  },
+
+  roleExists(id: string): Promise<boolean> {
+    return prisma.role.findUnique({ where: { id }, select: { id: true } }).then((r) => r !== null);
   },
 
   // --- Analytics overview ---
@@ -348,5 +352,96 @@ export const adminRepository = {
       create: { name, icon: data.icon, displayOrder: data.displayOrder },
       update: data,
     });
+  },
+
+  // --- RBAC: roles & permissions ---
+  //
+  // Adding a role or changing what it can do is a pure data operation (this
+  // CRUD surface + setRolePermissions) — no code change required. See
+  // Role/Permission/RolePermission models in schema.prisma.
+
+  findAllRoles() {
+    return prisma.role.findMany({
+      include: { permissions: { include: { permission: true } } },
+      orderBy: [{ rank: "desc" }, { name: "asc" }],
+    });
+  },
+
+  findAllPermissions() {
+    return prisma.permission.findMany({ orderBy: [{ category: "asc" }, { key: "asc" }] });
+  },
+
+  findRoleById(id: string) {
+    return prisma.role.findUnique({
+      where: { id },
+      include: { permissions: { include: { permission: true } } },
+    });
+  },
+
+  /** How many users currently hold this role — a role with any holders can't be deleted (see admin.service.ts deleteRole). */
+  countUsersWithRole(roleId: string) {
+    return prisma.user.count({ where: { roleId } });
+  },
+
+  /** Diffs the given keys against the Permission table; returns any that don't exist. */
+  async permissionKeysExist(keys: string[]): Promise<{ missing: string[] }> {
+    const unique = Array.from(new Set(keys));
+    if (unique.length === 0) return { missing: [] };
+    const rows = await prisma.permission.findMany({ where: { key: { in: unique } }, select: { key: true } });
+    const found = new Set(rows.map((r) => r.key));
+    return { missing: unique.filter((k) => !found.has(k)) };
+  },
+
+  /**
+   * Creates a role and its initial permission grants in one transaction.
+   * Always `isSystem: false` — only the seed script creates system roles.
+   */
+  async createRole(data: { id: string; name: string; description?: string; rank: number; permissionKeys: string[] }) {
+    const { permissionKeys, ...roleData } = data;
+    return prisma.$transaction(async (tx) => {
+      const role = await tx.role.create({ data: { ...roleData, isSystem: false } });
+      if (permissionKeys.length > 0) {
+        const permissions = await tx.permission.findMany({ where: { key: { in: permissionKeys } } });
+        await tx.rolePermission.createMany({
+          data: permissions.map((p) => ({ roleId: role.id, permissionId: p.id })),
+        });
+      }
+      return tx.role.findUniqueOrThrow({
+        where: { id: role.id },
+        include: { permissions: { include: { permission: true } } },
+      });
+    });
+  },
+
+  /**
+   * Updates role scalars and, if `permissionKeys` is present in `data` at
+   * all (even an empty array), REPLACES the entire permission grant set —
+   * same delete-then-recreate convention as LessonEngineCourse's sections
+   * (see lessonEngine.repository.ts updateCourse).
+   */
+  async updateRole(id: string, data: { name?: string; description?: string; rank?: number; permissionKeys?: string[] }) {
+    const { permissionKeys, ...roleData } = data;
+    return prisma.$transaction(async (tx) => {
+      if (Object.keys(roleData).length > 0) {
+        await tx.role.update({ where: { id }, data: roleData });
+      }
+      if (permissionKeys !== undefined) {
+        await tx.rolePermission.deleteMany({ where: { roleId: id } });
+        if (permissionKeys.length > 0) {
+          const permissions = await tx.permission.findMany({ where: { key: { in: permissionKeys } } });
+          await tx.rolePermission.createMany({
+            data: permissions.map((p) => ({ roleId: id, permissionId: p.id })),
+          });
+        }
+      }
+      return tx.role.findUniqueOrThrow({
+        where: { id },
+        include: { permissions: { include: { permission: true } } },
+      });
+    });
+  },
+
+  deleteRole(id: string) {
+    return prisma.role.delete({ where: { id } });
   },
 };

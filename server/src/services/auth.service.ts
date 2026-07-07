@@ -11,19 +11,25 @@ import {
   verifyAccessToken,
 } from "./token.service";
 import { logger } from "../config/logger";
+import { permissionKeysOf } from "../utils/permissions";
 import type { RegisterInput, LoginInput, UpdateProfileInput } from "../validators/auth.validators";
-import type { User } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 const BCRYPT_ROUNDS = 12;
 const DEFAULT_LANGUAGE_CODE = "en";
 
-function toPublicUser(user: User) {
+type UserWithPermissions = Prisma.UserGetPayload<{
+  include: { role: { include: { permissions: { include: { permission: true } } } } };
+}>;
+
+function toPublicUser(user: UserWithPermissions) {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
     avatarUrl: user.avatarUrl,
-    role: user.role,
+    role: user.roleId,
+    permissions: permissionKeysOf(user),
     currentLevel: user.currentLevel,
     primaryLanguage: user.primaryLanguageCode,
   };
@@ -37,8 +43,8 @@ async function assertEnabledLanguage(code: string): Promise<void> {
   }
 }
 
-async function issueTokenPair(user: User, ip?: string | null) {
-  const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.role });
+async function issueTokenPair(user: UserWithPermissions, ip?: string | null) {
+  const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.roleId });
 
   const refreshToken = generateRefreshToken();
   await refreshTokenRepository.create({
@@ -120,7 +126,7 @@ export const authService = {
     });
     await refreshTokenRepository.revoke(stored.id, newRecord.id);
 
-    const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.role });
+    const accessToken = signAccessToken({ sub: user.id, email: user.email, role: user.roleId });
 
     return { user: toPublicUser(user), accessToken, refreshToken: newRefreshToken };
   },
@@ -145,6 +151,7 @@ export const authService = {
     const user = await prisma.user.update({
       where: { id: userId },
       data: { primaryLanguageCode: input.primaryLanguage },
+      include: { role: { include: { permissions: { include: { permission: true } } } } },
     });
 
     return toPublicUser(user);
